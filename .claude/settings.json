@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "deny": [
+      "Bash(bash tests/fixtures/*)",
+      "Bash(sh tests/fixtures/*)",
+      "Bash(zsh tests/fixtures/*)",
+      "Bash(source tests/fixtures/*)",
+      "Bash(./tests/fixtures/*)",
+      "Bash(python tests/fixtures/*)",
+      "Bash(python3 tests/fixtures/*)",
+      "Bash(node tests/fixtures/*)",
+      "Bash(docker run --privileged *)"
+    ]
+  }
+}
