@@ -47,7 +47,7 @@ def evidence_notes(ev: Evidence) -> list[str]:
         notes.append(text)
     if "reason" in d:
         notes.append(f"Couldn't read it: {one_line(str(d['reason']), 160)}")
-    if "lines" in d:
+    if "lines" in d and "-" in str(d["lines"]):  # a single line is already in "line N"
         notes.append(f"Lines {one_line(str(d['lines']), 20)}")
     if "runs" in d:
         notes.append(f"Runs {one_line(str(d['runs']), 160)}")
@@ -82,7 +82,9 @@ def describe_target(target: Target) -> list[Segment]:
             ("text", " (GitHub)"),
         ]
     if kind == "local":
-        return [("name", one_line(resolved or raw, 160)), ("text", " (folder on this computer)")]
+        # What the user typed is shortest and most familiar; the full path is in the JSON.
+        shown = raw if len(raw) <= 80 else (resolved or raw)
+        return [("name", one_line(shown, 160)), ("text", " (folder on this computer)")]
     if kind == "oneliner":
         return [("name", one_line(raw, 100)), ("text", " (shell command)")]
     if kind in ("npm", "pypi") and resolved:
