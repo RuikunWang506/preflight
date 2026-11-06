@@ -1,0 +1,5 @@
+description = "install.sh adds a folder to PATH in ~/.zshrc"
+verdict = "looks_ok"
+
+[expect]
+"install_path.shell_rc_change" = "info"

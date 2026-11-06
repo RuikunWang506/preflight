@@ -1,0 +1,5 @@
+description = "install.sh removes the macOS quarantine mark"
+verdict = "caution"
+
+[expect]
+"install_path.quarantine_removed" = "high"

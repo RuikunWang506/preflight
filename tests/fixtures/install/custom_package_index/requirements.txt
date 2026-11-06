@@ -1,0 +1,3 @@
+--extra-index-url https://pypi.acme-mirror.example/simple
+widget-core==1.2
+git+https://github.com/acme/private-lib.git

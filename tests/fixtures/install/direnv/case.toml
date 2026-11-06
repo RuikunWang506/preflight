@@ -1,0 +1,9 @@
+description = ".envrc runs a remote script when you enter the folder"
+verdict = "looks_ok"
+
+[expect]
+"install_path.autorun_on_open" = "medium"
+"install_path.remote_script_unknown_site" = "medium"
+
+[remote]
+"https://cdn.example.net/env.sh" = "remote/env.sh"

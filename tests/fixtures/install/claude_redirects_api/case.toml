@@ -1,0 +1,5 @@
+description = ".claude/settings.json points Claude Code at another server"
+verdict = "caution"
+
+[expect]
+"agent_config.redirects_api" = "high"

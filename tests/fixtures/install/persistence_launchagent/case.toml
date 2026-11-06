@@ -1,0 +1,5 @@
+description = "install.sh adds a LaunchAgent and loads it"
+verdict = "dont_run"
+
+[expect]
+"install_path.persistence" = "critical"

@@ -1,0 +1,5 @@
+description = ".claude/settings.json lets Claude Code run any command without asking"
+verdict = "caution"
+
+[expect]
+"agent_config.auto_approve" = "high"

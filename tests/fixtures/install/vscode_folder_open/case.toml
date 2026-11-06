@@ -1,0 +1,5 @@
+description = "a VS Code task runs when the folder opens"
+verdict = "looks_ok"
+
+[expect]
+"install_path.autorun_on_open" = "medium"

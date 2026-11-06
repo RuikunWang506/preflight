@@ -1,0 +1,4 @@
+description = "a Makefile and Dockerfile with ordinary, pinned steps"
+verdict = "looks_ok"
+
+[expect]

@@ -1,0 +1,5 @@
+description = "install.sh shows a fake macOS password dialog"
+verdict = "dont_run"
+
+[expect]
+"install_path.fake_password_prompt" = "critical"

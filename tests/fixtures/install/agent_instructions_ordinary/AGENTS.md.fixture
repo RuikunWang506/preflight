@@ -1,0 +1,3 @@
+# Notes for coding agents
+
+Run `npm test` before committing. Use pnpm, not npm, to add packages.

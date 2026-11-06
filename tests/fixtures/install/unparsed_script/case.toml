@@ -1,0 +1,5 @@
+description = "install.sh has lines the parser can't read"
+verdict = "looks_ok"
+
+[expect]
+"install_path.unparsed" = "info"

@@ -1,0 +1,5 @@
+description = "install.sh installs a systemd service"
+verdict = "looks_ok"
+
+[expect]
+"install_path.background_service" = "medium"

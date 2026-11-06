@@ -1,0 +1,5 @@
+description = "install.sh decodes base64 and pipes it into a shell"
+verdict = "caution"
+
+[expect]
+"install_path.decode_and_run" = "high"

@@ -1,0 +1,5 @@
+description = "install.sh spells a command name with escape codes"
+verdict = "caution"
+
+[expect]
+"install_path.decode_and_run" = "high"

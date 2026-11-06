@@ -1,0 +1,5 @@
+description = "install.sh reads the SSH key and posts it to a server"
+verdict = "dont_run"
+
+[expect]
+"install_path.credential_theft" = "critical"

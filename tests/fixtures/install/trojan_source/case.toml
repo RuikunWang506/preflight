@@ -1,0 +1,5 @@
+description = "code hides what it does with direction-changing characters"
+verdict = "caution"
+
+[expect]
+"injection.trojan_source" = "high"
