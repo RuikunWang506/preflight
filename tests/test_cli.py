@@ -88,7 +88,7 @@ def test_local_folder(capsys, tmp_path: Path, monkeypatch) -> None:
     (tmp_path / "proj").mkdir()
     code, out, _ = run(capsys, "check", "proj")
     assert code == 0
-    assert f"{(tmp_path / 'proj').resolve()} (folder on this computer)" in out
+    assert "proj (folder on this computer)" in out  # shown as typed; JSON has the full path
 
 
 def test_package_source_repo_is_shown(capsys, recorded_http) -> None:
