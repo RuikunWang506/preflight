@@ -1,0 +1,475 @@
+{
+  "$defs": {
+    "CheckKind": {
+      "enum": [
+        "identity",
+        "install_path",
+        "agent_config",
+        "injection",
+        "package",
+        "sandbox"
+      ],
+      "title": "CheckKind",
+      "type": "string"
+    },
+    "Evidence": {
+      "additionalProperties": false,
+      "description": "One piece of evidence. Everything in it may come from the target, so it's untrusted.",
+      "properties": {
+        "data": {
+          "additionalProperties": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "title": "Data",
+          "type": "object"
+        },
+        "excerpt": {
+          "anyOf": [
+            {
+              "maxLength": 300,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Excerpt"
+        },
+        "line": {
+          "anyOf": [
+            {
+              "minimum": 1,
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Line"
+        },
+        "ref": {
+          "maxLength": 2048,
+          "minLength": 1,
+          "title": "Ref",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "url",
+            "file",
+            "command",
+            "network",
+            "process",
+            "filesystem",
+            "metric"
+          ],
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type",
+        "ref"
+      ],
+      "title": "Evidence",
+      "type": "object"
+    },
+    "Finding": {
+      "additionalProperties": false,
+      "properties": {
+        "check": {
+          "$ref": "#/$defs/CheckKind"
+        },
+        "confidence": {
+          "anyOf": [
+            {
+              "maximum": 1,
+              "minimum": 0,
+              "type": "number"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Confidence"
+        },
+        "evidence": {
+          "items": {
+            "$ref": "#/$defs/Evidence"
+          },
+          "title": "Evidence",
+          "type": "array"
+        },
+        "explanation": {
+          "minLength": 1,
+          "title": "Explanation",
+          "type": "string"
+        },
+        "id": {
+          "pattern": "^[a-z_]+\\.[a-z0-9_]+$",
+          "title": "Id",
+          "type": "string"
+        },
+        "recommendation": {
+          "minLength": 1,
+          "title": "Recommendation",
+          "type": "string"
+        },
+        "severity": {
+          "$ref": "#/$defs/Severity"
+        },
+        "source": {
+          "default": "lookfirst",
+          "title": "Source",
+          "type": "string"
+        },
+        "source_version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Version"
+        },
+        "title": {
+          "maxLength": 90,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "check",
+        "severity",
+        "title",
+        "explanation",
+        "recommendation"
+      ],
+      "title": "Finding",
+      "type": "object"
+    },
+    "IdentityResult": {
+      "additionalProperties": false,
+      "properties": {
+        "confidence": {
+          "maximum": 1,
+          "minimum": 0,
+          "title": "Confidence",
+          "type": "number"
+        },
+        "original": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Original"
+        },
+        "status": {
+          "enum": [
+            "original",
+            "fork_benign",
+            "unrelated",
+            "likely_impersonation"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "top_signals": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 3,
+          "title": "Top Signals",
+          "type": "array"
+        }
+      },
+      "required": [
+        "status",
+        "confidence"
+      ],
+      "title": "IdentityResult",
+      "type": "object"
+    },
+    "NotChecked": {
+      "additionalProperties": false,
+      "properties": {
+        "check": {
+          "$ref": "#/$defs/CheckKind"
+        },
+        "how_to_enable": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "How To Enable"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "what": {
+          "title": "What",
+          "type": "string"
+        }
+      },
+      "required": [
+        "check",
+        "what",
+        "reason"
+      ],
+      "title": "NotChecked",
+      "type": "object"
+    },
+    "SandboxRun": {
+      "additionalProperties": false,
+      "properties": {
+        "command": {
+          "title": "Command",
+          "type": "string"
+        },
+        "duration_s": {
+          "minimum": 0,
+          "title": "Duration S",
+          "type": "number"
+        },
+        "exit_code": {
+          "anyOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Exit Code"
+        },
+        "image_digest": {
+          "title": "Image Digest",
+          "type": "string"
+        },
+        "network": {
+          "enum": [
+            "sinkhole",
+            "passthrough",
+            "offline"
+          ],
+          "title": "Network",
+          "type": "string"
+        },
+        "timed_out": {
+          "default": false,
+          "title": "Timed Out",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "command",
+        "image_digest",
+        "duration_s",
+        "network"
+      ],
+      "title": "SandboxRun",
+      "type": "object"
+    },
+    "Severity": {
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "info"
+      ],
+      "title": "Severity",
+      "type": "string"
+    },
+    "Target": {
+      "additionalProperties": false,
+      "properties": {
+        "kind": {
+          "enum": [
+            "github",
+            "local",
+            "oneliner",
+            "npm",
+            "pypi",
+            "mcp_command"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "raw": {
+          "title": "Raw",
+          "type": "string"
+        },
+        "resolved": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Resolved"
+        },
+        "source_repo": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Source Repo"
+        }
+      },
+      "required": [
+        "kind",
+        "raw"
+      ],
+      "title": "Target",
+      "type": "object"
+    },
+    "VerdictLabel": {
+      "enum": [
+        "looks_ok",
+        "caution",
+        "dont_run"
+      ],
+      "title": "VerdictLabel",
+      "type": "string"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "checked": {
+      "items": {
+        "$ref": "#/$defs/CheckKind"
+      },
+      "title": "Checked",
+      "type": "array"
+    },
+    "disclaimer": {
+      "default": "lookfirst lowers risk; it doesn't guarantee safety.",
+      "title": "Disclaimer",
+      "type": "string"
+    },
+    "exit_code": {
+      "enum": [
+        0,
+        10,
+        20
+      ],
+      "title": "Exit Code",
+      "type": "integer"
+    },
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/Finding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "generated_at": {
+      "format": "date-time",
+      "title": "Generated At",
+      "type": "string"
+    },
+    "identity": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/IdentityResult"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "not_checked": {
+      "items": {
+        "$ref": "#/$defs/NotChecked"
+      },
+      "title": "Not Checked",
+      "type": "array"
+    },
+    "sandbox": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/SandboxRun"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null
+    },
+    "schema_version": {
+      "const": "1.0",
+      "default": "1.0",
+      "title": "Schema Version",
+      "type": "string"
+    },
+    "summary": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 3,
+      "title": "Summary",
+      "type": "array"
+    },
+    "target": {
+      "$ref": "#/$defs/Target"
+    },
+    "tool_version": {
+      "title": "Tool Version",
+      "type": "string"
+    },
+    "verdict": {
+      "$ref": "#/$defs/VerdictLabel"
+    }
+  },
+  "required": [
+    "tool_version",
+    "generated_at",
+    "target",
+    "verdict",
+    "exit_code"
+  ],
+  "title": "Report",
+  "type": "object"
+}

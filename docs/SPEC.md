@@ -1,6 +1,6 @@
-# Preflight v0.1 specification
+# lookfirst v0.1 specification
 
-Working title; pick the final name at milestone 1 (section 14). The sections below are the design Claude Code builds from. Where a detail is marked **decide**, propose options in the plan and wait for an answer.
+Named lookfirst at M1 (section 14); the working title was Preflight. The sections below are the design Claude Code builds from. Where a detail is marked **decide**, propose options in the plan and wait for an answer.
 
 ## 1. The problem in one paragraph
 
@@ -9,7 +9,7 @@ People and AI agents now run code from strangers all day: a repo that trended th
 ## 2. Users and the demo moment
 
 - **Primary:** developers and AI-tool users who install things from GitHub, and their coding agents (Claude Code, Codex, Cursor).
-- **Demo moment:** Claude Code is about to run the installer of a fake copy of a viral repo. Preflight's hook stops it and shows three lines of evidence: a copied README, a three-day-old account, and decoy SSH key contents seen leaving the sandbox.
+- **Demo moment:** Claude Code is about to run the installer of a fake copy of a viral repo. lookfirst's hook stops it and shows three lines of evidence: a copied README, a three-day-old account, and decoy SSH key contents seen leaving the sandbox.
 
 ## 3. Targets
 
@@ -48,7 +48,7 @@ People and AI agents now run code from strangers all day: a repo that trended th
 
 **Output:** one of `original`, `fork (benign)`, `unrelated`, or `likely impersonation of <owner/repo>` with a confidence and the top three signals.
 
-**Budget:** unauthenticated GitHub allows 60 requests an hour, so v0.1 asks for an optional read-only token (`GITHUB_TOKEN` or `gh auth token`) and caches responses with ETags in `~/.cache/preflight/`.
+**Budget:** unauthenticated GitHub allows 60 requests an hour, so v0.1 asks for an optional read-only token (`GITHUB_TOKEN` or `gh auth token`) and caches responses with ETags in `~/.cache/lookfirst/`.
 
 ## 5. Install-path check (static, nothing runs)
 
@@ -112,7 +112,7 @@ People and AI agents now run code from strangers all day: a repo that trended th
 
 **Engine:** the Docker API against Docker Desktop or OrbStack on the Mac. Linux-only in v0.1.
 
-**Image:** `preflight-sandbox`, built from `preflight/sandbox/Dockerfile`.
+**Image:** `lookfirst-sandbox`, built from `lookfirst/sandbox/Dockerfile`.
 
 - Debian slim with git, curl, ca-certificates, python3, pip, uv, nodejs, npm, build-essential, strace and procps.
 - Built locally and pinned by digest.
@@ -171,7 +171,7 @@ People and AI agents now run code from strangers all day: a repo that trended th
   "evidence": [{"type": "url", "ref": "https://github.com/original-owner/viral-tool", "excerpt": "..."}],
   "explanation": "Impersonation campaigns copy a popular project's README into a new repo.",
   "recommendation": "Use the original repo unless you know why this copy exists.",
-  "source": "preflight"
+  "source": "lookfirst"
 }
 ```
 
@@ -194,14 +194,14 @@ Every verdict lists what was not checked (for example "sandbox not run", "GuardD
 
 ## 10. Agent integration
 
-**MCP server** (`preflight mcp`, stdio, official Python SDK v2: `mcp>=2.3,<3`, `MCPServer`):
+**MCP server** (`lookfirst mcp`, stdio, official Python SDK v2: `mcp>=2.3,<3`, `MCPServer`):
 
 - The server returns quoted repo text only as escaped, length-capped excerpts marked as quoted data. Summaries come from templates only, so our own output can't carry an injection to the calling agent.
 
-- `preflight_check(target: str, sandbox: bool = false)` returns the verdict, the findings and a 3-line summary.
-- `preflight_explain(finding_id: str)` explains one finding.
+- `lookfirst_check(target: str, sandbox: bool = false)` returns the verdict, the findings and a 3-line summary.
+- `lookfirst_explain(finding_id: str)` explains one finding.
 
-**Claude Code hook** (`preflight hook`, a PreToolUse handler for the Bash tool):
+**Claude Code hook** (`lookfirst hook`, a PreToolUse handler for the Bash tool):
 
 - **Input:** it reads the hook JSON from stdin; the command is at `tool_input.command`.
 - **Fast path:** if the command doesn't look like an install or remote-execution command, exit 0 within 50 ms. Install-like commands include:
@@ -222,13 +222,13 @@ Every verdict lists what was not checked (for example "sandbox not run", "GuardD
 {
   "hooks": {
     "PreToolUse": [
-      {"matcher": "Bash", "hooks": [{"type": "command", "command": "preflight hook", "timeout": 30}]}
+      {"matcher": "Bash", "hooks": [{"type": "command", "command": "lookfirst hook", "timeout": 30}]}
     ]
   }
 }
 ```
 
-**Skill** (`plugin/skills/preflight/SKILL.md`):
+**Skill** (`plugin/skills/lookfirst/SKILL.md`):
 
 - **When to call it:** before cloning and running unfamiliar repos, adding MCP servers or skills, installing packages that aren't in the lockfile, or running a remote script.
 - **How to act on the verdict:**
@@ -261,11 +261,11 @@ Every verdict lists what was not checked (for example "sandbox not run", "GuardD
 
 **Injection fixture:** a README telling AI assistants to run a command. The verdict must not change, and the finding must quote it.
 
-**Host canary:** a fixture that would create `~/PREFLIGHT_HOST_CANARY` if it ever ran on the host. A test asserts that file never exists after the full suite.
+**Host canary:** a fixture that would create `~/LOOKFIRST_HOST_CANARY` if it ever ran on the host. A test asserts that file never exists after the full suite.
 
 ## 12. Definition of done (v0.1)
 
-1. **Static speed:** `preflight check owner/repo` finishes in under 30 seconds with a token on a typical repo, and every Caution or Don't-run reason has evidence.
+1. **Static speed:** `lookfirst check owner/repo` finishes in under 30 seconds with a token on a typical repo, and every Caution or Don't-run reason has evidence.
 2. **Sandbox:** `--sandbox` finishes in under 3 minutes, catches the theft, persistence and binary-run fixtures, and passes both benign installs.
 3. **Lookalikes:** every synthetic lookalike pair is flagged with the original named, and none of the 20 benign repos gets Don't run.
 4. **Hook:** in a recorded Claude Code session, the hook blocks the malicious one-liner fixture with evidence, and adds under 100 ms to unrelated commands.
@@ -280,7 +280,7 @@ Every verdict lists what was not checked (for example "sandbox not run", "GuardD
 
 | # | Milestone | Done when |
 | --- | --- | --- |
-| M1 | Plan, name, skeleton, findings schema, CLI, target fetching | `preflight check` prints an empty report for each target type |
+| M1 | Plan, name, skeleton, findings schema, CLI, target fetching | `lookfirst check` prints an empty report for each target type |
 | M2 | Install-path analyzer, shell rules, fixtures | Every install-path fixture is caught; benign installers pass |
 | M3 | Identity check, popular index, `official.yaml` | Lookalike pairs flagged; benign set clean |
 | M4 | osv-scanner and GuardDog wrappers, verdict, terminal/JSON/Markdown output | Three example reports reviewed (OK, Caution, Don't run) |
@@ -290,7 +290,7 @@ Every verdict lists what was not checked (for example "sandbox not run", "GuardD
 
 ## 14. Name
 
-"Preflight" is taken by several security tools, including SpectralOps/preflight (script verification), deepsafe-scan (a "preflight" scanner for AI coding agents) and agent-contracts/skill-preflight. "Airlock" is taken by sandbox tools (besoeasy/airlock, milankinen/airlock).
+"Preflight", the working title, is taken by several security tools, including SpectralOps/preflight (script verification), deepsafe-scan (a "preflight" scanner for AI coding agents) and agent-contracts/skill-preflight. "Airlock" is taken by sandbox tools (besoeasy/airlock, milankinen/airlock).
 
 At M1, propose 10 short names that work as a command (`<name> check owner/repo`). Check each on GitHub, PyPI, npm and Homebrew, and against well-known security products. Reserve the chosen name's packages on day one, and add an "official sources" line to the README.
 
@@ -298,7 +298,7 @@ At M1, propose 10 short names that work as a command (`<name> check owner/repo`)
 
 ## 15. Competitors to stay compatible with, not copy
 
-| Tool | Covers | What Preflight adds |
+| Tool | Covers | What lookfirst adds |
 | --- | --- | --- |
 | SafeDep PMG, Socket Firewall, Aikido Safe Chain | Malicious packages at install time; PMG sandboxes package installs | Repos and one-liners, identity, one verdict |
 | Repo Run Check (devx-agent, launched 30 Oct 2026) | Static reading of a repo's install steps (CLI, MCP, paid API). Its paid tier adds fake-star, new-owner and lookalike-owner signals. Closest competitor. | README-copy detection that names the original, release-asset comparison, sandbox run, hook |

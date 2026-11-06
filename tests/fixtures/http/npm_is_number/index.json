@@ -1,0 +1,32 @@
+[
+  {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/is-number/latest",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "last-modified": "Fri, 06 Nov 2026 15:39:44 GMT"
+    },
+    "body": "00.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/is-number/-/is-number-7.0.0.tgz",
+    "status": 200,
+    "headers": {
+      "content-type": "application/octet-stream",
+      "etag": "\"6c6e00114e00c2815fc0aeae3da1af23\"",
+      "last-modified": "Wed, 04 Jul 2018 15:09:05 GMT"
+    },
+    "body": "01.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://registry.npmjs.org/is-number/7.0.0",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json"
+    },
+    "body": "02.json"
+  }
+]

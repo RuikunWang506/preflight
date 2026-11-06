@@ -1,0 +1,44 @@
+[
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/octocat/Hello-World",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"b600d2a168ed3f6ed0127c3428277a20f634ff2aa954ba7fef81feb38e1d9f01\"",
+      "last-modified": "Fri, 06 Nov 2026 14:19:58 GMT"
+    },
+    "body": "00.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/octocat/Hello-World/commits/master",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"e59f37a32ceaedc08c360e7825eb8b23e0d04abf29f4182234b7a6f56433b922\"",
+      "last-modified": "Tue, 06 Mar 2012 23:06:50 GMT"
+    },
+    "body": "01.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/octocat/Hello-World/tarball/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+    "status": 302,
+    "headers": {
+      "content-type": "text/html;charset=utf-8",
+      "location": "https://codeload.github.com/octocat/Hello-World/legacy.tar.gz/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d"
+    },
+    "body": null
+  },
+  {
+    "method": "GET",
+    "url": "https://codeload.github.com/octocat/Hello-World/legacy.tar.gz/7fd1a60b01f91b314f59955a4e4d4e80d8edf11d",
+    "status": 200,
+    "headers": {
+      "content-type": "application/x-gzip",
+      "etag": "W/\"b8d0f4e688c1bbfed7532a3d2e38a2c39f923a2cc9d84603d5ba92906234e0e1\""
+    },
+    "body": "03.bin"
+  }
+]

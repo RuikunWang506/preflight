@@ -1,0 +1,23 @@
+[
+  {
+    "method": "GET",
+    "url": "https://pypi.org/pypi/six/1.17.0/json",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json",
+      "etag": "\"BOIp73K+xNVQK7wI/5QWUQ\""
+    },
+    "body": "00.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://files.pythonhosted.org/packages/94/e7/b2c673351809dca68a0e064b6af791aa332cf192da575fd474ed7d6f16a2/six-1.17.0.tar.gz",
+    "status": 200,
+    "headers": {
+      "content-type": "binary/octet-stream",
+      "etag": "\"a0387fe15662c71057b4fb2b7aa9056a\"",
+      "last-modified": "Wed, 04 Dec 2024 17:35:29 GMT"
+    },
+    "body": "01.bin"
+  }
+]
