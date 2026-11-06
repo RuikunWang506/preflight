@@ -66,7 +66,7 @@ People and AI agents now run code from strangers all day: a repo that trended th
 
 **Analyze each command and script:**
 
-1. **Parse with bashlex** to extract commands, pipes, redirections and URLs. Download each fetched URL and analyze it the same way, to depth 3. Never run anything.
+1. **Parse with tree-sitter-bash** to extract commands, pipes, redirections and URLs. Regions the parser can't read become an info finding ("couldn't fully read lines X–Y"), never a silent skip. Download each fetched URL and analyze it the same way, to depth 3, with size and count limits. Never run anything. (Changed from bashlex on 5 Nov 2026: bashlex is GPL-3.0 and failed on all 10 real installers tested.)
 2. **Run ShellCheck** when installed, for parse errors and obviously broken scripts.
 3. **Apply the rules below.** Each rule has an id, a severity and a plain-English explanation.
 
@@ -94,14 +94,19 @@ People and AI agents now run code from strangers all day: a repo that trended th
 
 ## 7. Package check (wrap existing tools)
 
-- **osv-scanner:** `osv-scanner scan source -r <dir>`, for known vulnerabilities in lockfiles and manifests. Parse its JSON output.
-- **GuardDog** (Apache-2.0), for malicious-package heuristics, with `--output-format=json`:
+- **osv-scanner** (Apache-2.0, tested with 2.7.0): `osv-scanner scan source -r --format json <dir>`, for known vulnerabilities in lockfiles and manifests.
+  - Exit code 1 means "vulnerabilities found", not a failure.
+  - A `package.json` without a lockfile yields nothing.
+  - It sends package names and versions to osv.dev (and deps.dev for transitive resolution). Say so in the report.
+- **GuardDog** (Apache-2.0, tested with 3.2.0), for malicious-package heuristics, with `--output-format=json`:
   - a folder or archive: `guarddog pypi scan <dir-or-archive>` or `guarddog npm scan <dir>`
   - requirements files: `guarddog pypi verify requirements.txt`
-  - workflows: `guarddog github_action verify <workflow.yml>`
+  - GitHub Actions: `guarddog github_action scan <target>` (there is no `verify` subcommand for actions)
+  - Its npm scan did not flag a `postinstall` that pipes curl into bash, so section 5's own rules must cover lifecycle scripts.
+  - Install hint to print: `uv tool install --python 3.12 guarddog` (the default Python fails to build pygit2). Look for it in `~/.local/bin` too.
 - **If a tool is missing,** say so in the report and print how to install it. Never vendor these tools.
-- **Credit** each finding to the tool that produced it.
-- **Decide:** whether to call Socket's MCP or SafeDep when a user has configured them (v0.2 is fine).
+- **Credit** each finding to the tool that produced it, with the tool's version.
+- **Socket's MCP and SafeDep:** deferred to v0.2 (decided 5 Nov 2026).
 
 ## 8. Sandbox dry run (`--sandbox`)
 
@@ -116,10 +121,13 @@ People and AI agents now run code from strangers all day: a repo that trended th
 
 - **No host mounts.** Copy the target into `/work` with `docker cp` or a tar stream.
 - **Container settings:** not privileged; all capabilities dropped except `SYS_PTRACE` (for strace); pids, memory and CPU limits; a hard timeout (default 180 seconds).
-- **Network:** an internal Docker network whose only way out is a mitmproxy sidecar.
-  - Set `HTTP_PROXY` and `HTTPS_PROXY`, and install mitmproxy's CA in the sandbox trust store.
+- **Network:** an internal Docker network whose only way out is a mitmproxy sidecar (`mitmproxy/mitmproxy`, pinned by digest).
+  - Set `HTTP_PROXY` and `HTTPS_PROXY`. Generate a fresh mitmproxy CA for each run and install it in the sandbox trust store.
+  - **Sinkhole by default** (decided 5 Nov 2026): requests to the package registries and the project's own domains pass through. Every other request is recorded in full (so honeytoken markers are still caught) and answered locally with a stub, so nothing leaves the Mac.
+  - `--network=passthrough` lets all traffic through the proxy, as an explicit opt-in.
   - Anything that tries to bypass the proxy fails, and strace records the attempt.
 - **`--offline`** removes even the proxy.
+- **Architecture:** arm64 by default (native on Apple Silicon). `--arch amd64` runs under emulation, which is slower but runs the many payloads built only for amd64.
 
 **Decoy home** (honeytokens, each holding a unique random marker):
 
@@ -186,7 +194,9 @@ Every verdict lists what was not checked (for example "sandbox not run", "GuardD
 
 ## 10. Agent integration
 
-**MCP server** (`preflight mcp`, stdio, official Python SDK):
+**MCP server** (`preflight mcp`, stdio, official Python SDK v2: `mcp>=2.3,<3`, `MCPServer`):
+
+- The server returns quoted repo text only as escaped, length-capped excerpts marked as quoted data. Summaries come from templates only, so our own output can't carry an injection to the calling agent.
 
 - `preflight_check(target: str, sandbox: bool = false)` returns the verdict, the findings and a 3-line summary.
 - `preflight_explain(finding_id: str)` explains one finding.
@@ -199,10 +209,13 @@ Every verdict lists what was not checked (for example "sandbox not run", "GuardD
   - `pip install`, `uv pip install`, `uv add`, `npm install <pkg>`, `npx -y`, `uvx`
   - `git clone` chained with run or install steps
   - `./install.sh` in a freshly cloned folder
-- **Otherwise,** run the static check with a 20-second budget, then act on the verdict:
-  - **Don't run:** exit 2, with a stderr message Claude sees: the verdict, the top three reasons, and "tell the user and don't retry with a workaround".
-  - **Caution:** exit 2, with a message telling Claude to show the user the findings and ask before going ahead.
-  - **Looks OK:** exit 0, so the normal permission flow applies.
+- **Fast-path speed:** the fast path imports only the Python standard library. Measured on 5 Nov 2026: bare Python starts in 17–25 ms; importing pydantic adds about 40 ms and `mcp` about 440 ms. Load everything else lazily.
+- **Otherwise,** run the static check with a 20-second budget, then exit 0 and print JSON on stdout (decided 5 Nov 2026; exit 2 can only block, it can't ask):
+  - **Don't run:** `{"hookSpecificOutput": {"hookEventName": "PreToolUse", "permissionDecision": "deny", "permissionDecisionReason": "<verdict, top three reasons, and: tell the user and don't retry with a workaround>"}}`
+  - **Caution:** `"permissionDecision": "ask"`, with the findings as the reason, so the user gets a real permission prompt.
+  - **Looks OK:** no output and exit 0, so the normal permission flow applies.
+  - **If the hook itself errors or runs past its budget:** let the command through, with a visible `systemMessage` warning that the check didn't finish (fail open). A broken hook must never stop the agent from working.
+- The Bash tool's `tool_input` also carries `description`, `timeout` and `run_in_background`; ignore them.
 - **Config** (project or user `settings.json`, or the plugin's `hooks/hooks.json` using `${CLAUDE_PLUGIN_ROOT}`):
 
 ```json
@@ -281,12 +294,15 @@ Every verdict lists what was not checked (for example "sandbox not run", "GuardD
 
 At M1, propose 10 short names that work as a command (`<name> check owner/repo`). Check each on GitHub, PyPI, npm and Homebrew, and against well-known security products. Reserve the chosen name's packages on day one, and add an "official sources" line to the README.
 
+**Chosen 5 Nov 2026: `lookfirst`.** It's free on PyPI, npm and Homebrew; the GitHub user name is taken, so the org is `lookfirst-dev`. The 10 candidates are in `docs/PLAN-v0.1.md` section 3.
+
 ## 15. Competitors to stay compatible with, not copy
 
 | Tool | Covers | What Preflight adds |
 | --- | --- | --- |
 | SafeDep PMG, Socket Firewall, Aikido Safe Chain | Malicious packages at install time; PMG sandboxes package installs | Repos and one-liners, identity, one verdict |
-| Repo Run Check | Static reading of a repo's install steps (MCP and CLI) | Impersonation detection, sandbox run |
+| Repo Run Check (devx-agent, launched 30 Oct 2026) | Static reading of a repo's install steps (CLI, MCP, paid API). Its paid tier adds fake-star, new-owner and lookalike-owner signals. Closest competitor. | README-copy detection that names the original, release-asset comparison, sandbox run, hook |
+| CloneGuard, RepoGuard, skillrx, agent-contracts/skill-preflight | Prompt-injection hooks, static repo or skill scanning | Identity check, sandbox, one verdict |
 | vet (vet-run) | Shows a `curl \| bash` script before running it | Recursive analysis, verdict, sandbox |
 | besoeasy/airlock, milankinen/airlock | Run untrusted code in a container or VM | Analysis and a verdict, not just isolation |
 | deepsafe-scan | Scans an agent environment for leaked keys, injections, hook backdoors | Pre-install identity and behavior checks for new code |
