@@ -1,0 +1,5 @@
+{
+  "name": "widget",
+  "initializeCommand": "bash .devcontainer/init.sh",
+  "postCreateCommand": ["pip", "install", "-e", "."]
+}

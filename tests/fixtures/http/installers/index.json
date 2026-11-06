@@ -1,0 +1,147 @@
+[
+  {
+    "method": "GET",
+    "url": "https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh",
+    "status": 200,
+    "headers": {
+      "content-type": "text/plain; charset=utf-8",
+      "etag": "W/\"ec440d9e16ed92befd8ed7d8c32e2948edefb6936182921752bb725c906ece89\""
+    },
+    "body": "00.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://sh.rustup.rs",
+    "status": 200,
+    "headers": {
+      "content-type": "application/x-sh",
+      "etag": "\"71ea992d4eb30d95cc3e081581d7b0b3\"",
+      "last-modified": "Tue, 03 Nov 2026 14:16:59 GMT"
+    },
+    "body": "01.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://astral.sh/uv/install.sh",
+    "status": 301,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "location": "https://releases.astral.sh/installers/uv/latest/uv-installer.sh"
+    },
+    "body": "02.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://releases.astral.sh/installers/uv/latest/uv-installer.sh",
+    "status": 200,
+    "headers": {
+      "content-type": "text/x-sh",
+      "etag": "\"1f08b093267063431db8b39c320b1240\"",
+      "last-modified": "Tue, 03 Nov 2026 02:45:35 GMT"
+    },
+    "body": "03.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh",
+    "status": 200,
+    "headers": {
+      "content-type": "text/plain; charset=utf-8",
+      "etag": "W/\"6b9317d6cfd8a166d3a76f2e5a11474940b7b845e8ebe93ebeba8db45dc48fdf\""
+    },
+    "body": "04.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh",
+    "status": 200,
+    "headers": {
+      "content-type": "text/plain; charset=utf-8",
+      "etag": "W/\"220a69c5c3b9604a015e8854d2918322f85d26e8cf772cdd441fe602e494008a\""
+    },
+    "body": "05.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://deno.land/install.sh",
+    "status": 301,
+    "headers": {
+      "location": "https://deno.land/x/install@v0.3.3/install.sh"
+    },
+    "body": null
+  },
+  {
+    "method": "GET",
+    "url": "https://deno.land/x/install@v0.3.3/install.sh",
+    "status": 200,
+    "headers": {
+      "content-type": "application/x-sh",
+      "etag": "\"ca432e7224edf88c2c2d5601c73dc9a2\"",
+      "last-modified": "Thu, 27 Aug 2026 11:11:13 GMT"
+    },
+    "body": "07.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://bun.sh/install",
+    "status": 200,
+    "headers": {
+      "content-type": "text/plain;charset=utf-8",
+      "etag": "W/\"46d9307a439cd77a804d1daa16b4c756\"",
+      "last-modified": "Thu, 05 Nov 2026 02:54:10 GMT"
+    },
+    "body": "08.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://get.docker.com",
+    "status": 200,
+    "headers": {
+      "content-type": "text/plain",
+      "etag": "\"21b071a08776a07536025f739e756ea5\"",
+      "last-modified": "Fri, 06 Nov 2026 12:10:14 GMT"
+    },
+    "body": "09.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://ollama.com/install.sh",
+    "status": 307,
+    "headers": {
+      "content-type": "text/html; charset=utf-8",
+      "location": "https://github.com/ollama/ollama/releases/latest/download/install.sh"
+    },
+    "body": null
+  },
+  {
+    "method": "GET",
+    "url": "https://github.com/ollama/ollama/releases/latest/download/install.sh",
+    "status": 302,
+    "headers": {
+      "content-type": "text/html; charset=utf-8",
+      "location": "https://github.com/ollama/ollama/releases/download/v0.40.15/install.sh"
+    },
+    "body": null
+  },
+  {
+    "method": "GET",
+    "url": "https://github.com/ollama/ollama/releases/download/v0.40.15/install.sh",
+    "status": 302,
+    "headers": {
+      "content-type": "text/html; charset=utf-8",
+      "location": "https://release-assets.githubusercontent.com/github-production-release-asset/658928958/c1ab17e9-bb9f-43d1-be17-54a7c2576f10"
+    },
+    "body": null
+  },
+  {
+    "method": "GET",
+    "url": "https://release-assets.githubusercontent.com/github-production-release-asset/658928958/c1ab17e9-bb9f-43d1-be17-54a7c2576f10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/octet-stream",
+      "etag": "\"0x8DF3BA625CD7372\"",
+      "last-modified": "Fri, 06 Nov 2026 01:34:49 GMT"
+    },
+    "body": "13.bin"
+  }
+]

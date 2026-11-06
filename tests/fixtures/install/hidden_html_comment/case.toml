@@ -1,0 +1,5 @@
+description = "README hides instructions for AI agents in an HTML comment"
+verdict = "caution"
+
+[expect]
+"injection.hidden_instructions" = "high"

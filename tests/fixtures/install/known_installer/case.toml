@@ -1,0 +1,8 @@
+description = "README installs Rust with the official rustup one-liner"
+verdict = "looks_ok"
+
+[expect]
+"install_path.known_installer" = "info"
+
+[remote]
+"https://sh.rustup.rs" = "recorded:installers"

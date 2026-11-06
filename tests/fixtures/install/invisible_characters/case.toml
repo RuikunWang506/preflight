@@ -1,0 +1,5 @@
+description = "README splits words with zero-width spaces"
+verdict = "looks_ok"
+
+[expect]
+"injection.invisible_characters" = "medium"

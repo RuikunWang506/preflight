@@ -1,0 +1,5 @@
+description = "install.sh adds a cron job that downloads and runs code"
+verdict = "dont_run"
+
+[expect]
+"install_path.persistence" = "critical"

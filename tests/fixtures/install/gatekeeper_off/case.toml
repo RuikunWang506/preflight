@@ -1,0 +1,5 @@
+description = "install.sh turns off Gatekeeper"
+verdict = "caution"
+
+[expect]
+"install_path.gatekeeper_off" = "high"

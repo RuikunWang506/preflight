@@ -1,0 +1,5 @@
+description = "install.sh copies AWS keys but sends nothing"
+verdict = "looks_ok"
+
+[expect]
+"install_path.credential_read" = "medium"

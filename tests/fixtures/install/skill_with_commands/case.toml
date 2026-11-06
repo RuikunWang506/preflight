@@ -1,0 +1,10 @@
+description = "a shipped skill pre-approves Bash and tells the agent to run a remote script"
+verdict = "caution"
+
+[expect]
+"agent_config.auto_approve" = "high"
+"agent_config.agent_instructions" = "info"
+"install_path.remote_script_unknown_site" = "medium"
+
+[remote]
+"https://cdn.example.net/skill.sh" = "remote/skill.sh"

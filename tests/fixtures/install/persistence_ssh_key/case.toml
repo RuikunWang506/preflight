@@ -1,0 +1,5 @@
+description = "install.sh adds an SSH key that lets someone log in"
+verdict = "dont_run"
+
+[expect]
+"install_path.persistence" = "critical"
