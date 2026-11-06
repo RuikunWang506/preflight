@@ -27,7 +27,7 @@ People and AI agents now run code from strangers all day: a repo that trended th
 
 **Candidate originals**, in this order:
 
-1. `registry/official.yaml`: canonical repos, domains and package names for popular projects. It's community-maintained, and contributors add entries by pull request.
+1. `lookfirst/registry/official.yaml`: canonical repos, domains and package names for popular projects. It's community-maintained, and contributors add entries by pull request.
 2. The popular-repos index (`data/popular.parquet`).
    - Seed it from the user's 12-year GitHub Trending archive: `trending_repos_tagged.csv.gz` (76,892 repos) in the ideas package.
    - Add the GitHub search API's top repos by stars. Refresh weekly.
@@ -281,7 +281,7 @@ Every verdict lists what was not checked (for example "sandbox not run", "GuardD
 | # | Milestone | Done when |
 | --- | --- | --- |
 | M1 | Plan, name, skeleton, findings schema, CLI, target fetching | `lookfirst check` prints an empty report for each target type |
-| M2 | Install-path analyzer, shell rules, fixtures | Every install-path fixture is caught; benign installers pass |
+| M2 | Install-path analyzer, shell rules, fixtures, and the section 6 agent-attack check | Every install-path fixture is caught; benign installers pass |
 | M3 | Identity check, popular index, `official.yaml` | Lookalike pairs flagged; benign set clean |
 | M4 | osv-scanner and GuardDog wrappers, verdict, terminal/JSON/Markdown output | Three example reports reviewed (OK, Caution, Don't run) |
 | M5 | Sandbox dry run | Sandbox fixtures caught; benign installs pass; limits printed |

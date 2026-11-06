@@ -12,7 +12,13 @@ from rich.table import Table
 from rich.text import Text
 
 from lookfirst.core.textsafe import one_line, visible
-from lookfirst.verdict.describe import HEADLINES, SKELETON_NOTE, Segment, describe_target
+from lookfirst.verdict.describe import (
+    SKELETON_NOTE,
+    Segment,
+    describe_target,
+    evidence_notes,
+    headline_text,
+)
 from lookfirst.verdict.schema import VERDICT_TEXT, Finding, Report, Severity, VerdictLabel
 
 _VERDICT_STYLE = {
@@ -48,7 +54,7 @@ def _indented(renderable: object, level: int = 1) -> Padding:
 def headline(report: Report) -> Text:
     return Text.assemble(
         (VERDICT_TEXT[report.verdict], _VERDICT_STYLE[report.verdict]),
-        f": {HEADLINES[report.verdict]}",
+        f": {headline_text(report)}",
     )
 
 
@@ -65,6 +71,8 @@ def _finding_block(finding: Finding) -> Table:
         grid.add_row("", Text.assemble(("Evidence: ", "dim"), where))
         if ev.excerpt:
             grid.add_row("", Text(f'  "{one_line(ev.excerpt, 200)}"', style="dim"))
+        for note in evidence_notes(ev):
+            grid.add_row("", Text(f"  {note}", style="dim"))
     source = finding.source + (f" {finding.source_version}" if finding.source_version else "")
     if finding.source != "lookfirst":
         grid.add_row("", Text(f"Found by {one_line(source, 60)}", style="dim"))

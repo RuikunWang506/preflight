@@ -69,7 +69,12 @@ lookfirst/
                 archive.py (safe unpacking)  textsafe.py (escape untrusted text)
   targets/      base.py (parse and fetch)  models.py  github.py  local.py  oneliner.py  packages.py
   identity/     popular_index.py  lookalike.py  readme_sim.py  stargazers.py  official.py  releases.py
-  static/       shell_parse.py (tree-sitter)  fetch.py (recursive download-and-read)  install_paths.py  shell_rules.py  autorun.py  agent_configs.py  injection.py
+  static/       checks.py (runs the three static checks)  rules_catalog.py (all rule wording)  model.py (finding collector)
+                shell_parse.py (tree-sitter)  shell_rules.py (rules + follows downloads)  fetch.py (safe remote reader)
+                install_paths.py  readme.py  code_rules.py (setup.py via ast; JavaScript patterns)  autorun.py  jsonc.py
+                agent_configs.py  injection.py  context.py (the project's own sites)  files.py (reads without following links)
+  registry/     installers.yaml (allowlisted installers + sha256 last seen)  installers.py; official.yaml at M3.
+                Inside the package, so it ships with `pip install`. Community-maintained: edit by pull request.
   scanners/     base.py  osv.py  guarddog.py
   sandbox/      Dockerfile  runner.py  honeytokens.py  proxy.py  mitm_addon.py  trace_parse.py
   verdict/      schema.py  scoring.py  describe.py (shared wording)  render_terminal.py  render_markdown.py
@@ -77,8 +82,6 @@ lookfirst/
   hook.py       Claude Code PreToolUse handler; the fast path imports only the standard library (under 50 ms)
 plugin/         .claude-plugin/plugin.json  hooks/hooks.json  skills/<name>/SKILL.md  .mcp.json
 .claude-plugin/ marketplace.json (makes this repo installable as a plugin marketplace)
-registry/       official.yaml (canonical repos, domains and packages for popular projects)
-                installers.yaml (allowlisted installer URLs and the sha256 last seen)
 scripts/        record_fixtures.py  export_schema.py
 data/           popular repos index (generated, gitignored except a small seed)
 tests/          conftest.py (no network, no real tokens, host canary)  helpers.py

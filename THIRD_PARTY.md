@@ -14,9 +14,12 @@ Versions are the ones in `uv.lock`. uv only installs versions published at least
 | rich | 15.0.0 | MIT | Terminal output |
 | httpx | 0.28.1 | BSD-3-Clause | HTTP client |
 | pydantic | 2.14.1 | MIT | Findings schema and JSON output |
+| tree-sitter | 0.26.0 | MIT | Reading shell scripts without running them (M2) |
+| tree-sitter-bash | 0.25.1 | MIT | The bash grammar for tree-sitter (M2) |
+| markdown-it-py | 4.2.0 | MIT | Finding install commands in READMEs (M2; also needed by rich) |
+| PyYAML | 6.0.3 | MIT | Reading the registry files, such as `lookfirst/registry/installers.yaml` (M2) |
 | annotated-doc | 0.0.5 | MIT | Needed by typer |
 | shellingham | 1.5.4 | ISC | Needed by typer |
-| markdown-it-py | 4.2.0 | MIT | Needed by rich |
 | mdurl | 0.1.2 | MIT | Needed by markdown-it-py |
 | pygments | 2.21.0 | BSD-2-Clause | Needed by rich |
 | anyio | 4.15.1 | MIT | Needed by httpx |
@@ -62,7 +65,6 @@ Never bundled or vendored. If one isn't installed, the report says so and shows 
 
 | Package or image | License | For |
 | --- | --- | --- |
-| tree-sitter, tree-sitter-bash | MIT | Shell parsing (M2) |
 | rapidfuzz | MIT | Name distance (M3) |
 | datasketch | MIT | README similarity (M3) |
 | docker (docker-py) | Apache-2.0 | Sandbox (M5) |
@@ -78,6 +80,22 @@ Recorded HTTP responses in `tests/fixtures/http/`, refreshed by `scripts/record_
 | octocat/Hello-World at 7fd1a60 (GitHub's sample repo: one README) | No license file; a one-line sample README |
 | is-number 7.0.0 (npm) | MIT, © Jon Schlinkert |
 | six 1.17.0 (PyPI) | MIT, © Benjamin Peterson |
+
+The real installer scripts in `tests/fixtures/http/installers/`, recorded on 6 Nov 2026 to check that well-known installers pass. Only open-source ones are copied in; Claude Code's installer is allowlisted by address and hash but not recorded, because it isn't open source.
+
+| Installer | License |
+| --- | --- |
+| Homebrew (Homebrew/install) | BSD-2-Clause |
+| rustup | MIT OR Apache-2.0 |
+| uv (astral-sh/uv) | MIT OR Apache-2.0 |
+| nvm (nvm-sh/nvm) | MIT |
+| Oh My Zsh (ohmyzsh/ohmyzsh) | MIT |
+| Deno (denoland/deno_install) | MIT |
+| Bun (oven-sh/bun) | MIT |
+| Docker (docker/docker-install) | Apache-2.0 |
+| Ollama (ollama/ollama) | MIT |
+
+The install-path fixtures in `tests/fixtures/install/` are written from scratch for lookfirst (Apache-2.0, like the rest of the repo). They're harmless fakes; see their README.
 
 ## Datasets
 

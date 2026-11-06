@@ -20,3 +20,7 @@ class FetchError(LookfirstError):
 
 class UnsafeArchiveError(LookfirstError):
     """An archive was too big or too damaged to unpack safely."""
+
+
+class CouldntCheckError(LookfirstError):
+    """The main thing to check couldn't be read, so no verdict would mean anything."""

@@ -10,6 +10,10 @@ dependencies = [
     "rich>=14.0",
     "httpx>=0.28",
     "pydantic>=2.12",
+    "tree-sitter>=0.25",
+    "tree-sitter-bash>=0.25",
+    "pyyaml>=6.0",
+    "markdown-it-py>=4.0",
 ]
 
 [project.scripts]
@@ -38,7 +42,7 @@ module-root = ""
 line-length = 100
 target-version = "py312"
 # Only Python files. Markdown code blocks in docs/ are sketches, not code to reformat.
-extend-exclude = ["*.md"]
+extend-exclude = ["*.md", "tests/fixtures"]  # fixtures are harmless fake data, not code
 
 [tool.ruff.lint]
 # E/W/F: errors, I: import order, B: likely bugs, UP: modern syntax,
@@ -47,7 +51,7 @@ select = ["E", "W", "F", "I", "B", "UP", "S", "SIM", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
 # Tests use assert, fake tokens, and harmless fake archives in temporary folders.
-"tests/**" = ["S101", "S105", "S106", "S108"]
+"tests/**" = ["S101", "S105", "S106", "S108", "E501"]  # long lines hold test data
 "scripts/**" = ["S101"]
 
 [tool.pytest.ini_options]
