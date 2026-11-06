@@ -1,0 +1,58 @@
+[project]
+name = "lookfirst"
+version = "0.1.0.dev0"
+description = "Check a GitHub repo, shell one-liner or package before you or your AI agent runs it."
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+requires-python = ">=3.12"
+dependencies = [
+    "typer>=0.27",
+    "rich>=14.0",
+    "httpx>=0.28",
+    "pydantic>=2.12",
+]
+
+[project.scripts]
+lookfirst = "lookfirst.cli:main"
+
+[dependency-groups]
+dev = [
+    "pytest>=9.0",
+    "ruff>=0.15",
+]
+
+[build-system]
+requires = ["uv_build>=0.13,<0.14"]
+build-backend = "uv_build"
+
+[tool.uv]
+# Cooldown: only use package versions published at least 14 days before
+# this date was last moved. Brand-new releases are when hijacked packages
+# do their damage. Move it forward deliberately when updating dependencies.
+exclude-newer = "2026-10-23T00:00:00Z"
+
+[tool.uv.build-backend]
+module-root = ""
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+# Only Python files. Markdown code blocks in docs/ are sketches, not code to reformat.
+extend-exclude = ["*.md"]
+
+[tool.ruff.lint]
+# E/W/F: errors, I: import order, B: likely bugs, UP: modern syntax,
+# S: security lints (bandit), SIM: simpler code, RUF: ruff's own checks.
+select = ["E", "W", "F", "I", "B", "UP", "S", "SIM", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+# Tests use assert, fake tokens, and harmless fake archives in temporary folders.
+"tests/**" = ["S101", "S105", "S106", "S108"]
+"scripts/**" = ["S101"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["-ra", "--strict-markers"]
+markers = [
+    "sandbox: runs a target inside the Docker sandbox; Linux CI only (from M5)",
+]
