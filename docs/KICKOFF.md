@@ -1,4 +1,4 @@
-# Kickoff prompts: Preflight
+# Kickoff prompts: lookfirst
 
 Start with `claude --permission-mode plan`. Paste one prompt at a time. Approve each plan before it builds, and commit after each milestone. Milestones are defined in `docs/SPEC.md` section 13.
 
@@ -37,7 +37,7 @@ Set up the uv project:
 - target parsing and fetching for every target type, using recorded HTTP fixtures in tests
 - a GitHub Actions workflow with lint and tests on macOS, and a separate Linux job reserved for sandbox tests
 
-`preflight check <target>` should print an empty report with the right verdict structure. Fill in the Commands section of CLAUDE.md.
+`lookfirst check <target>` should print an empty report with the right verdict structure. Fill in the Commands section of CLAUDE.md.
 
 ## 3. Install-path analyzer (M2)
 
@@ -75,7 +75,7 @@ Run the sandbox fixtures only inside Docker. Show me the report for the decoy-ke
 
 ## 7. Agent integration (M6)
 
-Build the MCP server, `preflight hook`, the skill and the plugin. Then record a Claude Code session in a scratch folder:
+Build the MCP server, `lookfirst hook`, the skill and the plugin. Then record a Claude Code session in a scratch folder:
 
 - the agent tries to run the malicious one-liner fixture and the hook blocks it with evidence
 - a benign command passes with no noticeable delay
@@ -100,5 +100,5 @@ Check everything against SPEC section 12, fix the gaps, run all tests, and prepa
 - **Demo:** "My coding agent was about to install a fake copy of a viral repo. Here's what stopped it."
 - **Timing:** post right after the next fake-repo or supply-chain story, and keep the release ready until then.
 - **Channels:** Show HN, r/programming, X and security newsletters. Answer every issue for the first 48 hours.
-- **Flywheel:** invite pull requests to `registry/official.yaml` ("add your project's official sources"), and an issue template for "Preflight missed this" and "false alarm" reports.
+- **Flywheel:** invite pull requests to `registry/official.yaml` ("add your project's official sources"), and an issue template for "lookfirst missed this" and "false alarm" reports.
 - **Reporting fakes:** report confirmed malicious repos to GitHub instead of naming them in posts, unless a public report already has.
