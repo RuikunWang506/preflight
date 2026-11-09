@@ -1,0 +1,75 @@
+{
+  "total_count": 5051650,
+  "items": [
+    {
+      "full_name": "react/react",
+      "stargazers_count": 252439,
+      "created_at": "2013-05-24T16:15:54Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "react/react-native",
+      "stargazers_count": 126887,
+      "created_at": "2015-01-09T18:10:16Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "react/create-react-app",
+      "stargazers_count": 103231,
+      "created_at": "2016-07-17T14:55:11Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "enaqx/awesome-react",
+      "stargazers_count": 75224,
+      "created_at": "2014-08-06T05:31:44Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "remix-run/react-router",
+      "stargazers_count": 56634,
+      "created_at": "2014-05-16T22:22:51Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "DavidHDev/react-bits",
+      "stargazers_count": 51576,
+      "created_at": "2024-08-06T06:54:54Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "brillout/awesome-react-components",
+      "stargazers_count": 48836,
+      "created_at": "2016-06-24T15:19:33Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "typescript-cheatsheets/react",
+      "stargazers_count": 47089,
+      "created_at": "2018-06-02T04:08:16Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "reactive-resume/reactive-resume",
+      "stargazers_count": 45538,
+      "created_at": "2020-03-25T14:08:22Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "sudheerj/reactjs-interview-questions",
+      "stargazers_count": 44918,
+      "created_at": "2018-05-31T17:17:01Z",
+      "default_branch": "master",
+      "fork": false
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "total_count": 468343,
+  "items": [
+    {
+      "full_name": "pallets/flask",
+      "stargazers_count": 75075,
+      "created_at": "2010-04-06T11:11:59Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "humiaozuzu/awesome-flask",
+      "stargazers_count": 12800,
+      "created_at": "2014-03-08T07:54:36Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "miguelgrinberg/flasky",
+      "stargazers_count": 8728,
+      "created_at": "2013-12-24T05:38:12Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "flask-restful/flask-restful",
+      "stargazers_count": 6903,
+      "created_at": "2012-10-12T00:08:51Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "pallets-eco/flask-admin",
+      "stargazers_count": 6072,
+      "created_at": "2012-03-18T23:21:57Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "miguelgrinberg/Flask-SocketIO",
+      "stargazers_count": 5504,
+      "created_at": "2014-02-09T07:22:50Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "dpgaspar/Flask-AppBuilder",
+      "stargazers_count": 4963,
+      "created_at": "2013-11-09T21:13:29Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "cookiecutter-flask/cookiecutter-flask",
+      "stargazers_count": 4723,
+      "created_at": "2013-08-16T07:27:55Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "realpython/discover-flask",
+      "stargazers_count": 4534,
+      "created_at": "2014-06-03T17:01:36Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "pallets-eco/flask-sqlalchemy",
+      "stargazers_count": 4301,
+      "created_at": "2010-06-01T15:01:50Z",
+      "default_branch": "main",
+      "fork": false
+    }
+  ]
+}

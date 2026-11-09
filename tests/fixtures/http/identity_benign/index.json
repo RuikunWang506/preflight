@@ -1,0 +1,432 @@
+[
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/facebook/react",
+    "status": 301,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "location": "https://api.github.com/repositories/10270250"
+    },
+    "body": "00.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repositories/10270250",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"cc12c85a34f218402f498c0659f576e2329f33aaadd768718f518a63ab4c47d8\"",
+      "last-modified": "Mon, 09 Nov 2026 16:24:28 GMT"
+    },
+    "body": "01.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=react%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=react+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=react+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "02.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/microsoft/vscode",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"d4f67d02c231a175bfbcd5735cc1b986184da36f8a0112225200a02835720f2e\"",
+      "last-modified": "Mon, 09 Nov 2026 16:51:05 GMT"
+    },
+    "body": "03.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=vscode%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=vscode+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=vscode+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "04.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/torvalds/linux",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"5a4e3a607cb33b9dec49fbeacf08561e25e51340ddf1d1af6ec743f2efbab76a\"",
+      "last-modified": "Mon, 09 Nov 2026 16:44:57 GMT"
+    },
+    "body": "05.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=linux%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=linux+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=linux+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "06.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/python/cpython",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"fd85c91134b63f40f7b12bf2be311a6a989181e0ae181af6e637ff0ded57fd1c\"",
+      "last-modified": "Mon, 09 Nov 2026 16:53:25 GMT"
+    },
+    "body": "07.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=cpython%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=cpython+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=cpython+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "08.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/golang/go",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"05ad99a6f3b5915135a2a3353530b00bacfc5247650be8c6919909045efbad00\"",
+      "last-modified": "Mon, 09 Nov 2026 16:45:39 GMT"
+    },
+    "body": "09.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=go%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=go+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=go+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "10.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/rust-lang/rust",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"887315b9aa1f5b404494b9b4e0e6aa4b7b9ea22d9d5864b0d533f3021a3eeeec\"",
+      "last-modified": "Mon, 09 Nov 2026 16:55:46 GMT"
+    },
+    "body": "11.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=rust%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=rust+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=rust+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "12.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/kubernetes/kubernetes",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"4085a7cd4b136ced19210ed23e31679bc71a81ac1472d7c0467e4d3009d26924\"",
+      "last-modified": "Mon, 09 Nov 2026 16:46:31 GMT"
+    },
+    "body": "13.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=kubernetes%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=kubernetes+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=kubernetes+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "14.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/pytorch/pytorch",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"d02ab5c2693fa4e567d3aec23538740be7179f68c39b447b45a4ef86215bd378\"",
+      "last-modified": "Mon, 09 Nov 2026 16:37:43 GMT"
+    },
+    "body": "15.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=pytorch%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=pytorch+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=pytorch+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "16.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/django/django",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"377a5745900c9b569a989362556af6ddd237fd2345a516d0c8fd8f9382a6c7b0\"",
+      "last-modified": "Mon, 09 Nov 2026 16:03:36 GMT"
+    },
+    "body": "17.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=django%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=django+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=django+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "18.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/pallets/flask",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"bb4e94ead1a9610be60b7efef1d3c4521515de711e3a85b3fda0fc7429a1462b\"",
+      "last-modified": "Mon, 09 Nov 2026 16:50:57 GMT"
+    },
+    "body": "19.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=flask%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=flask+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=flask+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "20.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/expressjs/express",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"c0bdc1893292de5f18f1b329ce68a44b8553d4f06b3c7e72dd137b5bbdba2af8\"",
+      "last-modified": "Mon, 09 Nov 2026 15:52:53 GMT"
+    },
+    "body": "21.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=express%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=express+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=express+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "22.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/vercel/next.js",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"b01fbc5b95afc4f924864ba00499b79fd7d8ebb112efc69d5d2a66d64953239d\"",
+      "last-modified": "Mon, 09 Nov 2026 16:45:16 GMT"
+    },
+    "body": "23.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=next.js%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=next.js+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=next.js+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "24.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/tailwindlabs/tailwindcss",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"327625ba9b63eb3c0ab68eabbb21c569a2acaf1bbf699eba9068c293e2056449\"",
+      "last-modified": "Mon, 09 Nov 2026 15:39:33 GMT"
+    },
+    "body": "25.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=tailwindcss%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=tailwindcss+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=tailwindcss+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "26.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/home-assistant/core",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"1000459881a9bf73550416f2b6093b27c3f274d85916766a7c783b23b4ae317b\"",
+      "last-modified": "Mon, 09 Nov 2026 16:56:35 GMT"
+    },
+    "body": "27.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=core%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=core+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=core+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "28.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/denoland/deno",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"f595a19dde919c888f532c5e55f68a447254f858e56fa8796eaeff5532b35c4a\"",
+      "last-modified": "Mon, 09 Nov 2026 16:43:06 GMT"
+    },
+    "body": "29.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=deno%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=deno+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=deno+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "30.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/ohmyzsh/ohmyzsh",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"5473ee1f2106c5ef9f567045fd8b65b9b2a04ddf9aab9cbc7726acc634d101bc\"",
+      "last-modified": "Mon, 09 Nov 2026 16:07:50 GMT"
+    },
+    "body": "31.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=ohmyzsh%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=ohmyzsh+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=ohmyzsh+in%3Aname&sort=stars&order=desc&per_page=10&page=67>; rel=\"last\""
+    },
+    "body": "32.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/nvm-sh/nvm",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"7dcc1383434fd277cb542a4cbbb78333cb2e4ca62feae890a7e3e4c6c8b1491e\"",
+      "last-modified": "Mon, 09 Nov 2026 16:33:06 GMT"
+    },
+    "body": "33.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=nvm%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=nvm+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=nvm+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "34.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/sharkdp/bat",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"424bc4ef296338fdb15a429306e9444a7d22e3be4e2e9ecdcb0b8ac12e4acd67\"",
+      "last-modified": "Mon, 09 Nov 2026 14:47:45 GMT"
+    },
+    "body": "35.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=bat%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=bat+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=bat+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "36.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/jqlang/jq",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"c17671092cdf8dde5f270e39ae34d82250e72374b3cd7698f289c98c760beb12\"",
+      "last-modified": "Mon, 09 Nov 2026 13:56:02 GMT"
+    },
+    "body": "37.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=jq%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=jq+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=jq+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "38.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/BurntSushi/ripgrep",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"be5aa7ca135e48d6d394dd75bc0fb9ada08adaf6b3da7a237e68a2fa638adeba\"",
+      "last-modified": "Mon, 09 Nov 2026 16:49:47 GMT"
+    },
+    "body": "39.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=ripgrep%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=ripgrep+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=ripgrep+in%3Aname&sort=stars&order=desc&per_page=10&page=30>; rel=\"last\""
+    },
+    "body": "40.json"
+  }
+]

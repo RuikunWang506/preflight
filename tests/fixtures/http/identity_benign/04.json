@@ -1,0 +1,75 @@
+{
+  "total_count": 188934,
+  "items": [
+    {
+      "full_name": "microsoft/vscode",
+      "stargazers_count": 195226,
+      "created_at": "2015-09-03T20:23:38Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "viatsko/awesome-vscode",
+      "stargazers_count": 29210,
+      "created_at": "2016-02-07T23:02:45Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "microsoft/vscode-extension-samples",
+      "stargazers_count": 10205,
+      "created_at": "2015-11-05T10:14:11Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "gitkraken/vscode-gitlens",
+      "stargazers_count": 9966,
+      "created_at": "2016-08-08T14:50:30Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "microsoft/vscode-copilot-chat",
+      "stargazers_count": 9939,
+      "created_at": "2025-06-10T16:21:19Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "hediet/vscode-drawio",
+      "stargazers_count": 9510,
+      "created_at": "2020-05-08T16:14:10Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "microsoft/vscode-tips-and-tricks",
+      "stargazers_count": 9019,
+      "created_at": "2016-03-16T01:56:50Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "bwya77/vscode-dark-islands",
+      "stargazers_count": 8522,
+      "created_at": "2026-02-14T05:06:12Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "LeetCode-OpenSource/vscode-leetcode",
+      "stargazers_count": 8493,
+      "created_at": "2018-02-11T13:23:36Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "hediet/vscode-debug-visualizer",
+      "stargazers_count": 8172,
+      "created_at": "2019-06-20T09:41:04Z",
+      "default_branch": "master",
+      "fork": false
+    }
+  ]
+}
