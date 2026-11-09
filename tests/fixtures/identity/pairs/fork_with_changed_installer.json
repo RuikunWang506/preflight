@@ -1,0 +1,52 @@
+{
+  "description": "A fork of Ollama from a 13-day-old account that changed its install script and added a 7z download",
+  "target": "lookfirst-fixture-copy/ollama",
+  "repo": {
+    "created_at": "2026-10-28T10:00:00Z",
+    "stargazers_count": 3,
+    "fork": true,
+    "default_branch": "main",
+    "parent": {
+      "full_name": "ollama/ollama",
+      "stargazers_count": 186425,
+      "created_at": "2023-06-26T19:39:32Z",
+      "default_branch": "main"
+    }
+  },
+  "owner": {
+    "created_at": "2026-10-27T10:00:00Z",
+    "public_repos": 2,
+    "followers": 0
+  },
+  "readme": {
+    "copy_of": "ollama/ollama",
+    "append": ""
+  },
+  "commits": 40,
+  "releases": [
+    {
+      "tag_name": "v0.9",
+      "assets": [
+        {
+          "name": "ollama-setup.7z"
+        }
+      ]
+    }
+  ],
+  "compare_files": [
+    "scripts/install.sh",
+    "README.md"
+  ],
+  "search": [],
+  "expect": {
+    "status": "likely_impersonation",
+    "original": "ollama/ollama",
+    "severity": "critical",
+    "findings": [
+      "identity.likely_impersonation",
+      "identity.new_account",
+      "identity.extra_downloads",
+      "identity.fork_changed_install"
+    ]
+  }
+}

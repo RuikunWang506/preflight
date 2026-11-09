@@ -1,0 +1,75 @@
+{
+  "total_count": 3392228,
+  "items": [
+    {
+      "full_name": "avelino/awesome-go",
+      "stargazers_count": 192950,
+      "created_at": "2014-07-06T13:42:15Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "golang/go",
+      "stargazers_count": 139812,
+      "created_at": "2014-08-19T04:33:40Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "godotengine/godot",
+      "stargazers_count": 119865,
+      "created_at": "2014-01-04T16:05:36Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "bilawalsidhu/gods-eye-view",
+      "stargazers_count": 63840,
+      "created_at": "2026-06-22T23:37:22Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "go-gitea/gitea",
+      "stargazers_count": 58980,
+      "created_at": "2016-11-01T02:13:26Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "aaif-goose/goose",
+      "stargazers_count": 56402,
+      "created_at": "2024-08-23T19:03:36Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "ethereum/go-ethereum",
+      "stargazers_count": 51470,
+      "created_at": "2013-12-26T13:05:46Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "gogs/gogs",
+      "stargazers_count": 47925,
+      "created_at": "2014-02-12T01:57:08Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "astaxie/build-web-application-with-golang",
+      "stargazers_count": 43855,
+      "created_at": "2012-08-02T11:49:35Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "go-gorm/gorm",
+      "stargazers_count": 39986,
+      "created_at": "2013-10-25T08:31:38Z",
+      "default_branch": "master",
+      "fork": false
+    }
+  ]
+}

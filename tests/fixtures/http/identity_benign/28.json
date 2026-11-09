@@ -1,0 +1,75 @@
+{
+  "total_count": 553837,
+  "items": [
+    {
+      "full_name": "home-assistant/core",
+      "stargazers_count": 92101,
+      "created_at": "2013-09-17T07:29:48Z",
+      "default_branch": "dev",
+      "fork": false
+    },
+    {
+      "full_name": "FuelLabs/fuel-core",
+      "stargazers_count": 56761,
+      "created_at": "2020-08-27T21:12:14Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "vuejs/core",
+      "stargazers_count": 54878,
+      "created_at": "2018-06-12T13:49:36Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "v2ray/v2ray-core",
+      "stargazers_count": 46906,
+      "created_at": "2015-09-04T11:42:53Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "isocpp/CppCoreGuidelines",
+      "stargazers_count": 45454,
+      "created_at": "2015-08-19T20:22:52Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "XTLS/Xray-core",
+      "stargazers_count": 42754,
+      "created_at": "2020-11-09T11:23:10Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "v2fly/v2ray-core",
+      "stargazers_count": 34756,
+      "created_at": "2019-04-15T10:05:54Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "chroma-core/chroma",
+      "stargazers_count": 29661,
+      "created_at": "2022-10-05T17:58:44Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "emscripten-core/emscripten",
+      "stargazers_count": 27766,
+      "created_at": "2011-02-12T05:23:30Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "ycm-core/YouCompleteMe",
+      "stargazers_count": 25875,
+      "created_at": "2012-04-16T03:12:14Z",
+      "default_branch": "master",
+      "fork": false
+    }
+  ]
+}

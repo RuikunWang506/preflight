@@ -2,14 +2,19 @@
 
 from __future__ import annotations
 
-from datetime import datetime
+from datetime import UTC, datetime
 from pathlib import Path
 
-from lookfirst.core.config import DEFAULT_LIMITS, Limits
-from lookfirst.core.errors import CouldntCheckError
+from lookfirst.core.config import DEFAULT_LIMITS, Limits, cache_dir
+from lookfirst.core.errors import CouldntCheckError, FetchError
+from lookfirst.core.http import github_token, make_client
+from lookfirst.identity.check import IdentityOutcome, check_identity
+from lookfirst.identity.github import GitHubData
+from lookfirst.identity.popular_index import load_index
 from lookfirst.static.checks import run_static_checks
 from lookfirst.static.fetch import RemoteReader
 from lookfirst.targets.base import open_target, parse_target
+from lookfirst.targets.models import ResolvedTarget
 from lookfirst.verdict.schema import CheckKind, NotChecked, Report
 from lookfirst.verdict.scoring import build_report
 
@@ -39,8 +44,10 @@ def run_check(
     spec = parse_target(raw, cwd=cwd or Path.cwd())
     own_reader = reader is None
     reader = reader or RemoteReader()
+    # One-liners are compared with official sites offline, so they need no GitHub token.
+    token = None if spec.kind == "oneliner" else github_token()
     try:
-        with open_target(spec, limits=limits) as target:
+        with open_target(spec, limits=limits, token=token) as target:
             result = run_static_checks(target, reader)
             if result.core_unreadable:
                 raise CouldntCheckError(
@@ -49,9 +56,19 @@ def run_check(
                     hint="lookfirst never gives a verdict on a script it hasn't read. "
                     "Check your connection and try again.",
                 )
+            identity = _identity(target, token, now or datetime.now(UTC))
+            checked = ([CheckKind.identity] if identity.ran else []) + result.checked
             not_checked: list[NotChecked] = []
             for kind, label in CHECKS.items():
-                if kind in result.checked:
+                if kind is CheckKind.identity:
+                    for what, reason, how in identity.gaps:
+                        shown = label if not identity.ran else what
+                        not_checked.append(
+                            NotChecked(check=kind, what=shown, reason=reason, how_to_enable=how)
+                        )
+                    if identity.ran or identity.gaps:
+                        continue
+                if kind in checked:
                     continue
                 if kind is CheckKind.sandbox and not sandbox:
                     reason, how = "not requested", "add --sandbox"
@@ -64,11 +81,27 @@ def run_check(
                 )
             return build_report(
                 target=target.to_schema(),
-                findings=result.findings,
-                checked=result.checked,
+                findings=result.findings + identity.findings,
+                checked=checked,
                 not_checked=not_checked,
+                identity=identity.result,
                 now=now,
             )
     finally:
         if own_reader:
             reader.close()
+
+
+def _identity(target: ResolvedTarget, token: str | None, now: datetime) -> IdentityOutcome:
+    """Run the identity check. A GitHub failure means "not checked", never a crash."""
+    if target.spec.kind == "oneliner":
+        return check_identity(target, None, load_index(), now=now)
+    with make_client(token=token) as client:
+        data = GitHubData(client, has_token=bool(token), cache=cache_dir())
+        try:
+            return check_identity(target, data, load_index(), now=now)
+        except FetchError as exc:
+            reason = f"couldn't reach GitHub: {exc.message.rstrip('.')}"
+            return IdentityOutcome(
+                ran=False, gaps=[("Is this the real project?", reason, exc.hint)]
+            )

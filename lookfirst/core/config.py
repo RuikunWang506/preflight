@@ -1,6 +1,9 @@
-"""Limits that keep a hostile target from filling the disk or memory."""
+"""Limits that keep a hostile target from filling the disk or memory, and where lookfirst
+keeps its cache."""
 
+import os
 from dataclasses import dataclass
+from pathlib import Path
 
 MB = 1024 * 1024
 
@@ -16,3 +19,10 @@ class Limits:
 
 
 DEFAULT_LIMITS = Limits()
+
+
+def cache_dir() -> Path:
+    """Where lookfirst caches GitHub answers and the popular-repos list.
+    Set LOOKFIRST_CACHE_DIR to move it."""
+    override = os.environ.get("LOOKFIRST_CACHE_DIR")
+    return Path(override).expanduser() if override else Path.home() / ".cache" / "lookfirst"

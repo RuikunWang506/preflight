@@ -336,7 +336,7 @@ def fetch_pypi(
         root=src / manifest.root if manifest.root else src,
         resolved=f"{one_line(name, 120)}=={one_line(info['version'], 60)}",
         source_repo=_pick_pypi_source(info),
-        metadata={"pypi": {"info": info, "file": chosen}},
+        metadata={"pypi": {"info": info, "file": chosen, "ownership": data.get("ownership")}},
         manifest=manifest,
     )
 

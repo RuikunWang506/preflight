@@ -82,11 +82,19 @@ _OVERRIDE = re.compile(
 )
 # Keeping things from the user. Technical writing says this too ("fails without notifying
 # the user"), so it only counts with an AI being addressed or asked to run something.
+# "Don't tell the user" counts when the sentence ends there or goes on to what's being
+# hidden ("about this step", "what you did", "that you changed..."). Skills also tell
+# agents not to make false claims ("don't tell the user it's fixed until the tests
+# pass"), and that's honesty, not secrecy.
 _SECRECY = re.compile(
-    r"\b(?:do\s+not|don'?t|never)\s+(?:tell|inform|alert|notify|warn|ask)\s+(?:the\s+)?user\b"
+    r"\b(?:do\s+not|don'?t|never)\s+(?:tell|inform|alert|notify|warn)\s+(?:the\s+)?user\b"
+    r"(?=[ \t]*(?:$|[.,;:!?)—-])"
+    r"|\s+(?:about|of|what|how|anything|this|these|you|we|when|where|why|whether"
+    r"|that\s+(?:you|we|i|this|these))\b)"
+    r"|\b(?:do\s+not|don'?t|never)\s+ask\s+(?:the\s+)?user\b"
     r"|\b(?:do\s+not|don'?t|never)\s+mention\s+(?:this|it|these)\s+to\s+(?:the\s+)?user\b"
     r"|\bwithout\s+(?:asking|telling|informing|notifying|warning|confirming\s+with)\s+(?:the\s+)?user\b",
-    re.IGNORECASE,
+    re.IGNORECASE | re.MULTILINE,
 )
 _COMMAND = re.compile(
     r"\b(?:run|execute|exec|paste|type|launch|start|install)\b[^.\n]{0,80}\b(?:command|script|curl|wget|bash|sh|terminal|shell|npx|following)\b"
