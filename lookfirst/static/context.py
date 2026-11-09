@@ -8,8 +8,8 @@ import tomllib
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
-from urllib.parse import urlsplit
 
+from lookfirst.core.urls import split_url, url_host
 from lookfirst.registry.installers import Installer, match_installer
 from lookfirst.static.files import read_text
 from lookfirst.targets.models import ResolvedTarget
@@ -49,7 +49,7 @@ class RuleContext:
     def add_url(self, url: object) -> None:
         if not isinstance(url, str) or not url.startswith(("http://", "https://")):
             return
-        host = (urlsplit(url).hostname or "").lower().removeprefix("www.")
+        host = url_host(url).removeprefix("www.")
         if host and host not in _SHARED_HOSTS:  # "owner.github.io" counts; "github.com" doesn't
             self.project_hosts.add(host)
 
@@ -63,7 +63,9 @@ class RuleContext:
         installer = match_installer(url)
         if installer is not None:
             return UrlClass("known_installer", installer)
-        parts = urlsplit(url)
+        parts = split_url(url)
+        if parts is None:
+            return UrlClass("unknown")
         host = (parts.hostname or "").lower().removeprefix("www.")
         path = parts.path
         m = _GITHUB_PATH.match(path)
