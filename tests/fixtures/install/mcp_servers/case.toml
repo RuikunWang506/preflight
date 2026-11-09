@@ -1,0 +1,5 @@
+description = ".mcp.json adds an MCP server that starts an npm package"
+verdict = "looks_ok"
+
+[expect]
+"agent_config.mcp_servers" = "medium"

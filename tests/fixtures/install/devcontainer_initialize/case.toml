@@ -1,0 +1,5 @@
+description = "a dev container runs commands, including one on your computer"
+verdict = "looks_ok"
+
+[expect]
+"install_path.autorun_on_open" = "medium"

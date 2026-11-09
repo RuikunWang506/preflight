@@ -1,0 +1,8 @@
+description = "README runs the project's own install script from a branch"
+verdict = "looks_ok"
+
+[expect]
+"install_path.unpinned_remote_script" = "medium"
+
+[remote]
+"https://raw.githubusercontent.com/acme/widget/main/install.sh" = "remote/install.sh"

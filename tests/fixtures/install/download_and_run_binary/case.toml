@@ -1,0 +1,8 @@
+description = "install.sh downloads a program from a file-sharing site and runs it"
+verdict = "caution"
+
+[expect]
+"install_path.download_and_run_binary" = "high"
+
+[remote]
+"https://files.example-share.net/helper" = "binary:"

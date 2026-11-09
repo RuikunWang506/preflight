@@ -1,0 +1,5 @@
+description = "requirements.txt installs from another index and from git"
+verdict = "looks_ok"
+
+[expect]
+"install_path.custom_package_index" = "medium"

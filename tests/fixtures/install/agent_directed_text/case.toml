@@ -1,0 +1,9 @@
+description = "README tells AI coding assistants to run a remote script"
+verdict = "caution"
+
+[expect]
+"injection.agent_directed" = "high"
+"install_path.remote_script_unknown_site" = "medium"
+
+[remote]
+"https://cdn.example.net/agent.sh" = "remote/agent.sh"

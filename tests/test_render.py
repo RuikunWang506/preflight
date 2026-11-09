@@ -91,4 +91,4 @@ def test_markdown_code_spans_cant_be_broken_out_of() -> None:
 def test_markdown_text_escapes_links_and_html() -> None:
     assert md_text("[click](https://evil.example)") == "\\[click\\](https://evil.example)"
     assert md_text("<script>") == "\\<script\\>"
-    assert md_text("a‮b") == "a<U+202E>b"
+    assert md_text("a\u202eb") == "a<U+202E>b"

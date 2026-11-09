@@ -1,0 +1,5 @@
+description = "install.sh reads a Keychain password and uploads it"
+verdict = "dont_run"
+
+[expect]
+"install_path.credential_theft" = "critical"

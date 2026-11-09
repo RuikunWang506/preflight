@@ -1,0 +1,4 @@
+description = "a plain Python library"
+verdict = "looks_ok"
+
+[expect]

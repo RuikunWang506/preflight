@@ -1,0 +1,5 @@
+description = "install.sh makes ~/.zshrc download and run code"
+verdict = "dont_run"
+
+[expect]
+"install_path.persistence" = "critical"

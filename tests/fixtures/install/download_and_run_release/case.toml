@@ -1,0 +1,8 @@
+description = "install.sh downloads and runs another project's release"
+verdict = "looks_ok"
+
+[expect]
+"install_path.download_and_run_release" = "medium"
+
+[remote]
+"https://github.com/other-org/tool/releases/download/v1.2.0/tool-macos" = "binary:"

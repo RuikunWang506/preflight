@@ -1,0 +1,6 @@
+description = "package.json runs husky on prepare"
+verdict = "looks_ok"
+
+[expect]
+"install_path.install_hook" = "info"
+"install_path.adds_commands" = "info"

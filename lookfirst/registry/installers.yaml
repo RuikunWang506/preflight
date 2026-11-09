@@ -1,0 +1,85 @@
+# Well-known installers that are normally run with `curl ... | sh`.
+#
+# A URL listed here is reported as "a well-known installer from its official site"
+# (info) instead of "a site lookfirst can't vouch for" (medium). lookfirst still
+# downloads the script and reads it with every rule: being listed is not a pass.
+#
+# sha256 is the copy lookfirst last saw at the first URL, on the date in `seen`.
+# Installers change often, so a different hash is noted in the report, not alarmed on.
+#
+# To add one: the official docs must tell people to run it from that exact address.
+# Add a `prefixes:` entry only for official versioned paths (like nvm's /v0.40.3/).
+
+installers:
+  - name: Homebrew
+    urls:
+      - https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+    prefixes:
+      - https://raw.githubusercontent.com/Homebrew/install/
+    sha256: 5f333bbe53bc490e51e7ccb1df8779b3dd6ee73a1a7379efda216edb08ccb148
+    seen: 2026-11-06
+
+  - name: rustup
+    urls:
+      - https://sh.rustup.rs
+      - https://static.rust-lang.org/rustup/rustup-init.sh
+    sha256: d890e2fef6fa991b19cde2e608199bc1dca4e37f41f884edf8849ff693048de6
+    seen: 2026-11-06
+
+  - name: uv
+    urls:
+      - https://astral.sh/uv/install.sh
+    prefixes:
+      - https://astral.sh/uv/
+    sha256: d263ee68314cf5bea36b08e6bd9e2c4563240d7adb73756cf33af5c199b92db4
+    seen: 2026-11-06
+
+  - name: nvm
+    urls:
+      - https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh
+    prefixes:
+      - https://raw.githubusercontent.com/nvm-sh/nvm/
+    sha256: 045932fe05f0d4247c946f2ec0ec4026dbfd8ce88a5f67ea28d8ea833227f48b
+    seen: 2026-11-06
+
+  - name: Oh My Zsh
+    urls:
+      - https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh
+      - https://install.ohmyz.sh
+    prefixes:
+      - https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/
+    sha256: 5574b96e94dbcb769f0d1592fa83aeb6ca2caf41c6ae5d76fcc7f04c524b4f55
+    seen: 2026-11-06
+
+  - name: Deno
+    urls:
+      - https://deno.land/install.sh
+      - https://deno.land/x/install/install.sh
+    sha256: 83f19ea13f6d7884f4dc0e2f92e7e08e7589204138d9b6edfcd53c3f07b3273b
+    seen: 2026-11-06
+
+  - name: Bun
+    urls:
+      - https://bun.sh/install
+      - https://bun.com/install
+    sha256: 04882bf41679d49d9af108657a1e5515bf04fdf2940d12c0d0b1e5d79dc53be8
+    seen: 2026-11-06
+
+  - name: Docker
+    urls:
+      - https://get.docker.com
+      - https://test.docker.com
+    sha256: c9e2607b313b7a208027fa225b9d0454e72c9ff4cd0e2c5f7a9edd8eb6a890e4
+    seen: 2026-11-06
+
+  - name: Ollama
+    urls:
+      - https://ollama.com/install.sh
+    sha256: 25f64b810b947145095956533e1bdf56eacea2673c55a7e586be4515fc882c9f
+    seen: 2026-11-06
+
+  - name: Claude Code
+    urls:
+      - https://claude.ai/install.sh
+    sha256: 3a68d3406cf674e17bed1733a4dcf37805e2e47d87417700007d7e1aa766a944
+    seen: 2026-11-06

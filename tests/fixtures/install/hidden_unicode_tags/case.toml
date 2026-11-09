@@ -1,0 +1,5 @@
+description = "README hides instructions in invisible Unicode tag characters"
+verdict = "caution"
+
+[expect]
+"injection.hidden_instructions" = "high"

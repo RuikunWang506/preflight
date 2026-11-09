@@ -1,0 +1,5 @@
+description = ".vscode/settings.json lets the editor's agent run tools without asking"
+verdict = "caution"
+
+[expect]
+"agent_config.auto_approve" = "high"

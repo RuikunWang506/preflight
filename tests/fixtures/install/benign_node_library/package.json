@@ -1,0 +1,8 @@
+{
+  "name": "widget",
+  "version": "1.0.0",
+  "scripts": {
+    "prepare": "tsc -p .",
+    "test": "vitest"
+  }
+}
