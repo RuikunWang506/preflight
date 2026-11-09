@@ -7,8 +7,11 @@ Run on demand. It uses the network:
 It runs lookfirst's own code, so the recordings match the requests the code really makes.
 Only the status, a few harmless headers and the bodies are saved. Request headers, where
 a token would be, are never saved, and bodies that look like they hold a token are
-refused. A GitHub token (from `gh`) is used only to stay under GitHub's rate limits; the
-identity check still follows its no-token path, the one the tests replay.
+refused. JSON answers lose their email addresses and keep only what lookfirst reads when
+they're long; downloaded files are kept exactly as published, since the tests check them
+against the registry's hash. A GitHub token (from `gh`) is used only to stay under
+GitHub's rate limits; the identity check still follows its no-token path, the one the
+tests replay.
 """
 
 from __future__ import annotations
@@ -39,6 +42,8 @@ OUT = ROOT / "tests" / "fixtures" / "http"
 KEEP_HEADERS = ("content-type", "location", "etag", "last-modified", "link")
 SIGNED_HOSTS = ("release-assets.githubusercontent.com", "objects.githubusercontent.com")
 TOKEN_PATTERN = re.compile(rb"(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})")
+EMAIL_KEYS = frozenset({"email", "author_email", "maintainer_email"})
+EMAIL_IN_NAME = re.compile(r"\s*<[^<>@\s]+@[^<>\s]+>")  # npm's "Name <address> (site)"
 
 # Small, stable, permissively licensed targets (see THIRD_PARTY.md).
 CHECKS: dict[str, list[str]] = {
@@ -171,7 +176,7 @@ def record(case: str, run: Callable[[], None], *, keep_readmes: bool = True) -> 
             number = len(index)
             if "json" in entry["headers"].get("content-type", ""):
                 name = f"{number:02d}.json"
-                trimmed = _trim(entry["url"], json.loads(body))
+                trimmed = drop_emails(_trim(entry["url"], json.loads(body)))
                 pretty = json.dumps(trimmed, indent=2, ensure_ascii=False) + "\n"
                 (case_dir / name).write_text(pretty, encoding="utf-8")
             else:
@@ -182,6 +187,18 @@ def record(case: str, run: Callable[[], None], *, keep_readmes: bool = True) -> 
         )
     (case_dir / "index.json").write_text(json.dumps(index, indent=2) + "\n", encoding="utf-8")
     print(f"{case}: {len(index)} responses")
+
+
+def drop_emails(data: object) -> object:
+    """The answer without email addresses. npm and PyPI list maintainers' and authors'
+    addresses, and GitHub lists commit authors'; lookfirst never reads them."""
+    if isinstance(data, dict):
+        return {k: drop_emails(v) for k, v in data.items() if k.lower() not in EMAIL_KEYS}
+    if isinstance(data, list):
+        return [drop_emails(v) for v in data]
+    if isinstance(data, str):
+        return EMAIL_IN_NAME.sub("", data)
+    return data
 
 
 def _trim(url: str, data: object) -> object:

@@ -253,4 +253,4 @@ Found while building M3, and handled (each now covered by a test):
 - **Malformed addresses** such as an unclosed `[` crashed the check: in the identity check and in six places in the M2 static checks. They're now read as having no host.
 - **GitHub's search limit** (10 a minute without a token, 30 with): running out stopped the whole identity check. Now it goes on without the same-name search and lists it under "Not checked".
 - **M2's hidden-instructions check** flagged comfy-cli's official agent skills, which tell agents "do not tell the user their Python was matched", meaning don't make a false claim. "Don't tell the user" now counts only when it hides something ("about this step", "what you did").
-- **Recorded account profiles** are trimmed to the account's age and counts, so no names, emails or locations are kept.
+- **Personal details in recordings:** account profiles are trimmed to the account's age and counts, and email addresses are dropped from every recorded answer, including the npm and PyPI answers recorded in M1. A test checks.
