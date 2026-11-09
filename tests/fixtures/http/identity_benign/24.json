@@ -1,0 +1,75 @@
+{
+  "total_count": 139189,
+  "items": [
+    {
+      "full_name": "vercel/next.js",
+      "stargazers_count": 143437,
+      "created_at": "2016-10-05T23:32:51Z",
+      "default_branch": "canary",
+      "fork": false
+    },
+    {
+      "full_name": "ixartz/Next-js-Boilerplate",
+      "stargazers_count": 13090,
+      "created_at": "2020-07-22T19:47:35Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "serverless-nextjs/serverless-next.js",
+      "stargazers_count": 4458,
+      "created_at": "2019-02-19T23:28:07Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "ixartz/Next-JS-Landing-Page-Starter-Template",
+      "stargazers_count": 2140,
+      "created_at": "2021-03-30T17:30:06Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "milliHQ/terraform-aws-next-js",
+      "stargazers_count": 1474,
+      "created_at": "2020-06-19T18:55:43Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "codebucks27/Next.js-Developer-Portfolio-Starter-Code",
+      "stargazers_count": 1355,
+      "created_at": "2023-03-20T08:11:17Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "Kuzma02/Electronics-eCommerce-Shop-With-Admin-Dashboard-NextJS-NodeJS",
+      "stargazers_count": 710,
+      "created_at": "2024-02-25T10:03:29Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "ixartz/Next-js-Blog-Boilerplate",
+      "stargazers_count": 690,
+      "created_at": "2020-07-25T13:09:25Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "HumeAI/hume-evi-next-js-starter",
+      "stargazers_count": 674,
+      "created_at": "2024-06-10T21:25:45Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "hiretimsf/Next.js-Blog-App",
+      "stargazers_count": 469,
+      "created_at": "2023-07-09T14:28:51Z",
+      "default_branch": "main",
+      "fork": false
+    }
+  ]
+}

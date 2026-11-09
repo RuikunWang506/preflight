@@ -72,9 +72,12 @@ def _no_network(monkeypatch: pytest.MonkeyPatch) -> None:
 
 
 @pytest.fixture(autouse=True)
-def _no_real_tokens(monkeypatch: pytest.MonkeyPatch) -> None:
+def _no_real_tokens(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
     for var in ("GITHUB_TOKEN", "GH_TOKEN"):
         monkeypatch.delenv(var, raising=False)
+    monkeypatch.setenv(
+        "LOOKFIRST_CACHE_DIR", str(tmp_path / "lookfirst-cache")
+    )  # never the real cache
     monkeypatch.setenv("LOOKFIRST_NO_GH_TOKEN", "1")
     monkeypatch.setenv("LOOKFIRST_DEBUG", "1")  # show real errors instead of "this is a bug"
 
@@ -96,8 +99,10 @@ class Recorded:
                 key = (entry["method"], entry["url"])
                 self.responses[key] = (entry["status"], entry["headers"], body)
 
-    def override(self, url: str, handler: Callable[[httpx.Request], httpx.Response]) -> None:
-        self.overrides[("GET", url)] = handler
+    def override(
+        self, url: str, handler: Callable[[httpx.Request], httpx.Response], method: str = "GET"
+    ) -> None:
+        self.overrides[(method, url)] = handler
 
     def handler(self, request: httpx.Request) -> httpx.Response:
         self.requests.append(request)

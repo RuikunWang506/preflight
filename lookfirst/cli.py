@@ -112,6 +112,33 @@ def check(
     raise typer.Exit(report.exit_code)
 
 
+@app.command("update-index")
+def update_index() -> None:
+    """Refresh lookfirst's list of popular repos from GitHub. Needs a GitHub token."""
+    from lookfirst.core.http import github_token, make_client
+    from lookfirst.identity import popular_index
+
+    token = github_token()
+    if not token:
+        print_error(
+            "Updating the list of popular repos needs a GitHub token.",
+            "Set GITHUB_TOKEN, or sign in with `gh auth login`, then try again.",
+        )
+        raise typer.Exit(EXIT_ERROR)
+    console = make_console(stderr=True)
+    console.print(
+        "Searching GitHub for the most-starred and fastest-rising repos (about 3 minutes)..."
+    )
+    try:
+        with make_client(token=token) as client:
+            data = popular_index.build(client)
+    except LookfirstError as exc:
+        print_error(exc.message, exc.hint)
+        raise typer.Exit(EXIT_ERROR) from None
+    path = popular_index.save_to_cache(data)
+    console.print(f"Saved {len(popular_index.load_index()):,} popular repos to {path}.")
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     """Run the CLI and return its exit code."""
     command = typer.main.get_command(app)

@@ -55,8 +55,7 @@
     "test": "mocha"
   },
   "_npmUser": {
-    "name": "jonschlinkert",
-    "email": "github@sellside.com"
+    "name": "jonschlinkert"
   },
   "homepage": "https://github.com/jonschlinkert/is-number",
   "keywords": [
@@ -96,16 +95,13 @@
   "directories": {},
   "maintainers": [
     {
-      "name": "doowb",
-      "email": "brian.woodward@gmail.com"
+      "name": "doowb"
     },
     {
-      "name": "jonschlinkert",
-      "email": "github@sellside.com"
+      "name": "jonschlinkert"
     },
     {
-      "name": "realityking",
-      "email": "me@rouvenwessling.de"
+      "name": "realityking"
     }
   ],
   "_nodeVersion": "10.0.0",

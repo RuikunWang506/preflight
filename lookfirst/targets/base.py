@@ -74,6 +74,7 @@ def parse_target(raw: str, *, cwd: Path) -> TargetSpec:
 
 
 ClientFactory = Callable[..., httpx.Client]
+_LOOK_UP = object()  # open_target's default: look the GitHub token up itself
 
 
 @contextmanager
@@ -82,15 +83,18 @@ def open_target(
     *,
     limits: Limits = DEFAULT_LIMITS,
     client_factory: ClientFactory = make_client,
+    token: str | object | None = _LOOK_UP,
 ) -> Iterator[ResolvedTarget]:
-    """Yield the target ready to read. Downloads live in a temporary folder deleted afterwards."""
+    """Yield the target ready to read. Downloads live in a temporary folder deleted afterwards.
+    Pass token to reuse one already looked up; by default it's looked up for GitHub targets."""
     if spec.kind == "local":
         yield resolve_local(spec)
         return
     if spec.kind == "oneliner":
         yield resolve_oneliner(spec)
         return
-    token = github_token() if spec.kind == "github" else None
+    if token is _LOOK_UP:
+        token = github_token() if spec.kind == "github" else None
     with (
         tempfile.TemporaryDirectory(prefix="lookfirst-") as tmp,
         client_factory(token=token, limits=limits) as client,

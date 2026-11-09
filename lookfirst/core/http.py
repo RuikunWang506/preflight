@@ -113,12 +113,14 @@ def _open(
     allowed_hosts: frozenset[str],
     headers: Mapping[str, str] | None,
     limits: Limits,
+    method: str = "GET",
+    json_body: Any = None,
 ) -> httpx.Response:
-    """Send a GET and follow redirects by hand. The caller must close the response."""
+    """Send a request and follow redirects by hand. The caller must close the response."""
     current = httpx.URL(url)
     for _ in range(limits.max_redirects + 1):
         _check_url(current, allowed_hosts)
-        request = client.build_request("GET", current, headers=headers)
+        request = client.build_request(method, current, headers=headers, json=json_body)
         try:
             response = client.send(request, stream=True)
         except httpx.TimeoutException as exc:
@@ -127,7 +129,7 @@ def _open(
             raise FetchError(
                 f"Couldn't connect to {current.host}.", hint="Check your internet connection."
             ) from exc
-        if not response.is_redirect:
+        if not response.has_redirect_location:  # httpx calls every 3xx, even 304, a redirect
             return response
         location = response.headers.get("location", "")
         response.close()
@@ -160,6 +162,62 @@ def _check_declared_size(response: httpx.Response, cap: int, what: str) -> None:
     declared = response.headers.get("content-length", "")
     if declared.isdigit() and int(declared) > cap:
         raise FetchError(f"{what} is larger than {cap // MB} MB, so lookfirst didn't download it.")
+
+
+_KEPT_HEADERS = frozenset(
+    {"etag", "link", "content-type", "x-ratelimit-remaining", "x-ratelimit-reset", "retry-after"}
+)
+
+
+@dataclass(frozen=True)
+class Fetched:
+    """A response whose status the caller handles itself (404 isn't an error here)."""
+
+    status: int
+    headers: dict[str, str]  # lowercase names; only the few lookfirst uses
+    content: bytes
+
+    def json(self) -> Any:
+        try:
+            return json.loads(self.content)
+        except ValueError:
+            return None
+
+
+def fetch(
+    client: httpx.Client,
+    url: str,
+    *,
+    allowed_hosts: frozenset[str],
+    what: str,
+    headers: Mapping[str, str] | None = None,
+    method: str = "GET",
+    json_body: Any = None,
+    max_bytes: int | None = None,
+    limits: Limits = DEFAULT_LIMITS,
+) -> Fetched:
+    """Send a request and return its status, a few headers and the capped body."""
+    response = _open(
+        client,
+        url,
+        allowed_hosts=allowed_hosts,
+        headers=headers,
+        limits=limits,
+        method=method,
+        json_body=json_body,
+    )
+    try:
+        cap = max_bytes or limits.max_json_bytes
+        _check_declared_size(response, cap, what)
+        body = bytearray()
+        for chunk in response.iter_bytes():
+            body.extend(chunk)
+            if len(body) > cap:
+                raise FetchError(f"{what} is larger than {cap // MB} MB, so lookfirst stopped.")
+        kept = {k.lower(): v for k, v in response.headers.items() if k.lower() in _KEPT_HEADERS}
+        return Fetched(response.status_code, kept, bytes(body))
+    finally:
+        response.close()
 
 
 def get_json(

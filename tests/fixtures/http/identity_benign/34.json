@@ -1,0 +1,75 @@
+{
+  "total_count": 5443,
+  "items": [
+    {
+      "full_name": "nvm-sh/nvm",
+      "stargazers_count": 95776,
+      "created_at": "2010-04-15T17:47:47Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "nvm-windows/nvm",
+      "stargazers_count": 48167,
+      "created_at": "2014-09-20T16:37:28Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "jorgebucaran/nvm.fish",
+      "stargazers_count": 2722,
+      "created_at": "2016-04-12T17:26:02Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "lukechilds/zsh-nvm",
+      "stargazers_count": 2414,
+      "created_at": "2016-07-07T23:40:21Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "linux-nvme/nvme-cli",
+      "stargazers_count": 1894,
+      "created_at": "2015-02-05T22:59:04Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "1111mp/nvm-desktop",
+      "stargazers_count": 1414,
+      "created_at": "2023-07-20T16:09:43Z",
+      "default_branch": "tauri",
+      "fork": false
+    },
+    {
+      "full_name": "acidanthera/NVMeFix",
+      "stargazers_count": 774,
+      "created_at": "2019-12-26T19:00:01Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "hakobera/nvmw",
+      "stargazers_count": 672,
+      "created_at": "2011-11-06T07:43:40Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "NVIDIA/nvmath-python",
+      "stargazers_count": 602,
+      "created_at": "2024-04-18T01:24:36Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "letsencrypt/openzfs-nvme-databases",
+      "stargazers_count": 581,
+      "created_at": "2020-09-16T20:43:57Z",
+      "default_branch": "main",
+      "fork": false
+    }
+  ]
+}

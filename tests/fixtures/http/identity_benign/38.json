@@ -1,0 +1,75 @@
+{
+  "total_count": 182052,
+  "items": [
+    {
+      "full_name": "jquery/jquery",
+      "stargazers_count": 59855,
+      "created_at": "2009-04-03T15:20:14Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "jqlang/jq",
+      "stargazers_count": 36084,
+      "created_at": "2012-07-18T19:57:25Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "blueimp/jQuery-File-Upload",
+      "stargazers_count": 30688,
+      "created_at": "2010-12-01T15:35:32Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "camsong/You-Dont-Need-jQuery",
+      "stargazers_count": 20105,
+      "created_at": "2015-11-21T16:02:26Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "defunkt/jquery-pjax",
+      "stargazers_count": 16623,
+      "created_at": "2011-02-26T02:44:18Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "jquery/jquery-ui",
+      "stargazers_count": 11336,
+      "created_at": "2010-01-19T14:40:34Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "jquery-validation/jquery-validation",
+      "stargazers_count": 10313,
+      "created_at": "2010-05-05T13:40:20Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "jquery-archive/jquery-mobile",
+      "stargazers_count": 9585,
+      "created_at": "2010-09-13T15:02:22Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "carhartl/jquery-cookie",
+      "stargazers_count": 8478,
+      "created_at": "2009-08-03T19:11:40Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "kamens/jQuery-menu-aim",
+      "stargazers_count": 7621,
+      "created_at": "2013-03-03T02:50:35Z",
+      "default_branch": "master",
+      "fork": false
+    }
+  ]
+}

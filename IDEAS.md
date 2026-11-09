@@ -17,4 +17,9 @@ Things worth doing that are outside the v0.1 scope. Add new ideas here instead o
 - **Remote scripts behind a proxy.** lookfirst downloads remote scripts directly, never through a proxy, so it can check each address is public. Users behind a corporate proxy get "couldn't download" instead.
 - **A JavaScript parser for install scripts.** npm lifecycle scripts that run JavaScript get pattern checks today, not a real parse.
 - **Monorepos.** Read the package.json of each workspace, not just the root one.
+- **Add the trending archive to the popular-repos list.** Merge `trending_repos_tagged.csv.gz` (76,892 repos) into `popular.csv.gz` once it's in `data/seed/`. M3 shipped without it.
+- **Trim the GitHub cache.** `~/.cache/lookfirst/github/` grows with every repo checked; drop entries not used for a month.
+- **Check every package's claimed repo.** Today a package's `repository` field is checked against the registry's provenance record only when it names an official project's repo. Doing it for every package would catch packages that borrow a famous repo's name ("starjacking"), and the identity line could say "not confirmed" when there's no record.
+- **Fork README warnings.** Count only the README warnings a fork added, not the ones it inherited from its parent.
+- **Renamed organizations.** When an organization is renamed, its old name is free for anyone to take. Old names of official projects (such as `ollama-webui`) could go in `official.yaml` as names to watch.
 - **Show what a known installer changed.** When an allowlisted installer's hash differs from the last one seen, show what changed.

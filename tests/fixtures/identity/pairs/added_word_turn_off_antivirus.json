@@ -1,0 +1,40 @@
+{
+  "description": "'yt-dlp-pro' with its own README that links a file host and says to turn off Defender",
+  "target": "ytdlp-tools-2026/yt-dlp-pro",
+  "repo": {
+    "created_at": "2026-11-03T10:00:00Z",
+    "stargazers_count": 5,
+    "fork": false,
+    "default_branch": "main"
+  },
+  "owner": {
+    "created_at": "2026-11-02T10:00:00Z",
+    "public_repos": 1,
+    "followers": 0
+  },
+  "readme": {
+    "text": "# yt-dlp Pro\n\nThe fastest video downloader, now with a one-click installer.\n\n1. Download https://gofile.io/d/AbC123 (yt-dlp-pro-setup.zip)\n2. Turn off Windows Defender before installing, it blocks the installer.\n3. Run setup.exe\n"
+  },
+  "commits": 4,
+  "releases": [],
+  "search": [
+    {
+      "full_name": "ytdlp-tools-2026/yt-dlp-pro",
+      "stargazers_count": 5,
+      "created_at": "2026-11-03T10:00:00Z",
+      "default_branch": "main"
+    }
+  ],
+  "expect": {
+    "status": "likely_impersonation",
+    "original": "yt-dlp/yt-dlp",
+    "severity": "critical",
+    "findings": [
+      "identity.likely_impersonation",
+      "identity.name_lookalike",
+      "identity.new_account",
+      "identity.offsite_download",
+      "identity.disable_protection"
+    ]
+  }
+}

@@ -1,0 +1,772 @@
+[
+  {
+    "tag_name": "2026.10.26",
+    "assets": [
+      {
+        "name": "SHA2-256SUMS"
+      },
+      {
+        "name": "SHA2-256SUMS.sig"
+      },
+      {
+        "name": "SHA2-512SUMS"
+      },
+      {
+        "name": "SHA2-512SUMS.sig"
+      },
+      {
+        "name": "yt-dlp"
+      },
+      {
+        "name": "yt-dlp.exe"
+      },
+      {
+        "name": "yt-dlp.tar.gz"
+      },
+      {
+        "name": "yt-dlp_arm64.exe"
+      },
+      {
+        "name": "yt-dlp_linux"
+      },
+      {
+        "name": "yt-dlp_linux.zip"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_linux_armv7l.zip"
+      },
+      {
+        "name": "yt-dlp_macos"
+      },
+      {
+        "name": "yt-dlp_macos.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux"
+      },
+      {
+        "name": "yt-dlp_musllinux.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_win.zip"
+      },
+      {
+        "name": "yt-dlp_win_arm64.zip"
+      },
+      {
+        "name": "yt-dlp_win_x86.zip"
+      },
+      {
+        "name": "yt-dlp_x86.exe"
+      },
+      {
+        "name": "_update_spec"
+      }
+    ]
+  },
+  {
+    "tag_name": "2026.10.21",
+    "assets": [
+      {
+        "name": "SHA2-256SUMS"
+      },
+      {
+        "name": "SHA2-256SUMS.sig"
+      },
+      {
+        "name": "SHA2-512SUMS"
+      },
+      {
+        "name": "SHA2-512SUMS.sig"
+      },
+      {
+        "name": "yt-dlp"
+      },
+      {
+        "name": "yt-dlp.exe"
+      },
+      {
+        "name": "yt-dlp.tar.gz"
+      },
+      {
+        "name": "yt-dlp_arm64.exe"
+      },
+      {
+        "name": "yt-dlp_linux"
+      },
+      {
+        "name": "yt-dlp_linux.zip"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_linux_armv7l.zip"
+      },
+      {
+        "name": "yt-dlp_macos"
+      },
+      {
+        "name": "yt-dlp_macos.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux"
+      },
+      {
+        "name": "yt-dlp_musllinux.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_win.zip"
+      },
+      {
+        "name": "yt-dlp_win_arm64.zip"
+      },
+      {
+        "name": "yt-dlp_win_x86.zip"
+      },
+      {
+        "name": "yt-dlp_x86.exe"
+      },
+      {
+        "name": "_update_spec"
+      }
+    ]
+  },
+  {
+    "tag_name": "2026.08.19",
+    "assets": [
+      {
+        "name": "SHA2-256SUMS"
+      },
+      {
+        "name": "SHA2-256SUMS.sig"
+      },
+      {
+        "name": "SHA2-512SUMS"
+      },
+      {
+        "name": "SHA2-512SUMS.sig"
+      },
+      {
+        "name": "yt-dlp"
+      },
+      {
+        "name": "yt-dlp.exe"
+      },
+      {
+        "name": "yt-dlp.tar.gz"
+      },
+      {
+        "name": "yt-dlp_arm64.exe"
+      },
+      {
+        "name": "yt-dlp_linux"
+      },
+      {
+        "name": "yt-dlp_linux.zip"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_linux_armv7l.zip"
+      },
+      {
+        "name": "yt-dlp_macos"
+      },
+      {
+        "name": "yt-dlp_macos.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux"
+      },
+      {
+        "name": "yt-dlp_musllinux.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_win.zip"
+      },
+      {
+        "name": "yt-dlp_win_arm64.zip"
+      },
+      {
+        "name": "yt-dlp_win_x86.zip"
+      },
+      {
+        "name": "yt-dlp_x86.exe"
+      },
+      {
+        "name": "_update_spec"
+      }
+    ]
+  },
+  {
+    "tag_name": "2026.07.04",
+    "assets": [
+      {
+        "name": "SHA2-256SUMS"
+      },
+      {
+        "name": "SHA2-256SUMS.sig"
+      },
+      {
+        "name": "SHA2-512SUMS"
+      },
+      {
+        "name": "SHA2-512SUMS.sig"
+      },
+      {
+        "name": "yt-dlp"
+      },
+      {
+        "name": "yt-dlp.exe"
+      },
+      {
+        "name": "yt-dlp.tar.gz"
+      },
+      {
+        "name": "yt-dlp_arm64.exe"
+      },
+      {
+        "name": "yt-dlp_linux"
+      },
+      {
+        "name": "yt-dlp_linux.zip"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_linux_armv7l.zip"
+      },
+      {
+        "name": "yt-dlp_macos"
+      },
+      {
+        "name": "yt-dlp_macos.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux"
+      },
+      {
+        "name": "yt-dlp_musllinux.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_win.zip"
+      },
+      {
+        "name": "yt-dlp_win_arm64.zip"
+      },
+      {
+        "name": "yt-dlp_win_x86.zip"
+      },
+      {
+        "name": "yt-dlp_x86.exe"
+      },
+      {
+        "name": "_update_spec"
+      }
+    ]
+  },
+  {
+    "tag_name": "2026.06.09",
+    "assets": [
+      {
+        "name": "SHA2-256SUMS"
+      },
+      {
+        "name": "SHA2-256SUMS.sig"
+      },
+      {
+        "name": "SHA2-512SUMS"
+      },
+      {
+        "name": "SHA2-512SUMS.sig"
+      },
+      {
+        "name": "yt-dlp"
+      },
+      {
+        "name": "yt-dlp.exe"
+      },
+      {
+        "name": "yt-dlp.tar.gz"
+      },
+      {
+        "name": "yt-dlp_arm64.exe"
+      },
+      {
+        "name": "yt-dlp_linux"
+      },
+      {
+        "name": "yt-dlp_linux.zip"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_linux_armv7l.zip"
+      },
+      {
+        "name": "yt-dlp_macos"
+      },
+      {
+        "name": "yt-dlp_macos.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux"
+      },
+      {
+        "name": "yt-dlp_musllinux.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_win.zip"
+      },
+      {
+        "name": "yt-dlp_win_arm64.zip"
+      },
+      {
+        "name": "yt-dlp_win_x86.zip"
+      },
+      {
+        "name": "yt-dlp_x86.exe"
+      },
+      {
+        "name": "_update_spec"
+      }
+    ]
+  },
+  {
+    "tag_name": "2026.03.17",
+    "assets": [
+      {
+        "name": "SHA2-256SUMS"
+      },
+      {
+        "name": "SHA2-256SUMS.sig"
+      },
+      {
+        "name": "SHA2-512SUMS"
+      },
+      {
+        "name": "SHA2-512SUMS.sig"
+      },
+      {
+        "name": "yt-dlp"
+      },
+      {
+        "name": "yt-dlp.exe"
+      },
+      {
+        "name": "yt-dlp.tar.gz"
+      },
+      {
+        "name": "yt-dlp_arm64.exe"
+      },
+      {
+        "name": "yt-dlp_linux"
+      },
+      {
+        "name": "yt-dlp_linux.zip"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_linux_armv7l.zip"
+      },
+      {
+        "name": "yt-dlp_macos"
+      },
+      {
+        "name": "yt-dlp_macos.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux"
+      },
+      {
+        "name": "yt-dlp_musllinux.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_win.zip"
+      },
+      {
+        "name": "yt-dlp_win_arm64.zip"
+      },
+      {
+        "name": "yt-dlp_win_x86.zip"
+      },
+      {
+        "name": "yt-dlp_x86.exe"
+      },
+      {
+        "name": "_update_spec"
+      }
+    ]
+  },
+  {
+    "tag_name": "2026.03.13",
+    "assets": [
+      {
+        "name": "SHA2-256SUMS"
+      },
+      {
+        "name": "SHA2-256SUMS.sig"
+      },
+      {
+        "name": "SHA2-512SUMS"
+      },
+      {
+        "name": "SHA2-512SUMS.sig"
+      },
+      {
+        "name": "yt-dlp"
+      },
+      {
+        "name": "yt-dlp.exe"
+      },
+      {
+        "name": "yt-dlp.tar.gz"
+      },
+      {
+        "name": "yt-dlp_arm64.exe"
+      },
+      {
+        "name": "yt-dlp_linux"
+      },
+      {
+        "name": "yt-dlp_linux.zip"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_linux_armv7l.zip"
+      },
+      {
+        "name": "yt-dlp_macos"
+      },
+      {
+        "name": "yt-dlp_macos.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux"
+      },
+      {
+        "name": "yt-dlp_musllinux.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_win.zip"
+      },
+      {
+        "name": "yt-dlp_win_arm64.zip"
+      },
+      {
+        "name": "yt-dlp_win_x86.zip"
+      },
+      {
+        "name": "yt-dlp_x86.exe"
+      },
+      {
+        "name": "_update_spec"
+      }
+    ]
+  },
+  {
+    "tag_name": "2026.03.03",
+    "assets": [
+      {
+        "name": "SHA2-256SUMS"
+      },
+      {
+        "name": "SHA2-256SUMS.sig"
+      },
+      {
+        "name": "SHA2-512SUMS"
+      },
+      {
+        "name": "SHA2-512SUMS.sig"
+      },
+      {
+        "name": "yt-dlp"
+      },
+      {
+        "name": "yt-dlp.exe"
+      },
+      {
+        "name": "yt-dlp.tar.gz"
+      },
+      {
+        "name": "yt-dlp_arm64.exe"
+      },
+      {
+        "name": "yt-dlp_linux"
+      },
+      {
+        "name": "yt-dlp_linux.zip"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_linux_armv7l.zip"
+      },
+      {
+        "name": "yt-dlp_macos"
+      },
+      {
+        "name": "yt-dlp_macos.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux"
+      },
+      {
+        "name": "yt-dlp_musllinux.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_win.zip"
+      },
+      {
+        "name": "yt-dlp_win_arm64.zip"
+      },
+      {
+        "name": "yt-dlp_win_x86.zip"
+      },
+      {
+        "name": "yt-dlp_x86.exe"
+      },
+      {
+        "name": "_update_spec"
+      }
+    ]
+  },
+  {
+    "tag_name": "2026.02.21",
+    "assets": [
+      {
+        "name": "SHA2-256SUMS"
+      },
+      {
+        "name": "SHA2-256SUMS.sig"
+      },
+      {
+        "name": "SHA2-512SUMS"
+      },
+      {
+        "name": "SHA2-512SUMS.sig"
+      },
+      {
+        "name": "yt-dlp"
+      },
+      {
+        "name": "yt-dlp.exe"
+      },
+      {
+        "name": "yt-dlp.tar.gz"
+      },
+      {
+        "name": "yt-dlp_arm64.exe"
+      },
+      {
+        "name": "yt-dlp_linux"
+      },
+      {
+        "name": "yt-dlp_linux.zip"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_linux_armv7l.zip"
+      },
+      {
+        "name": "yt-dlp_macos"
+      },
+      {
+        "name": "yt-dlp_macos.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux"
+      },
+      {
+        "name": "yt-dlp_musllinux.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_win.zip"
+      },
+      {
+        "name": "yt-dlp_win_arm64.zip"
+      },
+      {
+        "name": "yt-dlp_win_x86.zip"
+      },
+      {
+        "name": "yt-dlp_x86.exe"
+      },
+      {
+        "name": "_update_spec"
+      }
+    ]
+  },
+  {
+    "tag_name": "2026.02.04",
+    "assets": [
+      {
+        "name": "SHA2-256SUMS"
+      },
+      {
+        "name": "SHA2-256SUMS.sig"
+      },
+      {
+        "name": "SHA2-512SUMS"
+      },
+      {
+        "name": "SHA2-512SUMS.sig"
+      },
+      {
+        "name": "yt-dlp"
+      },
+      {
+        "name": "yt-dlp.exe"
+      },
+      {
+        "name": "yt-dlp.tar.gz"
+      },
+      {
+        "name": "yt-dlp_arm64.exe"
+      },
+      {
+        "name": "yt-dlp_linux"
+      },
+      {
+        "name": "yt-dlp_linux.zip"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64"
+      },
+      {
+        "name": "yt-dlp_linux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_linux_armv7l.zip"
+      },
+      {
+        "name": "yt-dlp_macos"
+      },
+      {
+        "name": "yt-dlp_macos.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux"
+      },
+      {
+        "name": "yt-dlp_musllinux.zip"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64"
+      },
+      {
+        "name": "yt-dlp_musllinux_aarch64.zip"
+      },
+      {
+        "name": "yt-dlp_win.zip"
+      },
+      {
+        "name": "yt-dlp_win_arm64.zip"
+      },
+      {
+        "name": "yt-dlp_win_x86.zip"
+      },
+      {
+        "name": "yt-dlp_x86.exe"
+      },
+      {
+        "name": "_update_spec"
+      }
+    ]
+  }
+]

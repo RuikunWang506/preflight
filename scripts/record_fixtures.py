@@ -1,12 +1,17 @@
 """Record the HTTP responses the tests replay, so the tests never use the network.
 
-Run on demand. It uses the network, without any token:
+Run on demand. It uses the network:
 
     uv run python scripts/record_fixtures.py
 
-It runs lookfirst's own fetchers, so the recordings match the requests the
-code really makes. Only the status, a few harmless headers and the bodies
-are saved. Request headers, where a token would be, are never saved.
+It runs lookfirst's own code, so the recordings match the requests the code really makes.
+Only the status, a few harmless headers and the bodies are saved. Request headers, where
+a token would be, are never saved, and bodies that look like they hold a token are
+refused. JSON answers lose their email addresses and keep only what lookfirst reads when
+they're long; downloaded files are kept exactly as published, since the tests check them
+against the registry's hash. A GitHub token (from `gh`) is used only to stay under
+GitHub's rate limits; the identity check still follows its no-token path, the one the
+tests replay.
 """
 
 from __future__ import annotations
@@ -15,22 +20,33 @@ import json
 import os
 import re
 import shutil
+import tempfile
+from collections.abc import Callable
+from datetime import UTC, datetime
 from pathlib import Path
 
 import httpx
 
+from lookfirst import pipeline
 from lookfirst.core import http as lf_http
+from lookfirst.core.http import github_token, make_client
+from lookfirst.identity.check import check_identity
+from lookfirst.identity.github import GitHubData
+from lookfirst.identity.popular_index import load_index
 from lookfirst.pipeline import run_check
 from lookfirst.static.fetch import make_public_transport
+from lookfirst.targets.models import ResolvedTarget, TargetSpec
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "tests" / "fixtures" / "http"
-KEEP_HEADERS = ("content-type", "location", "etag", "last-modified")
+KEEP_HEADERS = ("content-type", "location", "etag", "last-modified", "link")
 SIGNED_HOSTS = ("release-assets.githubusercontent.com", "objects.githubusercontent.com")
 TOKEN_PATTERN = re.compile(rb"(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})")
+EMAIL_KEYS = frozenset({"email", "author_email", "maintainer_email"})
+EMAIL_IN_NAME = re.compile(r"\s*<[^<>@\s]+@[^<>\s]+>")  # npm's "Name <address> (site)"
 
 # Small, stable, permissively licensed targets (see THIRD_PARTY.md).
-CASES: dict[str, list[str]] = {
+CHECKS: dict[str, list[str]] = {
     "github_hello_world": ["octocat/Hello-World"],
     "npm_is_number": ["npm:is-number", "npm:is-number@7.0.0"],
     "pypi_six": ["pypi:six==1.17.0"],
@@ -49,6 +65,37 @@ CASES: dict[str, list[str]] = {
         # Not Claude Code's installer: it isn't open source, so it isn't copied into this repo.
     ],
 }
+
+# The originals the lookalike pairs copy. Only open-source projects, because their README
+# text is recorded (licenses in THIRD_PARTY.md).
+ORIGINALS = ["ollama/ollama", "ggml-org/llama.cpp", "yt-dlp/yt-dlp", "openai/codex"]
+
+# Popular, trusted repos the identity check must never call impersonations (SPEC section 12).
+# Their README text isn't recorded: for an original, lookfirst finds no more-established
+# look-alike, so it never fetches one.
+BENIGN = [
+    "facebook/react",
+    "microsoft/vscode",
+    "torvalds/linux",
+    "python/cpython",
+    "golang/go",
+    "rust-lang/rust",
+    "kubernetes/kubernetes",
+    "pytorch/pytorch",
+    "django/django",
+    "pallets/flask",
+    "expressjs/express",
+    "vercel/next.js",
+    "tailwindlabs/tailwindcss",
+    "home-assistant/core",
+    "denoland/deno",
+    "ohmyzsh/ohmyzsh",
+    "nvm-sh/nvm",
+    "sharkdp/bat",
+    "jqlang/jq",
+    "BurntSushi/ripgrep",
+]
+RECORDED_ON = datetime(2026, 11, 9, tzinfo=UTC)
 
 
 class RecordingTransport(httpx.BaseTransport):
@@ -76,12 +123,20 @@ class RecordingTransport(httpx.BaseTransport):
         self.inner.close()
 
 
-def record(case: str, targets: list[str]) -> None:
+class _NoStarSample(GitHubData):
+    """Follow the no-token path (no GraphQL star sample) even though a token is used."""
+
+    def __init__(
+        self, client: httpx.Client, has_token: bool = False, cache: Path | None = None
+    ) -> None:
+        super().__init__(client, False, cache)
+
+
+def record(case: str, run: Callable[[], None], *, keep_readmes: bool = True) -> None:
     recorder = RecordingTransport()
     lf_http._TRANSPORT = recorder
     try:
-        for raw in targets:
-            run_check(raw, cwd=ROOT)
+        run()
     finally:
         lf_http._TRANSPORT = None
         recorder.close()
@@ -112,12 +167,17 @@ def record(case: str, targets: list[str]) -> None:
             raise SystemExit(
                 f"Refusing to save {entry['url']}: the body looks like it holds a token."
             )
+        if not keep_readmes and entry["url"].endswith("/readme"):
+            raise SystemExit(
+                f"{case} fetched a README ({entry['url']}); its text must not be recorded."
+            )
         name = None
         if body:
             number = len(index)
             if "json" in entry["headers"].get("content-type", ""):
                 name = f"{number:02d}.json"
-                pretty = json.dumps(json.loads(body), indent=2, ensure_ascii=False) + "\n"
+                trimmed = drop_emails(_trim(entry["url"], json.loads(body)))
+                pretty = json.dumps(trimmed, indent=2, ensure_ascii=False) + "\n"
                 (case_dir / name).write_text(pretty, encoding="utf-8")
             else:
                 name = f"{number:02d}.bin"
@@ -129,12 +189,77 @@ def record(case: str, targets: list[str]) -> None:
     print(f"{case}: {len(index)} responses")
 
 
+def drop_emails(data: object) -> object:
+    """The answer without email addresses. npm and PyPI list maintainers' and authors'
+    addresses, and GitHub lists commit authors'; lookfirst never reads them."""
+    if isinstance(data, dict):
+        return {k: drop_emails(v) for k, v in data.items() if k.lower() not in EMAIL_KEYS}
+    if isinstance(data, list):
+        return [drop_emails(v) for v in data]
+    if isinstance(data, str):
+        return EMAIL_IN_NAME.sub("", data)
+    return data
+
+
+def _trim(url: str, data: object) -> object:
+    """Keep only the fields lookfirst reads from release lists, search results and
+    account profiles: the rest is megabytes of asset details, or personal details."""
+    if "/releases" in url and isinstance(data, list):
+        return [
+            {
+                "tag_name": r.get("tag_name"),
+                "assets": [{"name": a.get("name")} for a in r.get("assets", [])],
+            }
+            for r in data
+            if isinstance(r, dict)
+        ]
+    if "/users/" in url and isinstance(data, dict):
+        # Only what the identity check reads: no names, emails or locations.
+        keep = ("login", "type", "created_at", "public_repos", "followers")
+        return {k: data.get(k) for k in keep}
+    if "/search/repositories" in url and isinstance(data, dict):
+        keep = ("full_name", "stargazers_count", "created_at", "default_branch", "fork")
+        items = [{k: i.get(k) for k in keep} for i in data.get("items", []) if isinstance(i, dict)]
+        return {"total_count": data.get("total_count"), "items": items}
+    return data
+
+
+def _originals() -> None:
+    with make_client(token=os.environ.get("GITHUB_TOKEN")) as client:
+        data = _NoStarSample(client, has_token=False)
+        for full in ORIGINALS:
+            data.repo(full)
+            data.readme(full)
+            data.releases(full)
+
+
+def _benign() -> None:
+    with make_client(token=os.environ.get("GITHUB_TOKEN")) as client:
+        data = _NoStarSample(client, has_token=False)
+        for full in BENIGN:
+            meta = data.repo(full)
+            assert meta, full
+            target = ResolvedTarget(
+                TargetSpec(kind="github", raw=full),
+                root=None,
+                resolved=full,
+                metadata={"repo": meta},
+            )
+            check_identity(target, data, load_index(), now=RECORDED_ON)
+
+
 def main() -> None:
-    for var in ("GITHUB_TOKEN", "GH_TOKEN"):
+    token = github_token()
+    for var in ("GH_TOKEN", "LOOKFIRST_NO_GH_TOKEN"):
         os.environ.pop(var, None)
-    os.environ["LOOKFIRST_NO_GH_TOKEN"] = "1"  # noqa: S105 - record without any token
-    for case, targets in CASES.items():
-        record(case, targets)
+    if token:
+        os.environ["GITHUB_TOKEN"] = token  # only ever sent to api.github.com
+    os.environ["LOOKFIRST_CACHE_DIR"] = tempfile.mkdtemp(prefix="lookfirst-record-")  # no 304s
+    pipeline.GitHubData = _NoStarSample  # type: ignore[misc]
+    for case, targets in CHECKS.items():
+        record(case, lambda targets=targets: [run_check(raw, cwd=ROOT) for raw in targets] and None)
+    record("identity_originals", _originals)
+    record("identity_benign", _benign, keep_readmes=False)
 
 
 if __name__ == "__main__":

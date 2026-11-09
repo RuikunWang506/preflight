@@ -7,8 +7,8 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, field
-from urllib.parse import urlsplit
 
+from lookfirst.core.urls import url_host, url_path
 from lookfirst.static.context import RuleContext
 from lookfirst.static.fetch import RemoteReader, RemoteScript
 from lookfirst.static.model import Collector, Origin, Snippet
@@ -332,7 +332,7 @@ def as_download(cmd: Command) -> Download | None:
         outs = [v for o, v in opts if o in ("-o", "--output") and v != "-"]
         remote_name = any(o in ("-O", "--remote-name", "--remote-name-all") for o, _ in opts)
         if remote_name:
-            outs += [basename(urlsplit(u).path) or "index.html" for u in urls if u != DYNAMIC]
+            outs += [basename(url_path(u)) or "index.html" for u in urls if u != DYNAMIC]
         sends = any(o in _CURL_SENDS for o, _ in opts) or any(
             o in ("-X", "--request") and v.upper() in ("POST", "PUT", "PATCH") for o, v in opts
         )
@@ -348,7 +348,7 @@ def as_download(cmd: Command) -> Download | None:
         to_stdout = "-" in doc
         outs = [v for v in doc if v != "-"]
         if not doc:
-            outs += [basename(urlsplit(u).path) or "index.html" for u in urls if u != DYNAMIC]
+            outs += [basename(url_path(u)) or "index.html" for u in urls if u != DYNAMIC]
         sends = any(
             o in ("--post-data", "--post-file", "--body-data", "--body-file") for o, _ in opts
         )
@@ -635,7 +635,7 @@ class ShellAnalyzer:
             if name == "git" and "clone" in args:
                 urls += [a for a in args if a.startswith("http://")]
             for url in urls:
-                if url.startswith("http://") and (urlsplit(url).hostname or "") not in _LOCAL_HOSTS:
+                if url.startswith("http://") and url_host(url) not in _LOCAL_HOSTS:
                     add("install_path.plain_http", **where, data={"what": url[:200]})
 
     @staticmethod
@@ -686,9 +686,7 @@ class ShellAnalyzer:
                         break
             if is_network_send(c):
                 for m in _SECRET_ENV.finditer(c.raw):
-                    hosts = [
-                        urlsplit(u).hostname or "" for u in re.findall(r"https?://[^\s'\"]+", c.raw)
-                    ]
+                    hosts = [url_host(u) for u in re.findall(r"https?://[^\s'\"]+", c.raw)]
                     allowed = _SECRET_HOME.get(m.group(1), ())
                     if hosts and all(
                         any(h == a or h.endswith("." + a) for a in allowed) for h in hosts

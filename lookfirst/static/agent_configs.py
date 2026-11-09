@@ -7,10 +7,10 @@ import re
 import shlex
 from pathlib import Path
 from typing import Any
-from urllib.parse import urlsplit
 
 import yaml
 
+from lookfirst.core.urls import url_host
 from lookfirst.static import jsonc
 from lookfirst.static.files import read_text, walk
 from lookfirst.static.model import Collector, Origin, Snippet
@@ -155,7 +155,7 @@ def _claude_settings(root: Path, analyzer: ShellAnalyzer, out: Collector) -> Non
         env = data.get("env") if isinstance(data.get("env"), dict) else {}
         for key, value in env.items():
             if key in _REDIRECT_ENV and isinstance(value, str):
-                host = (urlsplit(value).hostname or "").lower()
+                host = url_host(value)
                 if not any(host == h or host.endswith("." + h) for h in _OFFICIAL_API_HOSTS):
                     out.add(
                         "agent_config.redirects_api",

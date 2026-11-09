@@ -229,3 +229,28 @@ Found while building M2, and handled:
 - **Claude Code's installer** is allowlisted by address and hash, but its script isn't recorded in the fixtures because it isn't open source.
 - **The registry** moved from `registry/` to `lookfirst/registry/`, so it ships inside the package.
 
+
+## M3 decisions (all accepted as recommended, 9 Nov 2026)
+
+| # | Decision | Outcome |
+| --- | --- | --- |
+| 1 | "Likely impersonation" | A resemblance (lookalike name or copied README) plus a sign of deception (new account or repo, inflated stars), or a lookalike name and a copied README together. Forks need a sign of deception plus something they ship. Don't run with a risky download, a README warning or inflated stars; Caution otherwise. Single signals are medium; README warnings (archive password, turn off antivirus) are high. Revised after the live sweep (below). |
+| 2 | Libraries | None added: lookfirst's own edit distance and exact Jaccard instead of rapidfuzz and datasketch |
+| 3 | Popular-repos list | csv.gz inside the package (`lookfirst/registry/popular.csv.gz`), not Parquet. Built without the trending archive for now |
+| 4 | Star sample | GraphQL, so it needs a token; without one it's listed under "Not checked" |
+| 5 | Lookalike pair owners | Made-up names, each checked not to exist on GitHub |
+| 6 | README text in fixtures | Only the lookalike originals' (open source; licenses in THIRD_PARTY.md). None for the benign set |
+| 7 | `official.yaml` | 10 projects: Ollama, Claude Code, OpenAI Codex CLI, ComfyUI, Open WebUI, yt-dlp, llama.cpp, n8n, MCP reference servers, Stable Diffusion web UI |
+
+Live false-positive sweep, 9 Nov 2026: 50 popular repos (the top 25 and 25 at random from the list), 36 repos named like the official projects (ComfyUI custom nodes, claude-code-router, n8n-mcp, llama-cpp-python), 56 same-name repos for 14 popular names, the 20 most-starred forks on GitHub, 400 READMEs, 27 npm and PyPI packages, 13 real installer one-liners, and 6 full checks from the CLI. After the fixes below, none of these real projects gets Caution or Don't run from the identity check.
+
+Found while building M3, and handled (each now covered by a test):
+
+- **Forks:** 9 of the 20 most-starred forks (koboldcpp, qBittorrent Enhanced Edition, AlexeyAB/darknet, Proton-GE, bolt.diy and others) were Don't run, because shipping their own builds and changing build files counted as two signals. A fork now needs a sign of deception too.
+- **Official SDKs:** packages from an official organization that aren't on the list (`@anthropic-ai/sdk`, `openai`, `mcp`, `gguf`, `n8n-workflow`) would have been told "says it comes from X, but isn't its official package". Now an npm scope or PyPI organization the project owns, or the registry's provenance record of the repo that built it, settles it.
+- **Claude Code's npm package** names no repo, so it wasn't recognized. Official packages are now checked first.
+- **README warnings:** a feature list mentioning "password-protected archives" (awesome-mac) counted as an archive password; now only a line that hands out a password counts. Links to file-sharing sites' home pages, blogs and API docs (public-apis, free-for-dev) no longer count as downloads.
+- **Malformed addresses** such as an unclosed `[` crashed the check: in the identity check and in six places in the M2 static checks. They're now read as having no host.
+- **GitHub's search limit** (10 a minute without a token, 30 with): running out stopped the whole identity check. Now it goes on without the same-name search and lists it under "Not checked".
+- **M2's hidden-instructions check** flagged comfy-cli's official agent skills, which tell agents "do not tell the user their Python was matched", meaning don't make a false claim. "Don't tell the user" now counts only when it hides something ("about this step", "what you did").
+- **Personal details in recordings:** account profiles are trimmed to the account's age and counts, and email addresses are dropped from every recorded answer, including the npm and PyPI answers recorded in M1. A test checks.

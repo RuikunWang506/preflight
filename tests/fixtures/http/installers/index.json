@@ -57,7 +57,7 @@
     "status": 200,
     "headers": {
       "content-type": "text/plain; charset=utf-8",
-      "etag": "W/\"220a69c5c3b9604a015e8854d2918322f85d26e8cf772cdd441fe602e494008a\""
+      "etag": "W/\"220b345eae6ace88db651203a5f7f4ec35e1b12517362b2a60aeb5f00e321e7f\""
     },
     "body": "05.bin"
   },
@@ -88,7 +88,7 @@
     "headers": {
       "content-type": "text/plain;charset=utf-8",
       "etag": "W/\"46d9307a439cd77a804d1daa16b4c756\"",
-      "last-modified": "Thu, 05 Nov 2026 02:54:10 GMT"
+      "last-modified": "Sat, 07 Nov 2026 21:22:45 GMT"
     },
     "body": "08.bin"
   },

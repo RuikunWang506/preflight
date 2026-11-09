@@ -1,0 +1,562 @@
+[
+  {
+    "tag_name": "v0.40.15",
+    "assets": [
+      {
+        "name": "install.ps1"
+      },
+      {
+        "name": "install.sh"
+      },
+      {
+        "name": "ollama-darwin.tgz"
+      },
+      {
+        "name": "Ollama-darwin.zip"
+      },
+      {
+        "name": "ollama-linux-amd64-mlx.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64-rocm.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack5.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack6.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64.tar.zst"
+      },
+      {
+        "name": "ollama-windows-amd64-mlx.zip"
+      },
+      {
+        "name": "ollama-windows-amd64-rocm.zip"
+      },
+      {
+        "name": "ollama-windows-amd64.zip"
+      },
+      {
+        "name": "ollama-windows-arm64.zip"
+      },
+      {
+        "name": "Ollama.dmg"
+      },
+      {
+        "name": "OllamaSetup.exe"
+      },
+      {
+        "name": "sha256sum.txt"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.40.14",
+    "assets": [
+      {
+        "name": "install.ps1"
+      },
+      {
+        "name": "install.sh"
+      },
+      {
+        "name": "ollama-darwin.tgz"
+      },
+      {
+        "name": "Ollama-darwin.zip"
+      },
+      {
+        "name": "ollama-linux-amd64-mlx.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64-rocm.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack5.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack6.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64.tar.zst"
+      },
+      {
+        "name": "ollama-windows-amd64-mlx.zip"
+      },
+      {
+        "name": "ollama-windows-amd64-rocm.zip"
+      },
+      {
+        "name": "ollama-windows-amd64.zip"
+      },
+      {
+        "name": "ollama-windows-arm64.zip"
+      },
+      {
+        "name": "Ollama.dmg"
+      },
+      {
+        "name": "OllamaSetup.exe"
+      },
+      {
+        "name": "sha256sum.txt"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.40.13",
+    "assets": [
+      {
+        "name": "install.ps1"
+      },
+      {
+        "name": "install.sh"
+      },
+      {
+        "name": "ollama-darwin.tgz"
+      },
+      {
+        "name": "Ollama-darwin.zip"
+      },
+      {
+        "name": "ollama-linux-amd64-mlx.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64-rocm.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack5.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack6.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64.tar.zst"
+      },
+      {
+        "name": "ollama-windows-amd64-mlx.zip"
+      },
+      {
+        "name": "ollama-windows-amd64-rocm.zip"
+      },
+      {
+        "name": "ollama-windows-amd64.zip"
+      },
+      {
+        "name": "ollama-windows-arm64.zip"
+      },
+      {
+        "name": "Ollama.dmg"
+      },
+      {
+        "name": "OllamaSetup.exe"
+      },
+      {
+        "name": "sha256sum.txt"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.40.12",
+    "assets": [
+      {
+        "name": "install.ps1"
+      },
+      {
+        "name": "install.sh"
+      },
+      {
+        "name": "ollama-darwin.tgz"
+      },
+      {
+        "name": "Ollama-darwin.zip"
+      },
+      {
+        "name": "ollama-linux-amd64-mlx.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64-rocm.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack5.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack6.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64.tar.zst"
+      },
+      {
+        "name": "ollama-windows-amd64-mlx.zip"
+      },
+      {
+        "name": "ollama-windows-amd64-rocm.zip"
+      },
+      {
+        "name": "ollama-windows-amd64.zip"
+      },
+      {
+        "name": "ollama-windows-arm64.zip"
+      },
+      {
+        "name": "Ollama.dmg"
+      },
+      {
+        "name": "OllamaSetup.exe"
+      },
+      {
+        "name": "sha256sum.txt"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.40.11",
+    "assets": [
+      {
+        "name": "install.ps1"
+      },
+      {
+        "name": "install.sh"
+      },
+      {
+        "name": "ollama-darwin.tgz"
+      },
+      {
+        "name": "Ollama-darwin.zip"
+      },
+      {
+        "name": "ollama-linux-amd64-mlx.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64-rocm.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack5.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack6.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64.tar.zst"
+      },
+      {
+        "name": "ollama-windows-amd64-mlx.zip"
+      },
+      {
+        "name": "ollama-windows-amd64-rocm.zip"
+      },
+      {
+        "name": "ollama-windows-amd64.zip"
+      },
+      {
+        "name": "ollama-windows-arm64.zip"
+      },
+      {
+        "name": "Ollama.dmg"
+      },
+      {
+        "name": "OllamaSetup.exe"
+      },
+      {
+        "name": "sha256sum.txt"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.40.10",
+    "assets": [
+      {
+        "name": "install.ps1"
+      },
+      {
+        "name": "install.sh"
+      },
+      {
+        "name": "ollama-darwin.tgz"
+      },
+      {
+        "name": "Ollama-darwin.zip"
+      },
+      {
+        "name": "ollama-linux-amd64-mlx.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64-rocm.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack5.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack6.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64.tar.zst"
+      },
+      {
+        "name": "ollama-windows-amd64-mlx.zip"
+      },
+      {
+        "name": "ollama-windows-amd64-rocm.zip"
+      },
+      {
+        "name": "ollama-windows-amd64.zip"
+      },
+      {
+        "name": "ollama-windows-arm64.zip"
+      },
+      {
+        "name": "Ollama.dmg"
+      },
+      {
+        "name": "OllamaSetup.exe"
+      },
+      {
+        "name": "sha256sum.txt"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.40.9",
+    "assets": [
+      {
+        "name": "install.ps1"
+      },
+      {
+        "name": "install.sh"
+      },
+      {
+        "name": "ollama-darwin.tgz"
+      },
+      {
+        "name": "Ollama-darwin.zip"
+      },
+      {
+        "name": "ollama-linux-amd64-mlx.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64-rocm.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack5.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack6.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64.tar.zst"
+      },
+      {
+        "name": "ollama-windows-amd64-mlx.zip"
+      },
+      {
+        "name": "ollama-windows-amd64-rocm.zip"
+      },
+      {
+        "name": "ollama-windows-amd64.zip"
+      },
+      {
+        "name": "ollama-windows-arm64.zip"
+      },
+      {
+        "name": "Ollama.dmg"
+      },
+      {
+        "name": "OllamaSetup.exe"
+      },
+      {
+        "name": "sha256sum.txt"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.40.8",
+    "assets": [
+      {
+        "name": "install.ps1"
+      },
+      {
+        "name": "install.sh"
+      },
+      {
+        "name": "ollama-darwin.tgz"
+      },
+      {
+        "name": "Ollama-darwin.zip"
+      },
+      {
+        "name": "ollama-linux-amd64-mlx.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64-rocm.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack5.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack6.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64.tar.zst"
+      },
+      {
+        "name": "ollama-windows-amd64-mlx.zip"
+      },
+      {
+        "name": "ollama-windows-amd64-rocm.zip"
+      },
+      {
+        "name": "ollama-windows-amd64.zip"
+      },
+      {
+        "name": "ollama-windows-arm64.zip"
+      },
+      {
+        "name": "Ollama.dmg"
+      },
+      {
+        "name": "OllamaSetup.exe"
+      },
+      {
+        "name": "sha256sum.txt"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.40.7",
+    "assets": [
+      {
+        "name": "install.ps1"
+      },
+      {
+        "name": "install.sh"
+      },
+      {
+        "name": "ollama-darwin.tgz"
+      },
+      {
+        "name": "Ollama-darwin.zip"
+      },
+      {
+        "name": "ollama-linux-amd64-mlx.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64-rocm.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack5.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack6.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64.tar.zst"
+      },
+      {
+        "name": "ollama-windows-amd64-mlx.zip"
+      },
+      {
+        "name": "ollama-windows-amd64-rocm.zip"
+      },
+      {
+        "name": "ollama-windows-amd64.zip"
+      },
+      {
+        "name": "ollama-windows-arm64.zip"
+      },
+      {
+        "name": "Ollama.dmg"
+      },
+      {
+        "name": "OllamaSetup.exe"
+      },
+      {
+        "name": "sha256sum.txt"
+      }
+    ]
+  },
+  {
+    "tag_name": "v0.40.6",
+    "assets": [
+      {
+        "name": "install.ps1"
+      },
+      {
+        "name": "install.sh"
+      },
+      {
+        "name": "ollama-darwin.tgz"
+      },
+      {
+        "name": "Ollama-darwin.zip"
+      },
+      {
+        "name": "ollama-linux-amd64-mlx.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64-rocm.tar.zst"
+      },
+      {
+        "name": "ollama-linux-amd64.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack5.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64-jetpack6.tar.zst"
+      },
+      {
+        "name": "ollama-linux-arm64.tar.zst"
+      },
+      {
+        "name": "ollama-windows-amd64-mlx.zip"
+      },
+      {
+        "name": "ollama-windows-amd64-rocm.zip"
+      },
+      {
+        "name": "ollama-windows-amd64.zip"
+      },
+      {
+        "name": "ollama-windows-arm64.zip"
+      },
+      {
+        "name": "Ollama.dmg"
+      },
+      {
+        "name": "OllamaSetup.exe"
+      },
+      {
+        "name": "sha256sum.txt"
+      }
+    ]
+  }
+]
