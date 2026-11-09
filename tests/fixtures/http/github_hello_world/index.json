@@ -5,8 +5,8 @@
     "status": 200,
     "headers": {
       "content-type": "application/json; charset=utf-8",
-      "etag": "W/\"d75fa8896c8322b50d172e3c522b82c53b0d4719592497e2319a60408bce3b22\"",
-      "last-modified": "Fri, 06 Nov 2026 16:40:00 GMT"
+      "etag": "W/\"89c50ac2a1273e3f148bf81e727b32df37460871be41832c69afef9cfbaf438a\"",
+      "last-modified": "Mon, 09 Nov 2026 16:37:12 GMT"
     },
     "body": "00.json"
   },
@@ -16,7 +16,7 @@
     "status": 200,
     "headers": {
       "content-type": "application/json; charset=utf-8",
-      "etag": "W/\"e59f37a32ceaedc08c360e7825eb8b23e0d04abf29f4182234b7a6f56433b922\"",
+      "etag": "W/\"0c36dd584d96ef2b5dc7ec8c7e9c17f17f8a4e7d3fdb948e091939e520baeedf\"",
       "last-modified": "Tue, 06 Mar 2012 23:06:50 GMT"
     },
     "body": "01.json"
@@ -40,5 +40,57 @@
       "etag": "W/\"b8d0f4e688c1bbfed7532a3d2e38a2c39f923a2cc9d84603d5ba92906234e0e1\""
     },
     "body": "03.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/search/repositories?q=Hello-World%20in%3Aname&sort=stars&order=desc&per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "link": "<https://api.github.com/search/repositories?q=Hello-World+in%3Aname&sort=stars&order=desc&per_page=10&page=2>; rel=\"next\", <https://api.github.com/search/repositories?q=Hello-World+in%3Aname&sort=stars&order=desc&per_page=10&page=100>; rel=\"last\""
+    },
+    "body": "04.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/leachim6/hello-world/readme",
+    "status": 200,
+    "headers": {
+      "content-type": "application/vnd.github.raw; charset=utf-8",
+      "etag": "\"b7a5de0b42085f8722a1f399edb3911fc273ce76\"",
+      "last-modified": "Mon, 19 Jan 2026 23:10:03 GMT"
+    },
+    "body": "05.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/users/octocat",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"4954fa01c0206e1315ed3bab66c7eea19fd19bab4e4b5208424541156b6fc391\"",
+      "last-modified": "Thu, 22 Oct 2026 11:50:51 GMT"
+    },
+    "body": "06.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/octocat/Hello-World/releases?per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "\"6b38a265519bd425f7d92014045dceee56a6bc2bb2340a294c443d7327abf80b\""
+    },
+    "body": "07.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/leachim6/hello-world/releases?per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "\"6b38a265519bd425f7d92014045dceee56a6bc2bb2340a294c443d7327abf80b\""
+    },
+    "body": "08.json"
   }
 ]

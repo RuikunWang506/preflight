@@ -1,0 +1,105 @@
+# Official sources of popular projects that impersonators copy.
+#
+# lookfirst uses this to answer "is this the real project?":
+# - repos and orgs: the project's real repos. Every repo under an org listed here is the
+#   project's own.
+# - keywords: names that point at the project, used to spot repos, packages and download
+#   sites that look like it. Keep them distinctive: a common word would cause false alarms.
+# - domains: the project's own sites (subdomains count too).
+# - packages: its official npm and PyPI packages, and the npm scopes and PyPI organizations
+#   it publishes under (every package in them is the project's own).
+# - installers: the official one-line install addresses.
+#
+# Add your project by pull request. Every entry must match what the project's own README
+# or website says. Checked against GitHub, npm and PyPI on 9 Nov 2026.
+
+projects:
+  - name: Ollama
+    repos: [ollama/ollama]
+    orgs: [ollama]
+    keywords: [ollama]
+    domains: [ollama.com, ollama.ai]
+    packages:
+      npm: [ollama]
+      pypi: [ollama]
+    installers: [https://ollama.com/install.sh]
+
+  - name: Claude Code
+    repos: [anthropics/claude-code]
+    orgs: [anthropics]
+    keywords: [claude-code, claudecode]
+    domains: [claude.ai, claude.com, anthropic.com]
+    packages:
+      npm: ["@anthropic-ai/claude-code"]
+      npm_scopes: ["@anthropic-ai"]
+      pypi_orgs: [Anthropic]
+    installers: [https://claude.ai/install.sh]
+
+  - name: OpenAI Codex CLI
+    repos: [openai/codex]
+    orgs: [openai]
+    keywords: [openai-codex, codex-cli]
+    domains: [openai.com, chatgpt.com]
+    packages:
+      npm: ["@openai/codex"]
+      npm_scopes: ["@openai"]
+      pypi_orgs: [openai]
+
+  - name: ComfyUI
+    repos: [Comfy-Org/ComfyUI, comfyanonymous/ComfyUI]
+    orgs: [Comfy-Org]
+    keywords: [comfyui]
+    domains: [comfy.org]
+    packages:
+      pypi: [comfy-cli]
+      pypi_orgs: [Comfy-Org]
+
+  - name: Open WebUI
+    repos: [open-webui/open-webui]
+    orgs: [open-webui]
+    keywords: [open-webui, openwebui]
+    domains: [openwebui.com]
+    packages:
+      pypi: [open-webui]
+
+  - name: yt-dlp
+    repos: [yt-dlp/yt-dlp]
+    orgs: [yt-dlp]
+    keywords: [yt-dlp, ytdlp]
+    domains: []
+    packages:
+      pypi: [yt-dlp]
+      pypi_orgs: [yt-dlp]
+
+  - name: llama.cpp
+    repos: [ggml-org/llama.cpp]
+    orgs: [ggml-org]
+    keywords: [llama.cpp, llama-cpp, llamacpp]
+    domains: [ggml.ai, llama.app]
+    packages:
+      pypi: [gguf]  # published from gguf-py/ in the main repo
+
+  - name: n8n
+    repos: [n8n-io/n8n]
+    orgs: [n8n-io]
+    keywords: [n8n]
+    domains: [n8n.io, n8n.cloud]
+    packages:
+      npm: [n8n]
+      npm_scopes: ["@n8n"]
+
+  - name: MCP reference servers
+    repos: [modelcontextprotocol/servers]
+    orgs: [modelcontextprotocol]
+    keywords: [modelcontextprotocol]
+    domains: [modelcontextprotocol.io]
+    packages:
+      npm_scopes: ["@modelcontextprotocol"]
+      pypi: [mcp-server-fetch, mcp-server-git, mcp-server-time]
+
+  - name: Stable Diffusion web UI
+    repos: [AUTOMATIC1111/stable-diffusion-webui]
+    orgs: [AUTOMATIC1111]
+    keywords: [stable-diffusion-webui, automatic1111]
+    domains: []
+    packages: {}

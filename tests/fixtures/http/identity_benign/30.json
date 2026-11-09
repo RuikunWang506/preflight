@@ -1,0 +1,75 @@
+{
+  "total_count": 38673,
+  "items": [
+    {
+      "full_name": "denoland/deno",
+      "stargazers_count": 108931,
+      "created_at": "2018-05-15T01:34:26Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "lucidrains/denoising-diffusion-pytorch",
+      "stargazers_count": 10725,
+      "created_at": "2020-08-26T02:22:10Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "denolib/awesome-deno",
+      "stargazers_count": 4416,
+      "created_at": "2019-01-02T06:30:58Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "wenbihan/reproducible-image-denoising-state-of-the-art",
+      "stargazers_count": 2516,
+      "created_at": "2017-12-30T21:22:07Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "zoubohao/DenoisingDiffusionProbabilityModel-ddpm-",
+      "stargazers_count": 2191,
+      "created_at": "2022-05-25T02:34:13Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "eveningkid/denodb",
+      "stargazers_count": 1915,
+      "created_at": "2020-05-17T13:31:05Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "facebookresearch/denoiser",
+      "stargazers_count": 1898,
+      "created_at": "2020-08-31T14:06:29Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "webview/webview_deno",
+      "stargazers_count": 1590,
+      "created_at": "2020-03-05T19:52:18Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "denoland/deno_lint",
+      "stargazers_count": 1586,
+      "created_at": "2020-03-28T12:31:24Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "denoland/vscode_deno",
+      "stargazers_count": 1548,
+      "created_at": "2020-05-07T16:10:02Z",
+      "default_branch": "main",
+      "fork": false
+    }
+  ]
+}

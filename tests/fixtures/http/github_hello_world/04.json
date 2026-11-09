@@ -1,0 +1,75 @@
+{
+  "total_count": 1819598,
+  "items": [
+    {
+      "full_name": "leachim6/hello-world",
+      "stargazers_count": 12038,
+      "created_at": "2008-07-15T00:15:08Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "octocat/Hello-World",
+      "stargazers_count": 3927,
+      "created_at": "2011-01-26T19:01:12Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "mTvare6/hello-world.rs",
+      "stargazers_count": 3580,
+      "created_at": "2021-08-13T05:57:31Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "NanowarOfSteel/HelloWorld",
+      "stargazers_count": 2016,
+      "created_at": "2024-10-29T09:25:30Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "Aniket965/Hello-world",
+      "stargazers_count": 1431,
+      "created_at": "2018-10-03T15:00:19Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "bigdongdongCLUB/hello-world",
+      "stargazers_count": 762,
+      "created_at": "2018-11-16T11:56:19Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "blackbird71SR/Hello-World",
+      "stargazers_count": 668,
+      "created_at": "2018-10-02T08:44:54Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "hello-world-1989/cn-news",
+      "stargazers_count": 652,
+      "created_at": "2023-03-25T03:36:41Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "gatsbyjs/gatsby-starter-hello-world",
+      "stargazers_count": 640,
+      "created_at": "2017-07-26T19:46:18Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "Azure-Samples/nodejs-docs-hello-world",
+      "stargazers_count": 588,
+      "created_at": "2017-03-16T00:04:27Z",
+      "default_branch": "main",
+      "fork": false
+    }
+  ]
+}

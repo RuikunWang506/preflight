@@ -1,0 +1,75 @@
+{
+  "total_count": 669,
+  "items": [
+    {
+      "full_name": "ohmyzsh/ohmyzsh",
+      "stargazers_count": 190384,
+      "created_at": "2009-08-28T18:15:37Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "zakaziko99/agnosterzak-ohmyzsh-theme",
+      "stargazers_count": 405,
+      "created_at": "2016-02-28T12:45:35Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "ChesterYue/ohmyzsh-theme-passion",
+      "stargazers_count": 361,
+      "created_at": "2020-04-22T07:36:42Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "ohmyzsh/wiki",
+      "stargazers_count": 235,
+      "created_at": "2022-04-12T11:30:07Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "pugengineer/iTerm2-ohmyzsh-powerlevel9k",
+      "stargazers_count": 95,
+      "created_at": "2019-03-02T18:50:32Z",
+      "default_branch": "master",
+      "fork": false
+    },
+    {
+      "full_name": "Pilaton/OhMyZsh-full-autoupdate",
+      "stargazers_count": 95,
+      "created_at": "2021-12-15T00:36:44Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "robbyrussell/herdr-ohmyzsh",
+      "stargazers_count": 86,
+      "created_at": "2026-09-08T04:23:18Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "kirumipat/ZSH-OHMYZSH-POWERLEVEL10K-EXA",
+      "stargazers_count": 63,
+      "created_at": "2022-08-15T16:30:04Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "ohmyzsh/ohmyzsh-bot",
+      "stargazers_count": 46,
+      "created_at": "2019-09-06T13:22:49Z",
+      "default_branch": "main",
+      "fork": false
+    },
+    {
+      "full_name": "mattstauffer/ohmyzsh-dotfiles",
+      "stargazers_count": 42,
+      "created_at": "2013-11-07T15:40:33Z",
+      "default_branch": "master",
+      "fork": false
+    }
+  ]
+}

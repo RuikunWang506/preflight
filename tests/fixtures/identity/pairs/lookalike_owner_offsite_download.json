@@ -1,0 +1,42 @@
+{
+  "description": "llama.cpp under an owner spelled with a zero, pointing to a file-sharing download",
+  "target": "ggml-0rg/llama.cpp",
+  "repo": {
+    "created_at": "2026-11-01T10:00:00Z",
+    "stargazers_count": 12,
+    "fork": false,
+    "default_branch": "master"
+  },
+  "owner": {
+    "created_at": "2026-10-28T10:00:00Z",
+    "public_repos": 3,
+    "followers": 1
+  },
+  "readme": {
+    "copy_of": "ggml-org/llama.cpp",
+    "append": "\n## Prebuilt binaries\n\nDownload: https://www.mediafire.com/file/a1b2c3/llama-cpp-win.zip/file\n"
+  },
+  "commits": 1,
+  "releases": [],
+  "search": [
+    {
+      "full_name": "ggml-0rg/llama.cpp",
+      "stargazers_count": 12,
+      "created_at": "2026-11-01T10:00:00Z",
+      "default_branch": "master"
+    }
+  ],
+  "expect": {
+    "status": "likely_impersonation",
+    "original": "ggml-org/llama.cpp",
+    "severity": "critical",
+    "findings": [
+      "identity.likely_impersonation",
+      "identity.name_lookalike",
+      "identity.readme_copy",
+      "identity.new_account",
+      "identity.young_repo",
+      "identity.offsite_download"
+    ]
+  }
+}

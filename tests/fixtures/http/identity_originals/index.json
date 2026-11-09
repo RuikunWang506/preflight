@@ -1,0 +1,134 @@
+[
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/ollama/ollama",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"39068d9e8360c46ede399f96f13c78025cb0b52c30e371cf2ef1a9670342ce35\"",
+      "last-modified": "Mon, 09 Nov 2026 16:57:49 GMT"
+    },
+    "body": "00.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/ollama/ollama/readme",
+    "status": 200,
+    "headers": {
+      "content-type": "application/vnd.github.raw; charset=utf-8",
+      "etag": "\"2a7dd787dc04fad1536797c7a64f9c3d85fa0782\"",
+      "last-modified": "Sun, 08 Nov 2026 00:36:53 GMT"
+    },
+    "body": "01.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/ollama/ollama/releases?per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"13daccda199de298d41a317f1d15b2f3d10034762679fc30299c498c001b706e\"",
+      "link": "<https://api.github.com/repositories/658928958/releases?per_page=10&page=2>; rel=\"next\", <https://api.github.com/repositories/658928958/releases?per_page=10&page=28>; rel=\"last\""
+    },
+    "body": "02.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/ggml-org/llama.cpp",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"07fdc1ca8edca3e348b1221b76e826f2eb849ea6f7195862a2b1eeefa2f1daef\"",
+      "last-modified": "Mon, 09 Nov 2026 16:52:40 GMT"
+    },
+    "body": "03.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/ggml-org/llama.cpp/readme",
+    "status": 200,
+    "headers": {
+      "content-type": "application/vnd.github.raw; charset=utf-8",
+      "etag": "\"a72afcae664ae5217bfac8959582ea4b8e436a89\"",
+      "last-modified": "Mon, 09 Nov 2026 13:48:32 GMT"
+    },
+    "body": "04.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/ggml-org/llama.cpp/releases?per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"ecd83bf392be466b9745706ea5f5140e2c32fb868d3bfe81a7deb06feee92c7a\"",
+      "link": "<https://api.github.com/repositories/612354784/releases?per_page=10&page=2>; rel=\"next\", <https://api.github.com/repositories/612354784/releases?per_page=10&page=805>; rel=\"last\""
+    },
+    "body": "05.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/yt-dlp/yt-dlp",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"1ddad967eb69df76d3d9f8e4be9f67f60907d1d5e2e638f32f6fe5770f23015e\"",
+      "last-modified": "Mon, 09 Nov 2026 16:57:01 GMT"
+    },
+    "body": "06.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/yt-dlp/yt-dlp/readme",
+    "status": 200,
+    "headers": {
+      "content-type": "application/vnd.github.raw; charset=utf-8",
+      "etag": "\"750fae655ea0d5221bf49901508deb44681f3db0\"",
+      "last-modified": "Wed, 04 Nov 2026 07:16:26 GMT"
+    },
+    "body": "07.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/yt-dlp/yt-dlp/releases?per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"129d9b2053b85694a3c1a3bec682cfc31316e83a67d74eabe86f5bd2bcbf0249\"",
+      "link": "<https://api.github.com/repositories/307260205/releases?per_page=10&page=2>; rel=\"next\", <https://api.github.com/repositories/307260205/releases?per_page=10&page=14>; rel=\"last\""
+    },
+    "body": "08.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/openai/codex",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"fe1a92c50476811b54bde0875d434c73ea710bb33eab0f39818541e95da6f44d\"",
+      "last-modified": "Mon, 09 Nov 2026 16:55:55 GMT"
+    },
+    "body": "09.json"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/openai/codex/readme",
+    "status": 200,
+    "headers": {
+      "content-type": "application/vnd.github.raw; charset=utf-8",
+      "etag": "\"06b02fced7db972084bf0188cb03f60375b51c1c\"",
+      "last-modified": "Mon, 09 Nov 2026 16:37:22 GMT"
+    },
+    "body": "10.bin"
+  },
+  {
+    "method": "GET",
+    "url": "https://api.github.com/repos/openai/codex/releases?per_page=10",
+    "status": 200,
+    "headers": {
+      "content-type": "application/json; charset=utf-8",
+      "etag": "W/\"47431efc85542cfee5394ed44a7e93579db2ffce26cbcc14050b0cad61e20b23\"",
+      "link": "<https://api.github.com/repositories/965415649/releases?per_page=10&page=2>; rel=\"next\", <https://api.github.com/repositories/965415649/releases?per_page=10&page=128>; rel=\"last\""
+    },
+    "body": "11.json"
+  }
+]
