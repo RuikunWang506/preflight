@@ -15,6 +15,7 @@ from lookfirst.core.textsafe import one_line, visible
 from lookfirst.verdict.describe import (
     SKELETON_NOTE,
     Segment,
+    describe_identity,
     describe_target,
     evidence_notes,
     headline_text,
@@ -92,6 +93,17 @@ def render_terminal(report: Report, console: Console) -> None:
     facts.add_column(style="dim", no_wrap=True)
     facts.add_column()
     facts.add_row("Target", _segments(describe_target(report.target)))
+    identity = describe_identity(report)
+    if identity is not None:
+        style = (
+            "bold red"
+            if report.identity and report.identity.status == "likely_impersonation"
+            else None
+        )
+        row = _segments(identity)
+        if style:
+            row.stylize(style)
+        facts.add_row("Identity", row)
     if report.target.source_repo:
         facts.add_row(
             "Source repo",

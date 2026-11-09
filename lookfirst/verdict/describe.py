@@ -108,3 +108,19 @@ def describe_target(target: Target) -> list[Segment]:
             ("text", ")"),
         ]
     return [("name", one_line(raw, 120))]
+
+
+def describe_identity(report: Report) -> list[Segment] | None:
+    """One line on whether this is the real project, or None if that wasn't checked."""
+    identity = report.identity
+    if identity is None:
+        return None
+    original = one_line(identity.original or "", 140)
+    if identity.status == "original":
+        return [("text", "the original project")]
+    if identity.status == "fork_benign":
+        return [("text", "a fork of "), ("name", original)]
+    if identity.status == "likely_impersonation":
+        sure = round(identity.confidence * 100)
+        return [("text", "looks like a copy of "), ("name", original), ("text", f" ({sure}% sure)")]
+    return [("text", "not a copy of a project lookfirst knows")]
