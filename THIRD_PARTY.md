@@ -73,7 +73,7 @@ M3 (the identity check) added no libraries: name distance and README similarity 
 
 ## Test fixtures
 
-Recorded HTTP responses in `tests/fixtures/http/`, refreshed by `scripts/record_fixtures.py`. They include these small public archives:
+Recorded HTTP responses in `tests/fixtures/http/`, refreshed by `scripts/record_fixtures.py`. Email addresses are dropped from the recorded registry and GitHub answers (`tests/test_recordings.py` checks). Downloaded files are kept exactly as published, because the tests check them against the registry's hash, so six's archive still holds its author's address, as it does on PyPI. They include these small public archives:
 
 | What | License |
 | --- | --- |
@@ -81,7 +81,7 @@ Recorded HTTP responses in `tests/fixtures/http/`, refreshed by `scripts/record_
 | is-number 7.0.0 (npm) | MIT, © Jon Schlinkert |
 | six 1.17.0 (PyPI) | MIT, © Benjamin Peterson |
 
-The identity check's recordings (`tests/fixtures/http/identity_originals/`, `identity_benign/` and the GitHub answers in the cases above), recorded on 9 Nov 2026. Account profiles are trimmed to the account's age and counts, so no names, emails or locations are kept.
+The identity check's recordings (`tests/fixtures/http/identity_originals/`, `identity_benign/` and the GitHub answers in the cases above), recorded on 9 Nov 2026. Account profiles are trimmed to the account's age and counts, so no names or locations are kept.
 
 | What | License |
 | --- | --- |
