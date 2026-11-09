@@ -53,7 +53,7 @@ macOS VM dry runs (v0.2), Windows, browser extensions, Mac app bundles, a web ve
 
 - Python 3.12, uv, Typer (CLI), httpx, pydantic (findings schema), rich (terminal output)
 - tree-sitter-bash (MIT) for shell parsing, plus ShellCheck when installed. Not bashlex: it's GPL-3.0 and failed on all 10 real installers we tried. Mark parse-error regions as "couldn't fully read"; never skip them silently.
-- rapidfuzz for name distance; MinHash over word shingles for README similarity (datasketch, MIT)
+- Name distance and README similarity are lookfirst's own code (edit distance with look-alike letters folded; exact Jaccard over 5-word shingles), so no extra libraries
 - docker-py against Docker Desktop or OrbStack; mitmproxy as a container image (`mitmproxy/mitmproxy`, pinned by digest; not a Python dependency); strace inside the sandbox image
 - the official MCP Python SDK, v2: `mcp>=2.3,<3`, `from mcp.server import MCPServer` (FastMCP was renamed in v2)
 - License: Apache-2.0
@@ -65,15 +65,17 @@ macOS VM dry runs (v0.2), Windows, browser extensions, Mac app bundles, a web ve
 lookfirst/
   cli.py
   pipeline.py   one check from start to finish: target, checks, verdict
-  core/         http.py (httpx, size caps, host checks, token only to api.github.com; ETag cache at M3)  config.py  errors.py
-                archive.py (safe unpacking)  textsafe.py (escape untrusted text)
+  core/         http.py (httpx, size caps, host checks, token only to api.github.com)  config.py  errors.py
+                archive.py (safe unpacking)  textsafe.py (escape untrusted text)  urls.py (reads addresses without crashing)
   targets/      base.py (parse and fetch)  models.py  github.py  local.py  oneliner.py  packages.py
-  identity/     popular_index.py  lookalike.py  readme_sim.py  stargazers.py  official.py  releases.py
+  identity/     check.py (finds the original, combines the signals)  names.py  readme_sim.py  official.py
+                popular_index.py  github.py (GitHub API reads, ETag cache)  provenance.py (which repo built a package)
   static/       checks.py (runs the three static checks)  rules_catalog.py (all rule wording)  model.py (finding collector)
                 shell_parse.py (tree-sitter)  shell_rules.py (rules + follows downloads)  fetch.py (safe remote reader)
                 install_paths.py  readme.py  code_rules.py (setup.py via ast; JavaScript patterns)  autorun.py  jsonc.py
                 agent_configs.py  injection.py  context.py (the project's own sites)  files.py (reads without following links)
-  registry/     installers.yaml (allowlisted installers + sha256 last seen)  installers.py; official.yaml at M3.
+  registry/     installers.yaml (allowlisted installers + sha256 last seen)  installers.py
+                official.yaml (official repos, sites and packages)  popular.csv.gz (popular repos, generated)
                 Inside the package, so it ships with `pip install`. Community-maintained: edit by pull request.
   scanners/     base.py  osv.py  guarddog.py
   sandbox/      Dockerfile  runner.py  honeytokens.py  proxy.py  mitm_addon.py  trace_parse.py
@@ -82,8 +84,8 @@ lookfirst/
   hook.py       Claude Code PreToolUse handler; the fast path imports only the standard library (under 50 ms)
 plugin/         .claude-plugin/plugin.json  hooks/hooks.json  skills/<name>/SKILL.md  .mcp.json
 .claude-plugin/ marketplace.json (makes this repo installable as a plugin marketplace)
-scripts/        record_fixtures.py  export_schema.py
-data/           popular repos index (generated, gitignored except a small seed)
+scripts/        record_fixtures.py  export_schema.py  build_popular_index.py
+data/           local data, gitignored except data/seed/ (the trending archive goes there when added)
 tests/          conftest.py (no network, no real tokens, host canary)  helpers.py
                 fixtures/ (harmless fakes, recorded API responses, lookalike pairs, injection README)
 docs/           SPEC.md  KICKOFF.md  THREAT_MODEL.md  PLAN-v0.1.md  schema/report-1.0.json (generated)
@@ -99,7 +101,9 @@ Keep this section accurate whenever scripts change.
 - sandbox image build: (fill in at M5)
 - test: `uv run pytest` (never uses the network; sandbox tests are marked `sandbox` and run on Linux CI from M5)
 - lint: `uv run ruff check . && uv run ruff format --check .`
-- refresh the recorded HTTP fixtures (uses the network, no token): `uv run python scripts/record_fixtures.py`
+- refresh the recorded HTTP fixtures (uses the network; a `gh` token, if any, only raises the rate limit): `uv run python scripts/record_fixtures.py`
+- rebuild the popular-repos list that ships with lookfirst (needs a GitHub token, about 3 minutes): `uv run python scripts/build_popular_index.py`
+- refresh your own copy of that list: `uv run lookfirst update-index` (needs a GitHub token; saved in `~/.cache/lookfirst/`)
 - regenerate the published JSON schema after changing `lookfirst/verdict/schema.py`: `uv run python scripts/export_schema.py`
 
 ## Definition of done for v0.1

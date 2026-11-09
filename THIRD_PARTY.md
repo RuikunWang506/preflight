@@ -63,10 +63,10 @@ Never bundled or vendored. If one isn't installed, the report says so and shows 
 
 ## Planned (record the exact version when it's added)
 
+M3 (the identity check) added no libraries: name distance and README similarity are lookfirst's own code, so rapidfuzz and datasketch are no longer planned.
+
 | Package or image | License | For |
 | --- | --- | --- |
-| rapidfuzz | MIT | Name distance (M3) |
-| datasketch | MIT | README similarity (M3) |
 | docker (docker-py) | Apache-2.0 | Sandbox (M5) |
 | mitmproxy/mitmproxy image | MIT | Sandbox network proxy (M5) |
 | mcp (official MCP Python SDK) | MIT | MCP server (M6) |
@@ -80,6 +80,19 @@ Recorded HTTP responses in `tests/fixtures/http/`, refreshed by `scripts/record_
 | octocat/Hello-World at 7fd1a60 (GitHub's sample repo: one README) | No license file; a one-line sample README |
 | is-number 7.0.0 (npm) | MIT, © Jon Schlinkert |
 | six 1.17.0 (PyPI) | MIT, © Benjamin Peterson |
+
+The identity check's recordings (`tests/fixtures/http/identity_originals/`, `identity_benign/` and the GitHub answers in the cases above), recorded on 9 Nov 2026. Account profiles are trimmed to the account's age and counts, so no names, emails or locations are kept.
+
+| What | License |
+| --- | --- |
+| README of ollama/ollama | MIT, © Ollama |
+| README of ggml-org/llama.cpp | MIT, © 2023-2026 The ggml authors |
+| README of yt-dlp/yt-dlp | Unlicense (public domain) |
+| README of openai/codex | Apache-2.0, © 2025 OpenAI (its NOTICE file) |
+| README of leachim6/hello-world | MIT, © 2018-2022 Mike Donaghy |
+| Repo details, release file names and search results for these and the 20 benign repos | Facts from GitHub's API; no README text is kept for the benign repos |
+
+The lookalike pairs in `tests/fixtures/identity/pairs/` are made up for lookfirst (Apache-2.0). Their owner names were checked not to exist on GitHub. Where a pair copies an original's README, it reuses the recorded text above and appends its own lines.
 
 The real installer scripts in `tests/fixtures/http/installers/`, recorded on 6 Nov 2026 to check that well-known installers pass. Only open-source ones are copied in; Claude Code's installer is allowlisted by address and hash but not recorded, because it isn't open source.
 
@@ -101,4 +114,6 @@ The install-path fixtures in `tests/fixtures/install/` are written from scratch 
 
 | Dataset | License | For |
 | --- | --- | --- |
-| `trending_repos_tagged.csv.gz` (12-year GitHub Trending archive) | The user's own | Popular-repos index seed (M3) |
+| `lookfirst/registry/popular.csv.gz`: names, star counts and creation dates of 5,941 repos, from GitHub's search API on 9 Nov 2026 | Facts from GitHub's API (GitHub's terms of service apply to the API) | Popular-repos list for the identity check (M3). Rebuilt with `scripts/build_popular_index.py`; users refresh their copy with `lookfirst update-index`. |
+| `lookfirst/registry/official.yaml` | Written for lookfirst (Apache-2.0) from each project's own README, website and registry pages | Official repos, sites and packages of 10 projects (M3) |
+| `trending_repos_tagged.csv.gz` (12-year GitHub Trending archive) | The user's own | Popular-repos list seed. Not added yet: M3 started without it, and it can be merged in later. |

@@ -28,27 +28,31 @@ People and AI agents now run code from strangers all day: a repo that trended th
 **Candidate originals**, in this order:
 
 1. `lookfirst/registry/official.yaml`: canonical repos, domains and package names for popular projects. It's community-maintained, and contributors add entries by pull request.
-2. The popular-repos index (`data/popular.parquet`).
-   - Seed it from the user's 12-year GitHub Trending archive: `trending_repos_tagged.csv.gz` (76,892 repos) in the ideas package.
-   - Add the GitHub search API's top repos by stars. Refresh weekly.
+2. The popular-repos list (`lookfirst/registry/popular.csv.gz`, shipped with lookfirst; `lookfirst update-index` saves a fresher copy in `~/.cache/lookfirst/`).
+   - Built from the GitHub search API: the top repos by stars, plus fast risers from the last 90 days. Refresh weekly.
+   - Seed it from the user's 12-year GitHub Trending archive: `trending_repos_tagged.csv.gz` (76,892 repos) in the ideas package. Not added yet: M3 started without it.
 3. A live GitHub search for repos with the same name, sorted by stars.
 4. A package registry's `repository` field, when the README names an npm or PyPI package.
+
+A fork is compared with its parent first, then an official project, then the most-starred lookalike that is clearly more established than the target (at least 3 times its stars, and older).
 
 **Signals** (each becomes a finding with evidence):
 
 | Signal | Rule of thumb (tune on fixtures) |
 | --- | --- |
 | Name | Same repo name under a different owner; edit distance of 2 or less; homoglyphs (`rn`/`m`, `l`/`I`/`1`, `0`/`o`); suffixes such as `-pro`, `-free`, `-official`, `-download`, `-crack`, `-fixed`; an owner name that looks like the original owner's |
-| README copy | MinHash Jaccard of 5-word shingles against the candidate's README; 0.6 or above = substantially copied |
+| README copy | Jaccard of 5-word shingles against the candidate's README (exact; READMEs are small): 0.6 or above, or 80% of the target's shingles found in the candidate's with at least 40 shared = substantially copied |
 | Age and history | Repo or account under 30 days old while the original is older than 6 months; 3 commits or fewer; a single contributor; history unrelated to the original's |
 | Stars | Star count implausible for age; sample up to 100 stargazers and flag when over 50% are accounts under 30 days old or with no repos and no followers |
 | Releases | Release assets (zip, 7z, rar, exe, dmg, pkg, msi) that the original doesn't ship; README asks for an archive password; download links outside GitHub (file hosts, paste sites, chat CDNs); README asks you to disable Gatekeeper or antivirus |
-| Official sources | The original's README or `official.yaml` lists official sources, and the target isn't one of them |
+| Official sources | The original's README or `official.yaml` lists official sources, and the target isn't one of them. A package that names an official repo counts as official only if it's on the list, under an npm scope or PyPI organization the project owns, or the registry's provenance record (npm provenance, PyPI attestations) says one of the project's repos built it |
 | Forks | A fork whose release assets or install scripts differ from the parent's |
+
+**Combining** (calibrated on live repos, 9 Nov 2026): "likely impersonation" needs a resemblance (a lookalike name or a copied README) plus a sign of deception (a new account or repo, or inflated stars), or a lookalike name and a copied README together. A fork resembles its parent by nature, and established forks routinely ship their own builds and change their build files (9 of the 20 most-starred forks do), so a fork needs a sign of deception and something it ships (an extra download or a changed install). It's Don't run when a risky download, a README warning (archive password, turn off antivirus) or inflated stars come with it, and Caution otherwise. A name in common, or downloads compared with a project it isn't copying, is dropped as noise.
 
 **Output:** one of `original`, `fork (benign)`, `unrelated`, or `likely impersonation of <owner/repo>` with a confidence and the top three signals.
 
-**Budget:** unauthenticated GitHub allows 60 requests an hour, so v0.1 asks for an optional read-only token (`GITHUB_TOKEN` or `gh auth token`) and caches responses with ETags in `~/.cache/lookfirst/`.
+**Budget:** unauthenticated GitHub allows 60 requests an hour, so v0.1 asks for an optional read-only token (`GITHUB_TOKEN` or `gh auth token`) and caches responses with ETags in `~/.cache/lookfirst/`. Search has its own, smaller limit (10 a minute without a token, 30 with); when it's used up, the check goes on with the official and popular lists and lists the skipped search under "Not checked".
 
 ## 5. Install-path check (static, nothing runs)
 

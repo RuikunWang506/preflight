@@ -181,7 +181,7 @@ class RemoteReader:
             except httpx.HTTPError as exc:
                 return RemoteScript(url, "failed", reason=f"download failed ({type(exc).__name__})")
             try:
-                if response.is_redirect:
+                if response.has_redirect_location:
                     location = response.headers.get("location", "")
                     if not location:
                         return RemoteScript(

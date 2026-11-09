@@ -253,6 +253,126 @@ RULES: dict[str, Rule] = {
             "Read the lines listed below yourself.",
         ),
     ),
+    # Identity rules: {original}, {project}, {percent}, {days} and {commits} are filled in
+    # with GitHub names and numbers, never with text from the target.
+    **_rules(
+        CheckKind.identity,
+        (
+            "likely_impersonation",
+            C,
+            "Matches impersonation patterns: looks like a copy of {original}",
+            "Fake copies of popular projects are a common way to spread malware. This one "
+            "resembles {original} in several of the ways copies do, listed below.",
+            "Use the original, {original}, unless you know why this copy exists.",
+        ),
+        (
+            "possible_impersonation",
+            H,
+            "May be a copy of {original}",
+            "It resembles {original} in more than one of the ways fake copies do, though "
+            "nothing here is dangerous on its own.",
+            "Compare it with {original}, and prefer the original.",
+        ),
+        (
+            "archive_password",
+            H,
+            "Gives a password for its download",
+            "Password-protected archives hide what's inside from antivirus scans, which is "
+            "why malware campaigns use them.",
+            "Don't download or open it.",
+        ),
+        (
+            "disable_protection",
+            H,
+            "Tells you to turn off your antivirus or Gatekeeper",
+            "Real software doesn't ask you to turn off your computer's protection to install it.",
+            "Don't follow these instructions, and don't run it.",
+        ),
+        (
+            "claims_official_repo",
+            H,
+            "Says it comes from {original}, but isn't its official package",
+            "The package names {original} as its source, but it isn't one of that "
+            "project's official packages.",
+            "Install {project}'s official package instead.",
+        ),
+        (
+            "lookalike_installer_site",
+            H,
+            "Looks like {project}'s installer, but isn't from its official site",
+            "The download address uses {project}'s name, but it isn't one of {project}'s "
+            "official sites. Fake installers copy names this way.",
+            "Get {project}'s installer from its official site.",
+        ),
+        (
+            "name_lookalike",
+            M,
+            "Its name looks like {original}'s",
+            "Copies of popular projects use the same or a look-alike name, so people find "
+            "them instead of the original.",
+            "Check this is the project you meant.",
+        ),
+        (
+            "readme_copy",
+            M,
+            "Its README is {percent}% the same as {original}'s",
+            "Impersonation campaigns copy a popular project's README into a new repo.",
+            "Use the original repo unless you know why this copy exists.",
+        ),
+        (
+            "new_account",
+            M,
+            "Made by an account that's {days} days old",
+            "Fake copies are usually posted from brand-new accounts, while the project they "
+            "copy is years old.",
+            "Prefer the original project's own account.",
+        ),
+        (
+            "young_repo",
+            M,
+            "Created {days} days ago, with {commits} commits",
+            "Real projects build up history. Copies are usually uploaded in a few commits.",
+            "Look at the project's history before you trust it.",
+        ),
+        (
+            "suspicious_stars",
+            M,
+            "Its star count looks inflated",
+            "Stars from brand-new or empty accounts, or far more than a project this young "
+            "usually gets, are signs someone inflated it to look popular.",
+            "Don't trust the star count. Check the project's history and owner instead.",
+        ),
+        (
+            "extra_downloads",
+            M,
+            "Offers downloads {original} doesn't",
+            "Its releases include programs or archives the original doesn't offer. Copies "
+            "use downloads like these to deliver malware.",
+            "Download only from the original project's releases.",
+        ),
+        (
+            "offsite_download",
+            M,
+            "Sends you to a file-sharing site to download it",
+            "Real projects publish downloads on GitHub or their own site. File-sharing links "
+            "are hard to trace and easy to swap.",
+            "Download from the project's GitHub releases or official site instead.",
+        ),
+        (
+            "fork_changed_install",
+            M,
+            "A fork of {original} with different install steps",
+            "It's a fork of {original}, and it changed files that run when you install it.",
+            "Read what the fork changed before using it instead of {original}.",
+        ),
+        (
+            "lookalike_installer_link",
+            M,
+            "Uses {project}'s name, but isn't from {project}'s own repo",
+            "The script comes from a repo named after {project} that isn't {project}'s own.",
+            "Check where the script really comes from.",
+        ),
+    ),
     **_rules(
         CheckKind.agent_config,
         (

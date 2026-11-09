@@ -49,7 +49,7 @@ def test_every_target_type_prints_a_report(
     assert "Skeleton build" not in out
     assert described in out
     assert "Not checked" in out
-    assert "Is this the real project?" in out  # identity arrives in M3
+    assert "Identity" in out  # the identity check ran
     assert "not requested (add --sandbox)" in out
     assert "lookfirst lowers risk; it doesn't guarantee safety." in out
 
@@ -106,8 +106,10 @@ def test_json_output_is_a_valid_report(capsys, recorded_http) -> None:
     assert report.verdict == "looks_ok"
     assert report.exit_code == 0
     assert report.target.kind == "github"
-    assert report.checked == ["install_path", "agent_config", "injection"]
+    assert report.checked == ["identity", "install_path", "agent_config", "injection"]
     assert [n.check for n in report.not_checked] == ["identity", "package", "sandbox"]
+    assert report.not_checked[0].what == "Star sample"  # the tests run without a token
+    assert report.identity is not None
     assert report.not_checked[-1].reason == "not requested"
     assert json.loads(out)["disclaimer"] == "lookfirst lowers risk; it doesn't guarantee safety."
 
@@ -201,7 +203,13 @@ def test_unexpected_errors_exit_1_without_a_traceback(capsys, monkeypatch) -> No
 def test_the_token_is_never_printed(capsys, recorded_http, monkeypatch, tmp_path: Path) -> None:
     secret = "test-token-0123456789"
     monkeypatch.setenv("GITHUB_TOKEN", secret)
-    recorded_http("github_hello_world")
+    recorded = recorded_http("github_hello_world")
+    # with a token the identity check also samples stars, over GraphQL
+    recorded.override(
+        "https://api.github.com/graphql",
+        lambda r: httpx.Response(200, json={"data": {"repository": {"stargazers": {"nodes": []}}}}),
+        method="POST",
+    )
     report_file = tmp_path / "r.md"
     for extra in ([], ["--json"]):
         code, out, err = run(

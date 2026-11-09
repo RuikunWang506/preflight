@@ -8,6 +8,7 @@ from lookfirst.core.textsafe import one_line
 from lookfirst.verdict.describe import (
     SKELETON_NOTE,
     Segment,
+    describe_identity,
     describe_target,
     evidence_notes,
     headline_text,
@@ -57,6 +58,9 @@ def render_markdown(report: Report) -> str:
 
     when = report.generated_at.strftime("%Y-%m-%d %H:%M %Z").strip()
     lines += ["| | |", "| --- | --- |", f"| Target | {_segments(describe_target(report.target))} |"]
+    identity = describe_identity(report)
+    if identity is not None:
+        lines.append(f"| Identity | {_segments(identity)} |")
     if report.target.source_repo:
         lines.append(
             f"| Source repo | {md_code(report.target.source_repo)} (declared by the package) |"
