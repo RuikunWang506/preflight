@@ -1,0 +1,5 @@
+description = "a plain Node library that builds with tsc on prepare"
+verdict = "looks_ok"
+
+[expect]
+"install_path.install_hook" = "info"

@@ -5,7 +5,13 @@ from __future__ import annotations
 import re
 
 from lookfirst.core.textsafe import one_line
-from lookfirst.verdict.describe import HEADLINES, SKELETON_NOTE, Segment, describe_target
+from lookfirst.verdict.describe import (
+    SKELETON_NOTE,
+    Segment,
+    describe_target,
+    evidence_notes,
+    headline_text,
+)
 from lookfirst.verdict.schema import VERDICT_TEXT, Report
 
 # Characters that can create emphasis, code, links, images, HTML, table cells
@@ -39,7 +45,7 @@ def render_markdown(report: Report) -> str:
     lines = [
         f"# lookfirst report: {verdict}",
         "",
-        f"**{verdict}: {HEADLINES[report.verdict]}**",
+        f"**{verdict}: {headline_text(report)}**",
         "",
     ]
     if not report.checked:
@@ -72,6 +78,8 @@ def render_markdown(report: Report) -> str:
                 lines.append(f"- Evidence: {where}")
                 if ev.excerpt:
                     lines.append(f"  - Quoted: {md_code(ev.excerpt)}")
+                for note in evidence_notes(ev):
+                    lines.append(f"  - {md_text(note, None)}")
             if f.source != "lookfirst":
                 version = f" {f.source_version}" if f.source_version else ""
                 lines.append(f"- Found by {md_text(f.source + version)}")

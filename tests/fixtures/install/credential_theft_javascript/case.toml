@@ -1,0 +1,6 @@
+description = "npm postinstall runs JavaScript that reads ~/.npmrc and sends it"
+verdict = "dont_run"
+
+[expect]
+"install_path.credential_theft" = "critical"
+"install_path.install_hook" = "info"

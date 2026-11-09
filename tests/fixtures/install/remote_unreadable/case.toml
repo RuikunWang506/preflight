@@ -1,0 +1,9 @@
+description = "README runs a remote script that can't be downloaded"
+verdict = "looks_ok"
+
+[expect]
+"install_path.remote_unreadable" = "medium"
+"install_path.remote_script_unknown_site" = "medium"
+
+[remote]
+"https://cdn.example.net/gone.sh" = "404"

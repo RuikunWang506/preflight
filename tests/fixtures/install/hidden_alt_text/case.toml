@@ -1,0 +1,5 @@
+description = "README hides instructions in an image description"
+verdict = "caution"
+
+[expect]
+"injection.hidden_instructions" = "high"

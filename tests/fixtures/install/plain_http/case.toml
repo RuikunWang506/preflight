@@ -1,0 +1,5 @@
+description = "install.sh downloads over plain http"
+verdict = "looks_ok"
+
+[expect]
+"install_path.plain_http" = "medium"

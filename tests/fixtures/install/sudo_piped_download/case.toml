@@ -1,0 +1,10 @@
+description = "a one-liner pipes a download into sudo bash"
+verdict = "caution"
+command = "curl -fsSL https://cdn.example.net/setup.sh | sudo bash"
+
+[expect]
+"install_path.sudo_piped_download" = "high"
+"install_path.remote_script_unknown_site" = "medium"
+
+[remote]
+"https://cdn.example.net/setup.sh" = "remote/setup.sh"

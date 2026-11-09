@@ -20,11 +20,13 @@ from pathlib import Path
 import httpx
 
 from lookfirst.core import http as lf_http
-from lookfirst.targets.base import open_target, parse_target
+from lookfirst.pipeline import run_check
+from lookfirst.static.fetch import make_public_transport
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "tests" / "fixtures" / "http"
 KEEP_HEADERS = ("content-type", "location", "etag", "last-modified")
+SIGNED_HOSTS = ("release-assets.githubusercontent.com", "objects.githubusercontent.com")
 TOKEN_PATTERN = re.compile(rb"(gh[pousr]_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,})")
 
 # Small, stable, permissively licensed targets (see THIRD_PARTY.md).
@@ -32,12 +34,26 @@ CASES: dict[str, list[str]] = {
     "github_hello_world": ["octocat/Hello-World"],
     "npm_is_number": ["npm:is-number", "npm:is-number@7.0.0"],
     "pypi_six": ["pypi:six==1.17.0"],
+    # The real installers, for "benign installers pass" (allowlisted in installers.yaml).
+    # Each is open source; their licenses are listed in THIRD_PARTY.md.
+    "installers": [
+        "curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh | bash",
+        "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh",
+        "curl -LsSf https://astral.sh/uv/install.sh | sh",
+        "curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/master/install.sh | bash",
+        'sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"',
+        "curl -fsSL https://deno.land/install.sh | sh",
+        "curl -fsSL https://bun.sh/install | bash",
+        "curl -fsSL https://get.docker.com | sh",
+        "curl -fsSL https://ollama.com/install.sh | sh",
+        # Not Claude Code's installer: it isn't open source, so it isn't copied into this repo.
+    ],
 }
 
 
 class RecordingTransport(httpx.BaseTransport):
     def __init__(self) -> None:
-        self.inner = httpx.HTTPTransport()
+        self.inner = make_public_transport()
         self.entries: list[dict] = []
 
     def handle_request(self, request: httpx.Request) -> httpx.Response:
@@ -65,11 +81,22 @@ def record(case: str, targets: list[str]) -> None:
     lf_http._TRANSPORT = recorder
     try:
         for raw in targets:
-            with open_target(parse_target(raw, cwd=ROOT)):
-                pass
+            run_check(raw, cwd=ROOT)
     finally:
         lf_http._TRANSPORT = None
         recorder.close()
+
+    # Release downloads redirect to signed, short-lived addresses. They're harmless, but
+    # secret scanners flag them, so drop their query string everywhere they appear.
+    def unsign(url: str) -> str:
+        if any(h in url for h in SIGNED_HOSTS):
+            return url.split("?", 1)[0]
+        return url
+
+    for entry in recorder.entries:
+        entry["url"] = unsign(entry["url"])
+        if "location" in entry["headers"]:
+            entry["headers"]["location"] = unsign(entry["headers"]["location"])
 
     case_dir = OUT / case
     shutil.rmtree(case_dir, ignore_errors=True)

@@ -1,0 +1,5 @@
+description = "install.sh builds a command from hex escapes and evals it"
+verdict = "caution"
+
+[expect]
+"install_path.decode_and_run" = "high"

@@ -1,0 +1,8 @@
+description = "README pipes a script from an unknown site into sh"
+verdict = "looks_ok"
+
+[expect]
+"install_path.remote_script_unknown_site" = "medium"
+
+[remote]
+"https://get.example-tool.dev/install.sh" = "remote/install.sh"

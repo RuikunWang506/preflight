@@ -1,0 +1,5 @@
+description = "AGENTS.md with ordinary instructions is fine"
+verdict = "looks_ok"
+
+[expect]
+"agent_config.agent_instructions" = "info"

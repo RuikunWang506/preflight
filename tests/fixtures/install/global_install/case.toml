@@ -1,0 +1,5 @@
+description = "README installs globally and with sudo"
+verdict = "looks_ok"
+
+[expect]
+"install_path.global_install" = "medium"

@@ -1,0 +1,5 @@
+description = "setup.py reads AWS keys and sends them when installed"
+verdict = "dont_run"
+
+[expect]
+"install_path.credential_theft" = "critical"

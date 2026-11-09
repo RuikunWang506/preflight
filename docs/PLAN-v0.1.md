@@ -209,3 +209,23 @@ The original questions, kept for the record:
 9. **Start date.** Tomorrow (Fri 6 Nov), and do you take 26–27 Nov off?
 
 **Still to do by you:** reserve `lookfirst` on PyPI and npm, create a Homebrew tap and the `lookfirst-dev` GitHub org. These need your accounts. I can prepare minimal placeholder packages at M1 for you to publish.
+
+## M2 decisions (all accepted as recommended, 6 Nov 2026)
+
+| # | Decision | Outcome |
+| --- | --- | --- |
+| 1 | Agent check | SPEC section 6 (agent settings and hidden prompts) is built in M2 |
+| 2 | Prompts aimed at agents | High when hidden or deceptive, or telling agents to run remote code or skip checks; ordinary instructions in AGENTS.md and CLAUDE.md are info only |
+| 3 | Remote downloads | Sent with the User-Agent the command would send (curl or wget) |
+| 4 | Download limits | Public addresses only (checked at connect time), 3 levels deep, 20 scripts, 2 MB each, 15 seconds per check, no proxies |
+| 5 | Installer allowlist | "Well-known installer" is info, and every rule still reads it; a changed hash is noted, not alarmed on |
+| 6 | "Couldn't check" | A one-liner whose piped script can't be read exits 1 instead of getting a verdict |
+| 7 | Registry format | YAML, read with PyYAML (MIT) |
+
+Found while building M2, and handled:
+
+- **Fixture safety:** every fixture script starts with a guard that exits outside the sandbox and creates the host canary. Files that tools load automatically are stored under neutral names (`dot_claude/`, `AGENTS.md.fixture`) so no editor or AI agent working in this repo loads them.
+- **False positives on real code**, each now covered by a test: nvm's `\.` alias escape, paths with `\ ` spaces, HTML comments and badge descriptions written for people, flag emoji built from tag characters, Persian text, a stray zero-width space in a name, "without notifying the user" in technical docs, right-to-left tests, and links that stay inside the repo.
+- **Claude Code's installer** is allowlisted by address and hash, but its script isn't recorded in the fixtures because it isn't open source.
+- **The registry** moved from `registry/` to `lookfirst/registry/`, so it ships inside the package.
+

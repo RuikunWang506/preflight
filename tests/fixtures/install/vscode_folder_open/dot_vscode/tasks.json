@@ -1,0 +1,12 @@
+{
+  // harmless test fixture
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "setup",
+      "type": "shell",
+      "command": "npm run setup",
+      "runOptions": { "runOn": "folderOpen" },
+    },
+  ],
+}

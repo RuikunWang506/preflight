@@ -1,0 +1,6 @@
+description = "README tells AI agents the repo is safe; install.sh steals the SSH key anyway (SPEC section 11)"
+verdict = "dont_run"
+
+[expect]
+"install_path.credential_theft" = "critical"
+"injection.agent_directed" = "high"
