@@ -98,16 +98,25 @@ A fork is compared with its parent first, then an official project, then the mos
 
 ## 7. Package check (wrap existing tools)
 
-- **osv-scanner** (Apache-2.0, tested with 2.7.0): `osv-scanner scan source -r --format json <dir>`, for known vulnerabilities in lockfiles and manifests.
-  - Exit code 1 means "vulnerabilities found", not a failure.
-  - A `package.json` without a lockfile yields nothing.
-  - It sends package names and versions to osv.dev (and deps.dev for transitive resolution). Say so in the report.
-- **GuardDog** (Apache-2.0, tested with 3.2.0), for malicious-package heuristics, with `--output-format=json`:
-  - a folder or archive: `guarddog pypi scan <dir-or-archive>` or `guarddog npm scan <dir>`
-  - requirements files: `guarddog pypi verify requirements.txt`
-  - GitHub Actions: `guarddog github_action scan <target>` (there is no `verify` subcommand for actions)
+- **osv-scanner** (Apache-2.0, tested with 2.7.0): `osv-scanner scan source -r --no-resolve --no-call-analysis=all --format json <dir>`, for known vulnerabilities and known malware in lockfiles and manifests.
+  - `--no-resolve`: only the versions the files pin. Resolving unpinned versions online took 93 seconds on one repo, and isn't what an install would get anyway.
+  - `--no-call-analysis=all`: call analysis builds the project, and for Rust runs its build scripts. lookfirst never runs a target's code on the host.
+  - Exit codes: 0 nothing found, 1 vulnerabilities found (not a failure), 128 nothing it could read. A `package.json` without a lockfile yields nothing, and the report then says the versions aren't fixed.
+  - Known malware is an OpenSSF `MAL-` entry or an advisory tagged CWE-506 ("embedded malicious code"). RustSec notices (unmaintained, unsound) aren't vulnerabilities and are left out.
+  - For an npm or PyPI target, the package version itself is looked up too, through a one-line lockfile.
+  - It sends package names and versions to osv.dev. Every report says so, with the count.
+- **GuardDog** (Apache-2.0, tested with 3.2.0), for code patterns malware uses, with `--output-format=json`:
+  - `guarddog npm|pypi|github_action scan <dir>`, on a package's files, or on a repo or folder that is itself a package or a GitHub Action. Scanning a folder sends nothing anywhere.
+  - Version 3.2 reports "risks", each with its own severity. On 8 popular PyPI packages, 5 had a "high" risk, mostly in tests and examples (9 Nov 2026).
+  - `guarddog pypi verify requirements.txt` isn't run: it downloads and scans every dependency, which takes minutes, and osv-scanner's malware data already covers known-bad dependencies.
   - Its npm scan did not flag a `postinstall` that pipes curl into bash, so section 5's own rules must cover lifecycle scripts.
   - Install hint to print: `uv tool install --python 3.12 guarddog` (the default Python fails to build pygit2). Look for it in `~/.local/bin` too.
+- **How results count** (M4 decisions, `docs/PLAN-v0.1.md`):
+  - Known malware in a dependency the normal install fetches from the registry: critical. In example, test or fixture folders, or when the project's own local package only shares the name (dependency confusion): medium.
+  - Ordinary known vulnerabilities: one medium summary that never changes the verdict.
+  - GuardDog: medium at most. Hits in tests, examples, docs and dev scripts are only counted.
+  - An npm or PyPI package version reported as malware: critical.
+- **Running them:** no shell, a 2-minute limit each, and a minimal environment with no GitHub token or other secrets. Their output is untrusted text. In a local folder they may follow symbolic links; downloaded targets have none.
 - **If a tool is missing,** say so in the report and print how to install it. Never vendor these tools.
 - **Credit** each finding to the tool that produced it, with the tool's version.
 - **Socket's MCP and SafeDep:** deferred to v0.2 (decided 5 Nov 2026).
@@ -190,9 +199,9 @@ Every verdict lists what was not checked (for example "sandbox not run", "GuardD
 
 **Outputs:**
 
-- **Terminal:** rich text with the verdict first, then the top three reasons, then details folded below them.
-- **JSON:** `--json`, with a stable schema and a schema version number.
-- **Markdown:** `--report FILE`, shareable, with links to the evidence.
+- **Terminal:** rich text with the verdict first, then the top three reasons, then critical and high findings in full. The rest are folded to a title and where they point ("Worth knowing" in a Looks OK report, "Also found" otherwise), then what wasn't checked and which tools ran.
+- **JSON:** `--json`, with a stable schema and a schema version number. `tools` lists the scanners, their versions, and what they sent where.
+- **Markdown:** `--report FILE`, shareable, with every detail and links to the evidence: files at the exact commit on GitHub, advisories on osv.dev. Vulnerable packages are a table.
 
 **Wording:** plain English, about 15 words a line. Never say "safe"; say "Looks OK: no warning signs found in what was checked".
 

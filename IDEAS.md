@@ -22,4 +22,9 @@ Things worth doing that are outside the v0.1 scope. Add new ideas here instead o
 - **Check every package's claimed repo.** Today a package's `repository` field is checked against the registry's provenance record only when it names an official project's repo. Doing it for every package would catch packages that borrow a famous repo's name ("starjacking"), and the identity line could say "not confirmed" when there's no record.
 - **Fork README warnings.** Count only the README warnings a fork added, not the ones it inherited from its parent.
 - **Renamed organizations.** When an organization is renamed, its old name is free for anyone to take. Old names of official projects (such as `ollama-webui`) could go in `official.yaml` as names to watch.
+- **Opt out of osv.dev lookups.** A flag, or osv-scanner's offline database, for people who don't want package names and versions sent anywhere.
+- **Which lockfile an install uses.** Decide from the README's install commands (`cd app && npm install`), not only from folder names.
+- **Scan the dependencies' own code.** `guarddog verify` downloads and scans every dependency; worth it with a longer time budget, or inside the sandbox.
+- **"Fixed in" as one version.** Show the lowest version that fixes every advisory, which needs version comparison per ecosystem.
+- **Links in local folders.** The scanners may follow symbolic links in a folder on this computer; copy it without links first.
 - **Show what a known installer changed.** When an allowlisted installer's hash differs from the last one seen, show what changed.

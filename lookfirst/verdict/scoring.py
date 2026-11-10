@@ -17,6 +17,7 @@ from lookfirst.verdict.schema import (
     SandboxRun,
     Severity,
     Target,
+    ToolRun,
     VerdictLabel,
 )
 
@@ -52,6 +53,7 @@ def build_report(
     not_checked: Iterable[NotChecked],
     identity: IdentityResult | None = None,
     sandbox: SandboxRun | None = None,
+    tools: Iterable[ToolRun] = (),
     now: datetime | None = None,
     tool_version: str = __version__,
 ) -> Report:
@@ -69,4 +71,5 @@ def build_report(
         sandbox=sandbox,
         checked=list(checked),
         not_checked=list(not_checked),
+        tools=list(tools),
     )

@@ -1,0 +1,35 @@
+{
+ "package": "probe",
+ "risks": [
+  {
+   "name": "risk.process.spawn",
+   "category": "process",
+   "severity": "high",
+   "threat_rule": "threat-process-download-exec",
+   "threat_description": "Detects download-and-execute patterns: fetching a remote file then executing it",
+   "threat_location": "setup.py:10",
+   "threat_match": "os.system(\"curl",
+   "file_path": "setup.py"
+  },
+  {
+   "name": "risk.process.spawn",
+   "category": "process",
+   "severity": "high",
+   "threat_rule": "threat-process-download-exec",
+   "threat_description": "Detects download-and-execute patterns: fetching a remote file then executing it",
+   "threat_location": "setup.py:11",
+   "threat_match": " exec(",
+   "file_path": "setup.py"
+  },
+  {
+   "name": "risk.runtime.obfuscation",
+   "category": "runtime",
+   "severity": "high",
+   "threat_rule": "threat-runtime-obfuscation-base64exec",
+   "threat_description": "Detects base64 decoding followed by code execution",
+   "threat_location": "setup.py:11",
+   "threat_match": "base64.b64decode(",
+   "file_path": "setup.py"
+  }
+ ]
+}
