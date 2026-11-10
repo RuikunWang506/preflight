@@ -1,0 +1,175 @@
+{
+ "package": "yt-dlp",
+ "risks": [
+  {
+   "name": "risk.filesystem.read",
+   "category": "filesystem",
+   "severity": "medium",
+   "threat_rule": "threat-filesystem-read",
+   "threat_description": "Detects access to sensitive files (credentials, configs, keys)",
+   "threat_location": "yt_dlp/cookies.py:219",
+   "threat_match": ".mozilla/firefox",
+   "file_path": "yt_dlp/cookies.py"
+  },
+  {
+   "name": "risk.filesystem.read",
+   "category": "filesystem",
+   "severity": "medium",
+   "threat_rule": "threat-filesystem-read",
+   "threat_description": "Detects access to sensitive files (credentials, configs, keys)",
+   "threat_location": "yt_dlp/cookies.py:222",
+   "threat_match": ".mozilla/firefox",
+   "file_path": "yt_dlp/cookies.py"
+  },
+  {
+   "name": "risk.filesystem.read",
+   "category": "filesystem",
+   "severity": "medium",
+   "threat_rule": "threat-filesystem-read",
+   "threat_description": "Detects access to sensitive files (credentials, configs, keys)",
+   "threat_location": "yt_dlp/cookies.py:224",
+   "threat_match": ".mozilla/firefox",
+   "file_path": "yt_dlp/cookies.py"
+  },
+  {
+   "name": "risk.filesystem.read",
+   "category": "filesystem",
+   "severity": "medium",
+   "threat_rule": "threat-filesystem-read",
+   "threat_description": "Detects access to sensitive files (credentials, configs, keys)",
+   "threat_location": "yt_dlp/options.py:838",
+   "threat_match": "'Location of .netrc authentication data; either the path or its containing directory. Defaults to ~/.netrc'",
+   "file_path": "yt_dlp/options.py"
+  },
+  {
+   "name": "risk.network.outbound",
+   "category": "network",
+   "severity": "medium",
+   "threat_rule": "threat-network-exfiltration",
+   "threat_description": "Detects URLs to suspicious domains often used for exfiltration or C2",
+   "threat_location": "test/test_InfoExtractor.py:251",
+   "threat_match": "https://vrtnu.page.link/",
+   "file_path": "test/test_InfoExtractor.py"
+  },
+  {
+   "name": "risk.network.outbound",
+   "category": "network",
+   "severity": "medium",
+   "threat_rule": "threat-network-exfiltration",
+   "threat_description": "Detects URLs to suspicious domains often used for exfiltration or C2",
+   "threat_location": "yt_dlp/extractor/cozytv.py:27",
+   "threat_match": "https://cozycdn.foxtrotstream.xyz/",
+   "file_path": "yt_dlp/extractor/cozytv.py"
+  },
+  {
+   "name": "risk.network.outbound",
+   "category": "network",
+   "severity": "medium",
+   "threat_rule": "threat-network-exfiltration",
+   "threat_description": "Detects URLs to suspicious domains often used for exfiltration or C2",
+   "threat_location": "yt_dlp/extractor/dtube.py:47",
+   "threat_match": "https://video.dtube.top/",
+   "file_path": "yt_dlp/extractor/dtube.py"
+  },
+  {
+   "name": "risk.network.outbound",
+   "category": "network",
+   "severity": "medium",
+   "threat_rule": "threat-network-exfiltration",
+   "threat_description": "Detects URLs to suspicious domains often used for exfiltration or C2",
+   "threat_location": "yt_dlp/extractor/generic.py:108",
+   "threat_match": "http://calimero.tk/",
+   "file_path": "yt_dlp/extractor/generic.py"
+  },
+  {
+   "name": "risk.network.outbound",
+   "category": "network",
+   "severity": "medium",
+   "threat_rule": "threat-network-exfiltration",
+   "threat_description": "Detects URLs to suspicious domains often used for exfiltration or C2",
+   "threat_location": "yt_dlp/extractor/mux.py:51",
+   "threat_match": "https://datastar-todomvc.cross.stream/",
+   "file_path": "yt_dlp/extractor/mux.py"
+  },
+  {
+   "name": "risk.network.outbound",
+   "category": "network",
+   "severity": "medium",
+   "threat_rule": "threat-network-outbound-shady-links",
+   "threat_description": "Detects URLs to URL shorteners, file sharing, and suspicious services",
+   "threat_location": "yt_dlp/extractor/youporn.py:34",
+   "threat_match": "bit.ly",
+   "file_path": "yt_dlp/extractor/youporn.py"
+  },
+  {
+   "name": "risk.network.outbound",
+   "category": "network",
+   "severity": "medium",
+   "threat_rule": "threat-network-outbound-shady-links",
+   "threat_description": "Detects URLs to URL shorteners, file sharing, and suspicious services",
+   "threat_location": "yt_dlp/extractor/youporn.py:34",
+   "threat_match": "bit.ly",
+   "file_path": "yt_dlp/extractor/youporn.py"
+  },
+  {
+   "name": "risk.process.spawn",
+   "category": "process",
+   "severity": "high",
+   "threat_rule": "threat-process-download-exec",
+   "threat_description": "Detects download-and-execute patterns: fetching a remote file then executing it",
+   "threat_location": "devscripts/install_deps.py:94",
+   "threat_match": "sys.executable, '-m', 'pip', 'install",
+   "file_path": "devscripts/install_deps.py"
+  },
+  {
+   "name": "risk.process.spawn",
+   "category": "process",
+   "severity": "high",
+   "threat_rule": "threat-process-download-exec",
+   "threat_description": "Detects download-and-execute patterns: fetching a remote file then executing it",
+   "threat_location": "devscripts/install_deps.py:99",
+   "threat_match": "subprocess.call(",
+   "file_path": "devscripts/install_deps.py"
+  },
+  {
+   "name": "risk.process.spawn",
+   "category": "process",
+   "severity": "low",
+   "threat_rule": "threat-process-spawn-silent",
+   "threat_description": "Detects fully silent process execution (suppressing all output channels)",
+   "threat_location": "test/test_postprocessors.py:66",
+   "threat_match": "stdout=subprocess.DEVNULL",
+   "file_path": "test/test_postprocessors.py"
+  },
+  {
+   "name": "risk.process.spawn",
+   "category": "process",
+   "severity": "low",
+   "threat_rule": "threat-process-spawn-silent",
+   "threat_description": "Detects fully silent process execution (suppressing all output channels)",
+   "threat_location": "yt_dlp/update.py:556",
+   "threat_match": "stdout=subprocess.DEVNULL",
+   "file_path": "yt_dlp/update.py"
+  },
+  {
+   "name": "risk.runtime.obfuscation",
+   "category": "runtime",
+   "severity": "medium",
+   "threat_rule": "threat-runtime-obfuscation-general",
+   "threat_description": "Detects heavy code obfuscation techniques",
+   "threat_location": "test/test_jsc/test_ejs_integration.py:89",
+   "threat_match": "\\x00\\x01\\x02\\x03\\x04\\x05\\x06\\x07\\x08\\x09\\x0a\\x0b\\x0c\\x0d\\x0e\\x0f\\x10\\x11\\x12\\x13\\x14\\x15\\x16\\x17\\x18\\x19\\x1a\\x1b\\x1c\\x1d\\x1e\\x1f\\x20\\x21\\x22\\x23\\x24\\x25\\x26\\x27\\x28\\x29\\x2a\\x2b\\x2c\\x2d\\x2e\\x2f\\x30\\x31\\x32\\x33\\x34\\x35\\x36\\x37\\x38\\x39\\x3a\\x3b\\x3c\\x3d\\x3e\\x3f\\x40\\x41\\x42\\x43\\x44\\x45\\x46\\x47\\x48\\x49\\x4a",
+   "file_path": "test/test_jsc/test_ejs_integration.py"
+  },
+  {
+   "name": "risk.runtime.obfuscation",
+   "category": "runtime",
+   "severity": "medium",
+   "threat_rule": "threat-runtime-obfuscation-unicode",
+   "threat_description": "Detects unicode homoglyphs and uncommon characters used for obfuscation",
+   "threat_location": "test/test_networking.py:2092",
+   "threat_match": "e\u0432",
+   "file_path": "test/test_networking.py"
+  }
+ ]
+}

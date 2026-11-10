@@ -452,5 +452,94 @@ RULES: dict[str, Rule] = {
 }
 
 
+_NOT_MALWARE = (
+    "These are bugs attackers can use, usually through the data a program handles. They're "
+    "common, and they aren't a sign the project is malicious."
+)
+
+# The package check (SPEC section 7): findings from osv-scanner and GuardDog. Counts in
+# titles come already worded ("3 package versions"), so singular and plural read right.
+RULES.update(
+    _rules(
+        CheckKind.package,
+        # --- critical ---
+        (
+            "known_malware",
+            C,
+            "Depends on a package known to be malware",
+            "osv.dev reports a package it installs as malware: published to steal data or "
+            "attack the computer it's installed on. Installing the project downloads it.",
+            "Don't install it. If you already did, change the passwords and keys on this computer.",
+        ),
+        (
+            "target_is_malware",
+            C,
+            "This package version is reported as malware",
+            "osv.dev lists this exact version as malware: published to steal data or attack "
+            "the computer it's installed on.",
+            "Don't install it. If you already did, change the passwords and keys on this computer.",
+        ),
+        # --- medium ---
+        (
+            "known_malware_elsewhere",
+            M,
+            "An example or test folder uses a package known to be malware",
+            "A lockfile outside the main install lists a package osv.dev reports as malware. "
+            "Installing the project doesn't use it, but installing that folder would.",
+            "Don't install that folder. Tell the project's maintainers if it's still there.",
+        ),
+        (
+            "malware_name_local",
+            M,
+            "A local package shares its name with known malware",
+            "The project's own local package has the same name as a malicious one on the "
+            "registry. That's how dependency-confusion attacks work: if the name were ever "
+            "looked up on the registry, the malware would be installed. Today the lockfile "
+            "uses the local copy.",
+            "Nothing to do now. Take care if you change how this package is installed.",
+        ),
+        (
+            "known_vulnerabilities",
+            M,
+            "Uses {packages} with known vulnerabilities",
+            _NOT_MALWARE,
+            "Update the packages below before you rely on this project for anything sensitive.",
+        ),
+        (
+            "target_vulnerable",
+            M,
+            "This version has {vulnerabilities}",
+            _NOT_MALWARE,
+            "Use a version that fixes them, if one is listed below.",
+        ),
+        (
+            "code_patterns",
+            M,
+            "GuardDog found {patterns} that malware also uses",
+            "GuardDog looks for code patterns common in malicious packages. Ordinary code "
+            "matches them too, so these are worth a look, not proof.",
+            "Look at the places below and make sure you know why the project needs them.",
+        ),
+        # --- info ---
+        (
+            "known_vulnerabilities_elsewhere",
+            I,
+            "Its examples and tests use {packages} with known vulnerabilities",
+            "These lockfiles are outside the main install, so installing the project doesn't "
+            "use them.",
+            "Nothing to do unless you install those folders.",
+        ),
+        (
+            "code_patterns_elsewhere",
+            I,
+            "GuardDog found {patterns} in its tests, examples and dev scripts",
+            "Installing it doesn't run these folders, and ordinary test code often matches "
+            "GuardDog's patterns.",
+            "Nothing to do unless you run those folders.",
+        ),
+    )
+)
+
+
 def rule(rule_id: str) -> Rule:
     return RULES[rule_id]
