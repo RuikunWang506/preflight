@@ -56,8 +56,8 @@ Never bundled or vendored. If one isn't installed, the report says so and shows 
 
 | Tool | License | How lookfirst uses it | Since |
 | --- | --- | --- | --- |
-| osv-scanner | Apache-2.0 | Known vulnerabilities in lockfiles (M4) | planned |
-| GuardDog | Apache-2.0 | Malicious-package heuristics (M4) | planned |
+| osv-scanner | Apache-2.0 | Known vulnerabilities and known malware in the packages a project pins. Tested with 2.7.0; always run with `--no-resolve` and `--no-call-analysis=all` | M4 |
+| GuardDog | Apache-2.0 | Code patterns that malware uses. Tested with 3.2.0 | M4 |
 | ShellCheck | **GPL-3.0** (copyleft) | Shell script problems, only if installed (M2). Run as a separate program and never bundled; approved 6 Nov 2026 (skeleton plan, decision 5). | planned |
 | gh (GitHub CLI) | MIT | Optional: `gh auth token` supplies a GitHub token for higher rate limits | M1 |
 
@@ -107,6 +107,14 @@ The real installer scripts in `tests/fixtures/http/installers/`, recorded on 6 N
 | Bun (oven-sh/bun) | MIT |
 | Docker (docker/docker-install) | Apache-2.0 |
 | Ollama (ollama/ollama) | MIT |
+
+Recorded scanner output in `tests/fixtures/scanners/`, recorded on 9 Nov 2026 and trimmed to the fields lookfirst reads:
+
+| What | License |
+| --- | --- |
+| Advisory ids, summaries and affected versions from osv.dev, which gathers them from the GitHub Advisory Database, the PyPA Advisory Database and OpenSSF Malicious Packages | CC-BY-4.0 (GitHub, PyPA) and Apache-2.0 (OpenSSF) |
+| GuardDog's findings for yt-dlp 2026.10.26, quoting short lines of its code | Unlicense (public domain) |
+| GuardDog's findings for a harmless sample package written for lookfirst | Apache-2.0, like the rest of the repo |
 
 The install-path fixtures in `tests/fixtures/install/` are written from scratch for lookfirst (Apache-2.0, like the rest of the repo). They're harmless fakes; see their README.
 

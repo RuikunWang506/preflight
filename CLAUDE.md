@@ -77,7 +77,8 @@ lookfirst/
   registry/     installers.yaml (allowlisted installers + sha256 last seen)  installers.py
                 official.yaml (official repos, sites and packages)  popular.csv.gz (popular repos, generated)
                 Inside the package, so it ships with `pip install`. Community-maintained: edit by pull request.
-  scanners/     base.py  osv.py  guarddog.py
+  scanners/     check.py (the package check)  base.py (runs tools safely)  osv.py  guarddog.py
+                lockfiles.py (registry download or local copy?)
   sandbox/      Dockerfile  runner.py  honeytokens.py  proxy.py  mitm_addon.py  trace_parse.py
   verdict/      schema.py  scoring.py  describe.py (shared wording)  render_terminal.py  render_markdown.py
   mcp_server.py
@@ -97,6 +98,7 @@ THIRD_PARTY.md  IDEAS.md  README.md  LICENSE
 Keep this section accurate whenever scripts change.
 
 - setup: `uv sync`
+- optional scanners: `brew install osv-scanner` and `uv tool install --python 3.12 guarddog`
 - check: `uv run lookfirst check <target>` (add `--json` for JSON, `--report FILE` for Markdown)
 - sandbox image build: (fill in at M5)
 - test: `uv run pytest` (never uses the network; sandbox tests are marked `sandbox` and run on Linux CI from M5)
