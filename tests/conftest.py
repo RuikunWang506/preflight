@@ -3,6 +3,8 @@
 - No network: any real connection outside this machine fails the test.
 - No real tokens: GitHub token variables are cleared and `gh` is never asked.
 - HTTP comes from recordings in tests/fixtures/http (see scripts/record_fixtures.py).
+- No real scanners: osv-scanner and GuardDog count as not installed. Tests that need them
+  use fake_tools, which serves recorded output from tests/fixtures/scanners.
 - Host canary: the whole run fails if ~/LOOKFIRST_HOST_CANARY ever exists,
   which would mean something from a target ran on this machine.
 """
@@ -12,6 +14,7 @@ from __future__ import annotations
 import json
 import socket
 from collections.abc import Callable
+from dataclasses import dataclass, field
 from pathlib import Path
 
 import httpx
@@ -69,6 +72,13 @@ def _no_network(monkeypatch: pytest.MonkeyPatch) -> None:
     real_getaddrinfo = socket.getaddrinfo
     monkeypatch.setattr(socket.socket, "connect", guarded_connect)
     monkeypatch.setattr(socket, "getaddrinfo", guarded_getaddrinfo)
+
+
+@pytest.fixture(autouse=True)
+def _no_real_scanners(monkeypatch: pytest.MonkeyPatch) -> None:
+    """osv-scanner and GuardDog count as not installed, so no test runs the real ones
+    (osv-scanner would reach osv.dev). Tests that need them use fake_tools."""
+    monkeypatch.setattr("lookfirst.scanners.base.locate", lambda name: None)
 
 
 @pytest.fixture(autouse=True)
@@ -145,3 +155,62 @@ def mock_http(monkeypatch: pytest.MonkeyPatch) -> Callable[..., list[httpx.Reque
         return sent
 
     return use
+
+
+# --- fake scanners -------------------------------------------------------------
+
+SCANNERS = FIXTURES / "scanners"
+_VERSIONS = {
+    "osv-scanner": "osv-scanner version: 2.7.0\nosv-scalibr version: 0.5.3",
+    "guarddog": "3.2.0",
+}
+
+
+@dataclass
+class FakeTools:
+    """Handlers by tool name ("osv-scanner", "guarddog"), and every call made."""
+
+    handlers: dict[str, Callable[[list[str]], object]] = field(default_factory=dict)
+    calls: list[tuple[str, list[str]]] = field(default_factory=list)
+
+
+def osv_output(name: str, root: Path, *, code: int = 1, found: int = 3) -> object:
+    """A recorded osv-scanner run, as if it had scanned root."""
+    from lookfirst.scanners.base import ToolOutput
+
+    text = (SCANNERS / name).read_text().replace("{ROOT}", str(root))
+    return ToolOutput(code, text, f"Scanned {root} file and found {found} packages\n")
+
+
+def guarddog_output(name: str) -> object:
+    from lookfirst.scanners.base import ToolOutput
+
+    return ToolOutput(0, (SCANNERS / name).read_text(), "")
+
+
+@pytest.fixture
+def fake_tools(monkeypatch: pytest.MonkeyPatch):
+    """Pretend the scanners in fake.handlers are installed, and answer from the handlers."""
+    from lookfirst.scanners import base
+
+    fake = FakeTools()
+
+    def locate(name: str) -> Path | None:
+        return Path("/fake/bin") / name if name in fake.handlers else None
+
+    def run_tool(executable: Path, args: list[str], **_: object) -> object:
+        fake.calls.append((executable.name, list(args)))
+        if args == ["--version"]:
+            return base.ToolOutput(0, _VERSIONS[executable.name], "")
+        return fake.handlers[executable.name](list(args))
+
+    monkeypatch.setattr(base, "locate", locate)
+    for module in (
+        "lookfirst.scanners.base",
+        "lookfirst.scanners.osv",
+        "lookfirst.scanners.guarddog",
+    ):
+        monkeypatch.setattr(f"{module}.run_tool", run_tool)
+    base.tool_version.cache_clear()
+    yield fake
+    base.tool_version.cache_clear()
