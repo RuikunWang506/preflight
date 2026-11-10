@@ -1,5 +1,8 @@
 """The terminal report: verdict first, then the top reasons, then details.
 
+Serious findings (critical and high) get every detail. The rest are folded to one title
+and where it points; the Markdown report (`--report FILE`) has everything.
+
 Every string from a target is passed to rich as a Text object, never as
 markup, so text like "[link=...]" in a repo can't style or link anything.
 """
@@ -17,8 +20,12 @@ from lookfirst.verdict.describe import (
     Segment,
     describe_identity,
     describe_target,
+    describe_tools,
     evidence_notes,
+    evidence_place,
     headline_text,
+    is_serious,
+    where_short,
 )
 from lookfirst.verdict.schema import VERDICT_TEXT, Finding, Report, Severity, VerdictLabel
 
@@ -67,13 +74,16 @@ def _finding_block(finding: Finding) -> Table:
     grid.add_row(badge, Text(one_line(finding.title, 120), style="bold"))
     grid.add_row("", Text(visible(finding.explanation)))
     grid.add_row("", Text.assemble(("What to do: ", "dim"), visible(finding.recommendation)))
+    last_place = None
     for ev in finding.evidence:
-        where = one_line(ev.ref, 160) + (f" line {ev.line}" if ev.line else "")
-        grid.add_row("", Text.assemble(("Evidence: ", "dim"), where))
+        place = evidence_place(ev)
+        if place != last_place:  # several lines from one file share one "Evidence:" line
+            grid.add_row("", Text.assemble(("Evidence: ", "dim"), place))
+            last_place = place
         if ev.excerpt:
-            grid.add_row("", Text(f'  "{one_line(ev.excerpt, 200)}"', style="dim"))
+            grid.add_row("", _indented(Text(f'"{one_line(ev.excerpt, 200)}"', style="dim")))
         for note in evidence_notes(ev):
-            grid.add_row("", Text(f"  {note}", style="dim"))
+            grid.add_row("", _indented(Text(note, style="dim")))
     source = finding.source + (f" {finding.source_version}" if finding.source_version else "")
     if finding.source != "lookfirst":
         grid.add_row("", Text(f"Found by {one_line(source, 60)}", style="dim"))
@@ -114,23 +124,46 @@ def render_terminal(report: Report, console: Console) -> None:
         )
     console.print(_indented(facts))
 
-    if report.findings:
+    serious = [f for f in report.findings if is_serious(f)]
+    minor = [f for f in report.findings if not is_serious(f)]
+    if serious:
         console.print()
         console.print(_indented(Text("Details", style="bold")))
-        for finding in report.findings:
+        for finding in serious:
             console.print(_indented(_finding_block(finding), 2))
             console.print()
+    if minor:
+        console.print()
+        # Looks OK promised "things worth knowing"; otherwise they back up the reasons above.
+        header = "Worth knowing" if report.verdict is VerdictLabel.looks_ok else "Also found"
+        console.print(_indented(Text(header, style="bold")))
+        folded = Table.grid(padding=(0, 2))
+        folded.add_column(no_wrap=True)
+        folded.add_column()
+        for finding in minor:
+            badge = Text(finding.severity.value.upper(), style=_SEVERITY_STYLE[finding.severity])
+            folded.add_row(badge, Text(one_line(finding.title, 120)))
+            where = where_short(finding)
+            if where:
+                folded.add_row("", Text(where, style="dim"))
+        console.print(_indented(folded, 2))
+        console.print(_indented(Text("Add --report FILE to see every detail.", style="dim"), 2))
 
     if report.not_checked:
         console.print()
         console.print(_indented(Text("Not checked", style="bold")))
-        skipped = Table.grid(padding=(0, 4))
-        skipped.add_column(no_wrap=True)
-        skipped.add_column(style="dim")
+        skipped = Table.grid(padding=(0, 3))
+        skipped.add_column(ratio=2)
+        skipped.add_column(ratio=3, style="dim")
         for item in report.not_checked:
             reason = item.reason + (f" ({item.how_to_enable})" if item.how_to_enable else "")
-            skipped.add_row(one_line(item.what, 60), one_line(reason, 100))
+            skipped.add_row(one_line(item.what, 60), one_line(reason, 120))
         console.print(_indented(skipped, 2))
+
+    tools = describe_tools(report)
+    if tools:
+        console.print()
+        console.print(_indented(Text(tools, style="dim")))
 
     console.print()
     console.print(_indented(Text(report.disclaimer, style="dim")))
