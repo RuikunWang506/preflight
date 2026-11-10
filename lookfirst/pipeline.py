@@ -11,6 +11,7 @@ from lookfirst.core.http import github_token, make_client
 from lookfirst.identity.check import IdentityOutcome, check_identity
 from lookfirst.identity.github import GitHubData
 from lookfirst.identity.popular_index import load_index
+from lookfirst.scanners.check import run_package_check
 from lookfirst.static.checks import run_static_checks
 from lookfirst.static.fetch import RemoteReader
 from lookfirst.targets.base import open_target, parse_target
@@ -57,7 +58,12 @@ def run_check(
                     "Check your connection and try again.",
                 )
             identity = _identity(target, token, now or datetime.now(UTC))
-            checked = ([CheckKind.identity] if identity.ran else []) + result.checked
+            package = run_package_check(target)
+            checked = (
+                ([CheckKind.identity] if identity.ran else [])
+                + result.checked
+                + ([CheckKind.package] if package.ran else [])
+            )
             not_checked: list[NotChecked] = []
             for kind, label in CHECKS.items():
                 if kind is CheckKind.identity:
@@ -68,11 +74,17 @@ def run_check(
                         )
                     if identity.ran or identity.gaps:
                         continue
+                if kind is CheckKind.package and package.gaps:
+                    not_checked += package.gaps
+                    continue
                 if kind in checked:
                     continue
                 if kind is CheckKind.sandbox and not sandbox:
                     reason, how = "not requested", "add --sandbox"
-                elif kind in (CheckKind.agent_config, CheckKind.injection) and target.root is None:
+                elif (
+                    kind in (CheckKind.agent_config, CheckKind.injection, CheckKind.package)
+                    and target.root is None
+                ):
                     reason, how = NOT_FOR_COMMANDS, None
                 else:
                     reason, how = NOT_BUILT, None
@@ -81,10 +93,11 @@ def run_check(
                 )
             return build_report(
                 target=target.to_schema(),
-                findings=result.findings + identity.findings,
+                findings=result.findings + identity.findings + package.findings,
                 checked=checked,
                 not_checked=not_checked,
                 identity=identity.result,
+                tools=package.tools,
                 now=now,
             )
     finally:
