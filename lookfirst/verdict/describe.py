@@ -5,7 +5,14 @@ from __future__ import annotations
 from typing import Literal
 
 from lookfirst.core.textsafe import one_line
-from lookfirst.verdict.schema import Evidence, Report, Target, VerdictLabel
+from lookfirst.verdict.schema import (
+    Evidence,
+    Finding,
+    Report,
+    Severity,
+    Target,
+    VerdictLabel,
+)
 
 HEADLINES: dict[VerdictLabel, str] = {
     VerdictLabel.looks_ok: "no warning signs found in what was checked.",
@@ -26,6 +33,45 @@ def headline_text(report: Report) -> str:
             f"no serious warning signs. {n} {'thing' if n == 1 else 'things'} worth knowing below."
         )
     return HEADLINES[report.verdict]
+
+
+def is_serious(finding: Finding) -> bool:
+    """Critical and high findings get every detail; the rest are worth knowing."""
+    return finding.severity in (Severity.critical, Severity.high)
+
+
+def evidence_place(ev: Evidence) -> str:
+    """Where a piece of evidence points, in a few words."""
+    return one_line(ev.ref, 120) + (f" line {ev.line}" if ev.line else "")
+
+
+def where_short(finding: Finding) -> str:
+    """The first place a finding points to, and how many more there are."""
+    if not finding.evidence:
+        return ""
+    ev = finding.evidence[0]
+    more = len(finding.evidence) - 1 + sum(int(e.data.get("more", 0)) for e in finding.evidence)
+    if "package" in ev.data:  # findings about package versions: name the first (the worst)
+        name = one_line(f"{ev.data['package']} {ev.data.get('version', '')}".strip(), 80)
+        if isinstance(ev.data.get("worst"), int | float):
+            return f"Worst: {name} (score {ev.data['worst']:g}), in {evidence_place(ev)}"
+        first = f"{name}, in {evidence_place(ev)}"
+        return f"{first}, and {more} more" if more else first
+    first = evidence_place(ev)
+    return f"{first} and {more} more" if more else first
+
+
+def describe_tools(report: Report) -> str | None:
+    """Which outside scanners ran, and what they sent where."""
+    parts = []
+    for tool in report.tools:
+        if tool.status not in ("ran", "nothing_to_scan"):
+            continue
+        name = one_line(f"{tool.name} {tool.version}" if tool.version else tool.name, 60)
+        parts.append(f"{name}, which {one_line(tool.detail, 120)}" if tool.detail else name)
+    if not parts:
+        return None
+    return "Also checked with " + " and ".join(parts) + "."
 
 
 def evidence_notes(ev: Evidence) -> list[str]:
@@ -51,8 +97,13 @@ def evidence_notes(ev: Evidence) -> list[str]:
         notes.append(f"Lines {one_line(str(d['lines']), 20)}")
     if "runs" in d:
         notes.append(f"Runs {one_line(str(d['runs']), 160)}")
+    if isinstance(d.get("files"), int) and d["files"] > 1:
+        notes.append(f"Pinned in {d['files']} lockfiles")
     if "more" in d:
         notes.append(f"…and {d['more']} more like this")
+    if isinstance(d.get("elsewhere"), int) and d["elsewhere"]:
+        n = d["elsewhere"]
+        notes.append(f"Also {n} in tests, examples and dev scripts, not listed")
     return notes
 
 

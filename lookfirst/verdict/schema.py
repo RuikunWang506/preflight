@@ -1,8 +1,8 @@
 """The findings schema: what a check reports, and the report lookfirst outputs.
 
 This is a public contract. The JSON form (`lookfirst check --json`) is what
-agents and the MCP server read, so every change bumps SCHEMA_VERSION and the
-generated file in docs/schema/.
+agents and the MCP server read, so after v0.1.0 every change bumps SCHEMA_VERSION.
+Until then it stays 1.0. Either way, regenerate the file in docs/schema/.
 """
 
 from __future__ import annotations
@@ -126,6 +126,15 @@ class NotChecked(_Model):
     how_to_enable: str | None = None  # "add --sandbox", "uv tool install --python 3.12 guarddog"
 
 
+class ToolRun(_Model):
+    """An outside scanner lookfirst used, or would have used, for this report."""
+
+    name: str  # "osv-scanner", "GuardDog"
+    version: str | None = None
+    status: Literal["ran", "nothing_to_scan", "not_installed", "failed"]
+    detail: str | None = None  # what it sent where, or why it failed
+
+
 class Report(_Model):
     schema_version: Literal["1.0"] = SCHEMA_VERSION
     tool_version: str
@@ -139,6 +148,7 @@ class Report(_Model):
     sandbox: SandboxRun | None = None
     checked: list[CheckKind] = Field(default_factory=list)
     not_checked: list[NotChecked] = Field(default_factory=list)
+    tools: list[ToolRun] = Field(default_factory=list)
     disclaimer: str = DISCLAIMER
 
     @model_validator(mode="after")

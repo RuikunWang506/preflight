@@ -364,6 +364,56 @@
       "title": "Target",
       "type": "object"
     },
+    "ToolRun": {
+      "additionalProperties": false,
+      "description": "An outside scanner lookfirst used, or would have used, for this report.",
+      "properties": {
+        "detail": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Detail"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "ran",
+            "nothing_to_scan",
+            "not_installed",
+            "failed"
+          ],
+          "title": "Status",
+          "type": "string"
+        },
+        "version": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Version"
+        }
+      },
+      "required": [
+        "name",
+        "status"
+      ],
+      "title": "ToolRun",
+      "type": "object"
+    },
     "VerdictLabel": {
       "enum": [
         "looks_ok",
@@ -458,6 +508,13 @@
     "tool_version": {
       "title": "Tool Version",
       "type": "string"
+    },
+    "tools": {
+      "items": {
+        "$ref": "#/$defs/ToolRun"
+      },
+      "title": "Tools",
+      "type": "array"
     },
     "verdict": {
       "$ref": "#/$defs/VerdictLabel"
