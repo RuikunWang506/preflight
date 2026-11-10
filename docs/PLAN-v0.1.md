@@ -254,3 +254,28 @@ Found while building M3, and handled (each now covered by a test):
 - **GitHub's search limit** (10 a minute without a token, 30 with): running out stopped the whole identity check. Now it goes on without the same-name search and lists it under "Not checked".
 - **M2's hidden-instructions check** flagged comfy-cli's official agent skills, which tell agents "do not tell the user their Python was matched", meaning don't make a false claim. "Don't tell the user" now counts only when it hides something ("about this step", "what you did").
 - **Personal details in recordings:** account profiles are trimmed to the account's age and counts, and email addresses are dropped from every recorded answer, including the npm and PyPI answers recorded in M1. A test checks.
+
+## M4 decisions (all accepted as recommended, 9 Nov 2026)
+
+| # | Decision | Outcome |
+| --- | --- | --- |
+| 1 | Known malware in a dependency | Don't run when the normal install fetches it from the registry. In example, test or fixture folders, or when the project's own local package only shares the name (dependency confusion), it's worth knowing |
+| 2 | Ordinary known vulnerabilities | One worth-knowing summary that never changes the verdict; the full list is a table in the Markdown and JSON reports |
+| 3 | GuardDog | Worth knowing at most. Hits in tests, examples, docs and dev scripts are only counted |
+| 4 | npm and PyPI targets | The package version itself is looked up on osv.dev too; a version reported as malware is Don't run |
+| 5 | Running the tools | osv-scanner always with `--no-resolve` and `--no-call-analysis=all`; 2 minutes each; no GitHub token or other secrets in their environment; output treated as untrusted |
+| 6 | Privacy | Every report says what osv-scanner sent to osv.dev (names and versions, with a count). No opt-out flag in v0.1 |
+| 7 | GuardDog scope | Packages, and repos or folders that are packages or GitHub Actions. `guarddog verify` (every dependency) isn't run |
+| 8 | Outputs | Terminal folds minor findings to a title and where they point; JSON keeps schema 1.0 and adds `tools`; Markdown links files to the exact commit and advisories to osv.dev |
+| 9 | Example reports | Looks OK: `sharkdp/bat`. Caution: the hidden-HTML-comment fixture. Don't run: the made-up copy of Ollama. Shown for review before the wording is frozen |
+
+Tested live before planning, on 9 Nov 2026: osv-scanner on 6 repos and on lockfiles naming known malware, and GuardDog on 18 popular npm and PyPI packages. After building: full checks with the real tools on facebook/react, pallets/flask, sharkdp/bat, `pypi:pyyaml==5.3`, `pypi:yt-dlp` and `npm:express` all come out Looks OK, and a folder whose lockfile pins known malware comes out Don't run.
+
+Found while building M4, and handled (each now covered by a test):
+
+- **React's lockfile matches known malware twice,** and neither is real: its own local package `eslint-plugin-react-internal` shares a name with npm malware, and old `fsevents` versions appear only in its `fixtures/` folders. lookfirst now reads the lockfile entry (npm, yarn, pnpm, uv, poetry, Cargo and Pipfile formats) to tell a registry download from a local copy, and folders a normal install doesn't use are only counted.
+- **RustSec notices** that a crate is unmaintained or unsound came through as vulnerabilities (5 in bat's `Cargo.lock`). They're left out now.
+- **Test data named like a lockfile** (bat's `syntax_test_requirements.txt`) counted as part of the install. Files named for tests now count as outside it.
+- **One malicious package listed once per advisory** (flatmap-stream three times). Now one line per package version, with all its advisory ids.
+- **Terminal layout:** long quotes wrapped back to the wrong indent, and several pieces of evidence from one file repeated "Evidence: file" each time.
+- **Tests never run the real scanners,** which would reach osv.dev: in the tests they count as not installed unless a test serves recorded output.
