@@ -53,6 +53,8 @@ select = ["E", "W", "F", "I", "B", "UP", "S", "SIM", "RUF"]
 # Tests use assert, fake tokens, and harmless fake archives in temporary folders.
 "tests/**" = ["S101", "S105", "S106", "S108", "E501"]  # long lines hold test data
 "scripts/**" = ["S101"]
+# Paths like /tmp here are inside the sandbox container, never on this computer.
+"lookfirst/sandbox/**" = ["S108"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

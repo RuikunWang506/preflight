@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -11,6 +12,7 @@ from lookfirst.core.http import github_token, make_client
 from lookfirst.identity.check import IdentityOutcome, check_identity
 from lookfirst.identity.github import GitHubData
 from lookfirst.identity.popular_index import load_index
+from lookfirst.sandbox.runner import SandboxOptions, SandboxOutcome, run_sandbox
 from lookfirst.scanners.check import run_package_check
 from lookfirst.static.checks import run_static_checks
 from lookfirst.static.fetch import RemoteReader
@@ -41,6 +43,8 @@ def run_check(
     limits: Limits = DEFAULT_LIMITS,
     now: datetime | None = None,
     reader: RemoteReader | None = None,
+    sandbox_options: SandboxOptions | None = None,
+    on_sandbox_build: Callable[[], None] | None = None,
 ) -> Report:
     spec = parse_target(raw, cwd=cwd or Path.cwd())
     own_reader = reader is None
@@ -59,10 +63,16 @@ def run_check(
                 )
             identity = _identity(target, token, now or datetime.now(UTC))
             package = run_package_check(target)
+            dry_run = (
+                run_sandbox(target, sandbox_options or SandboxOptions(), on_build=on_sandbox_build)
+                if sandbox
+                else SandboxOutcome()
+            )
             checked = (
                 ([CheckKind.identity] if identity.ran else [])
                 + result.checked
                 + ([CheckKind.package] if package.ran else [])
+                + ([CheckKind.sandbox] if dry_run.run else [])
             )
             not_checked: list[NotChecked] = []
             for kind, label in CHECKS.items():
@@ -76,6 +86,12 @@ def run_check(
                         continue
                 if kind is CheckKind.package and package.gaps:
                     not_checked += package.gaps
+                    continue
+                if kind is CheckKind.sandbox and dry_run.gaps:
+                    for what, reason, how in dry_run.gaps:
+                        not_checked.append(
+                            NotChecked(check=kind, what=what, reason=reason, how_to_enable=how)
+                        )
                     continue
                 if kind in checked:
                     continue
@@ -93,11 +109,12 @@ def run_check(
                 )
             return build_report(
                 target=target.to_schema(),
-                findings=result.findings + identity.findings + package.findings,
+                findings=result.findings + identity.findings + package.findings + dry_run.findings,
                 checked=checked,
                 not_checked=not_checked,
                 identity=identity.result,
                 tools=package.tools,
+                sandbox=dry_run.run,
                 now=now,
             )
     finally:

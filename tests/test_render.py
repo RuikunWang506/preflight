@@ -227,3 +227,45 @@ def test_terminal_lists_a_file_once_for_several_pieces_of_evidence() -> None:
     out = terminal_text(report)
     assert out.count("Evidence: package-lock.json") == 1
     assert "coa 2.0.3: malware" in out and "rc 1.2.9: malware" in out
+
+
+def sandbox_report():
+    from lookfirst.verdict.schema import SandboxRun
+
+    run = SandboxRun(
+        command="npm install\nnpm run build",
+        why="the install instructions in README.md (line 8)",
+        image_digest="sha256:" + "a" * 64,
+        duration_s=1.24,
+        exit_code=0,
+        network="sinkhole",
+        arch="arm64",
+        hosts=["registry.npmjs.org", "collect.example.net"],
+        files_changed=13,
+    )
+    return build_report(
+        target=Target(kind="local", raw="app", resolved="/x/app"),
+        findings=[],
+        checked=[CheckKind.sandbox],
+        not_checked=[],
+        sandbox=run,
+    )
+
+
+def test_reports_describe_the_dry_run() -> None:
+    lines = [line.strip() for line in terminal_text(sandbox_report()).splitlines()]
+    assert "Sandbox dry run" in lines
+    flat = " ".join(" ".join(lines).split())
+    assert (
+        "Ran npm install (and 1 more line): the install instructions in README.md (line 8)" in flat
+    )
+    assert "Time 1.2 s, finished normally" in flat
+    assert "Touched 13 files changed; contacted registry.npmjs.org, collect.example.net" in flat
+    assert "seeing nothing doesn't mean it's safe" in flat
+    md = render_markdown(sandbox_report())
+    assert "## Sandbox dry run" in md
+    assert "| Ran | `npm install (and 1 more line): the install instructions" in md
+    assert (
+        "| Network | registries and its own sites passed; the sandbox answered every other request |"
+        in md
+    )
