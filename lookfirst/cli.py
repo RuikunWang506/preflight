@@ -8,6 +8,7 @@ as "block this command".
 import os
 import sys
 from collections.abc import Sequence
+from enum import StrEnum
 from pathlib import Path
 from typing import Annotated
 
@@ -18,6 +19,7 @@ from lookfirst import __version__
 from lookfirst.core.errors import LookfirstError
 from lookfirst.core.textsafe import visible
 from lookfirst.pipeline import run_check
+from lookfirst.sandbox.runner import DEFAULT_TIMEOUT, SandboxOptions
 from lookfirst.verdict.render_markdown import render_markdown
 from lookfirst.verdict.render_terminal import make_console, render_terminal
 
@@ -34,6 +36,25 @@ app = typer.Typer(
         "lookfirst lowers risk; it doesn't guarantee safety."
     ),
 )
+
+
+class Network(StrEnum):
+    sinkhole = "sinkhole"
+    passthrough = "passthrough"
+    offline = "offline"
+
+
+class Arch(StrEnum):
+    arm64 = "arm64"
+    amd64 = "amd64"
+
+
+sandbox_app = typer.Typer(
+    name="sandbox",
+    no_args_is_help=True,
+    help="The Docker sandbox that --sandbox runs installs in.",
+)
+app.add_typer(sandbox_app)
 
 
 def _show_version(value: bool) -> None:
@@ -77,9 +98,51 @@ def check(
     sandbox: Annotated[
         bool,
         typer.Option(
-            "--sandbox", help="Also run the install in a throwaway sandbox (coming in M5)."
+            "--sandbox",
+            help="Also run the install in a throwaway Docker sandbox and watch what it does.",
         ),
     ] = False,
+    cmd: Annotated[
+        str | None,
+        typer.Option(
+            "--cmd",
+            metavar="COMMAND",
+            help="With --sandbox: the install command to run, instead of lookfirst's guess.",
+        ),
+    ] = None,
+    network: Annotated[
+        Network,
+        typer.Option(
+            "--network",
+            case_sensitive=False,
+            help=(
+                "With --sandbox: sinkhole (the default) records every request and lets only "
+                "package registries and the project's own sites through; passthrough lets "
+                "everything through; offline has no network at all."
+            ),
+        ),
+    ] = Network.sinkhole,
+    arch: Annotated[
+        Arch | None,
+        typer.Option(
+            "--arch",
+            case_sensitive=False,
+            help=(
+                "With --sandbox: arm64 or amd64. The default is this computer's own; amd64 on "
+                "Apple Silicon runs under emulation."
+            ),
+        ),
+    ] = None,
+    timeout: Annotated[
+        int,
+        typer.Option(
+            "--timeout",
+            min=10,
+            max=1800,
+            metavar="SECONDS",
+            help="With --sandbox: stop the dry run after this many seconds.",
+        ),
+    ] = DEFAULT_TIMEOUT,
     json_output: Annotated[bool, typer.Option("--json", help="Print the report as JSON.")] = False,
     report_file: Annotated[
         Path | None,
@@ -92,8 +155,22 @@ def check(
     ] = None,
 ) -> None:
     """Check a target before you run it. Nothing from the target is ever run on this computer."""
+    status = make_console(stderr=True)
+    options = SandboxOptions(
+        command=cmd, network=network.value, arch=arch.value if arch else None, timeout=timeout
+    )
+    if sandbox:
+        minutes = f"{timeout // 60} minutes" if timeout >= 120 else f"{timeout} seconds"
+        status.print(Text(f"Running the install in the sandbox (up to {minutes})...", style="dim"))
     try:
-        report = run_check(target, sandbox=sandbox)
+        report = run_check(
+            target,
+            sandbox=sandbox,
+            sandbox_options=options,
+            on_sandbox_build=lambda: status.print(
+                Text("Building the sandbox image (first time only, about a minute)...", style="dim")
+            ),
+        )
     except LookfirstError as exc:
         print_error(exc.message, exc.hint)
         raise typer.Exit(EXIT_ERROR) from None
@@ -137,6 +214,39 @@ def update_index() -> None:
         raise typer.Exit(EXIT_ERROR) from None
     path = popular_index.save_to_cache(data)
     console.print(f"Saved {len(popular_index.load_index()):,} popular repos to {path}.")
+
+
+@sandbox_app.command("build")
+def sandbox_build(
+    arch: Annotated[
+        Arch | None,
+        typer.Option(
+            "--arch", case_sensitive=False, help="arm64 or amd64 (default: this computer's)."
+        ),
+    ] = None,
+) -> None:
+    """Build the sandbox image and fetch the recording proxy, so --sandbox starts quickly."""
+    from lookfirst.sandbox import image
+    from lookfirst.sandbox.docker import DockerError, find_docker
+
+    docker = find_docker()
+    engine = docker.engine() if docker else None
+    if docker is None or engine is None:
+        print_error(
+            "Docker isn't installed or isn't running.",
+            "Install OrbStack or Docker Desktop and start it, then try again.",
+        )
+        raise typer.Exit(EXIT_ERROR)
+    chosen = arch.value if arch else engine[1]
+    console = make_console(stderr=True)
+    console.print(Text(f"Building the {chosen} sandbox image (about a minute)...", style="dim"))
+    try:
+        built = image.ensure_sandbox_image(docker, chosen)
+        image.ensure_proxy_image(docker)
+    except DockerError as exc:
+        print_error(f"The sandbox image couldn't be built: {exc}")
+        raise typer.Exit(EXIT_ERROR) from None
+    console.print(f"Ready: {image.sandbox_tag(chosen)} ({built[:19]}), and the recording proxy.")
 
 
 def main(argv: Sequence[str] | None = None) -> int:

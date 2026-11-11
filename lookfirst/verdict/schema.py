@@ -112,11 +112,15 @@ class IdentityResult(_Model):
 
 class SandboxRun(_Model):
     command: str
+    why: str | None = None  # why this command was chosen, in plain English
     image_digest: str
     duration_s: float = Field(ge=0)
     exit_code: int | None = None
     timed_out: bool = False
     network: Literal["sinkhole", "passthrough", "offline"]
+    arch: Literal["arm64", "amd64"] = "arm64"
+    hosts: list[str] = Field(default_factory=list, max_length=50)  # sites it contacted
+    files_changed: int = Field(default=0, ge=0)
 
 
 class NotChecked(_Model):
