@@ -38,7 +38,7 @@ jobs:
         run: uv run pytest
 
   sandbox-linux:
-    name: Sandbox tests (Linux, from M5)
+    name: Sandbox tests (Linux)
     runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
@@ -51,14 +51,7 @@ jobs:
       - name: Install
         run: uv sync --locked
       - name: Sandbox tests
-        # Sandbox tests arrive in M5. Until then pytest finds none and exits 5,
-        # which counts as a pass here.
-        run: |
-          set +e
-          uv run pytest -m sandbox
-          code=$?
-          if [ "$code" -eq 5 ]; then
-            echo "No sandbox tests yet; they arrive in M5."
-            exit 0
-          fi
-          exit "$code"
+        # Builds the sandbox image (a few minutes) and runs each fixture in it.
+        env:
+          LOOKFIRST_SANDBOX_TESTS: "1"
+        run: uv run pytest -m sandbox

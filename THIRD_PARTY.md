@@ -61,14 +61,35 @@ Never bundled or vendored. If one isn't installed, the report says so and shows 
 | ShellCheck | **GPL-3.0** (copyleft) | Shell script problems, only if installed (M2). Run as a separate program and never bundled; approved 6 Nov 2026 (skeleton plan, decision 5). | planned |
 | gh (GitHub CLI) | MIT | Optional: `gh auth token` supplies a GitHub token for higher rate limits | M1 |
 
+## Container images and the sandbox image (M5)
+
+Pulled or built on your computer by `--sandbox` or `lookfirst sandbox build`. lookfirst ships only `lookfirst/sandbox/Dockerfile` and its own proxy addon, never the images.
+
+| Image | License | How lookfirst uses it |
+| --- | --- | --- |
+| `debian` (trixie-slim), pinned by digest | Debian's free licenses (DFSG) | Base of the sandbox image |
+| `mitmproxy/mitmproxy` 12.3.1, pinned by digest | MIT | The recording proxy |
+
+Installed into the sandbox image from Debian (and uv from PyPI) when you build it. The GPL and LGPL tools here were approved on 11 Nov 2026 (M5 decision 4): they run inside a container image built on your computer and are never shipped by lookfirst.
+
+| Package | License |
+| --- | --- |
+| git | **GPL-2.0** |
+| build-essential (gcc, make) | **GPL-3.0** (gcc, with the GCC runtime exception), GPL-2.0+ (make) |
+| strace | **LGPL-2.1+** |
+| procps | **GPL-2.0+** and LGPL-2.0+ |
+| curl | curl license (MIT-style) |
+| ca-certificates | MPL-2.0 (the certificates) and GPL-2.0+ (the scripts) |
+| python3, python3-pip, python3-venv | PSF-2.0 (Python), MIT (pip) |
+| nodejs, npm | MIT (Node.js), Artistic-2.0 (npm) |
+| uv 0.13.6 (from PyPI) | MIT OR Apache-2.0 |
+
 ## Planned (record the exact version when it's added)
 
 M3 (the identity check) added no libraries: name distance and README similarity are lookfirst's own code, so rapidfuzz and datasketch are no longer planned.
 
 | Package or image | License | For |
 | --- | --- | --- |
-| docker (docker-py) | Apache-2.0 | Sandbox (M5) |
-| mitmproxy/mitmproxy image | MIT | Sandbox network proxy (M5) |
 | mcp (official MCP Python SDK) | MIT | MCP server (M6) |
 
 ## Test fixtures
@@ -115,6 +136,8 @@ Recorded scanner output in `tests/fixtures/scanners/`, recorded on 9 Nov 2026 an
 | Advisory ids, summaries and affected versions from osv.dev, which gathers them from the GitHub Advisory Database, the PyPA Advisory Database and OpenSSF Malicious Packages | CC-BY-4.0 (GitHub, PyPA) and Apache-2.0 (OpenSSF) |
 | GuardDog's findings for yt-dlp 2026.10.26, quoting short lines of its code | Unlicense (public domain) |
 | GuardDog's findings for a harmless sample package written for lookfirst | Apache-2.0, like the rest of the repo |
+
+The sandbox fixtures in `tests/fixtures/sandbox/` are written from scratch for lookfirst (Apache-2.0). The harmless `npm install` one pins is-number 7.0.0 (MIT) in its lockfile; the package itself is downloaded only inside the sandbox. `tests/fixtures/sandbox_traces/` holds strace output from dry runs of those fixtures: paths, program names and arguments only.
 
 The install-path fixtures in `tests/fixtures/install/` are written from scratch for lookfirst (Apache-2.0, like the rest of the repo). They're harmless fakes; see their README.
 

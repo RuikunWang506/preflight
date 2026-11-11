@@ -279,3 +279,34 @@ Found while building M4, and handled (each now covered by a test):
 - **One malicious package listed once per advisory** (flatmap-stream three times). Now one line per package version, with all its advisory ids.
 - **Terminal layout:** long quotes wrapped back to the wrong indent, and several pieces of evidence from one file repeated "Evidence: file" each time.
 - **Tests never run the real scanners,** which would reach osv.dev: in the tests they count as not installed unless a test serves recorded output.
+
+## M5 decisions (all accepted as recommended, 11 Nov 2026)
+
+| # | Decision | Outcome |
+| --- | --- | --- |
+| 1 | Docker access | The `docker` command-line tool, like the scanners; no Python Docker library |
+| 2 | Locked-down container | No capabilities at all (strace works without `SYS_PTRACE`), no new privileges, an ordinary user, 512 processes, 2 GB, 2 CPUs, a 3-minute limit; nothing mounted, never the Docker socket; containers and networks removed after every run, and leftovers swept |
+| 3 | Network | An internal network whose only way out is mitmproxy 12.3.1 (pinned), with a fresh certificate authority per run. Sinkhole by default: registries and the project's own sites pass, everything else is recorded and answered locally. `--network passthrough` and `--network offline` |
+| 4 | Image | Debian 13 slim (pinned) with git, curl, Python 3.13, uv, Node 20, npm, build tools, strace, procps; built on this computer. GPL and LGPL tools inside it approved: lookfirst ships only the Dockerfile |
+| 5 | Decoys | SSH key, AWS keys, GitHub and npm tokens, `.env`, a Chrome profile, two wallets and two environment variables, each fresh per run. Sent in any common encoding: Don't run. Read by anything but its own tool: Caution |
+| 6 | What runs | `--cmd`, or the one-liner, the package installed by name, the README's install block, then `npm install`, `pip install .`, `make install` or `bash install.sh` |
+| 7 | Findings | SPEC section 8's table; attempts count even when permissions block them |
+| 8 | Tests | Parsing and findings from recorded traces, no Docker; real fixture runs opt-in on this computer (`LOOKFIRST_SANDBOX_TESTS=1`) and in CI on Linux |
+| 9 | Fixtures | SPEC section 11's five: decoy-key theft, a cron entry, download-and-run from `/tmp`, a harmless `npm install`, a harmless `pip install .` |
+| 10 | Report | A "Sandbox dry run" section: the command and why, the network mode, time, files changed, sites contacted, and the limits |
+
+Measured on 11 Nov 2026 (OrbStack, Apple Silicon):
+- **Image:** builds once in about 90 seconds (about 1 GB).
+- **Fixtures:** each takes 4 to 10 seconds, against the 3-minute target.
+- **Full checks:** the decoy-key theft fixture takes 6.0 seconds (Don't run; the dry run itself 0.3), and a harmless `npm install` 6.5 seconds (Looks OK; 1.2).
+
+Found while building M5, and handled (each now covered by a test):
+
+- **mitmproxy ignored lookfirst's addon,** because files copied in had a 1970 date and mitmproxy only loads a script once it sees the file change. A proxy without the addon forwards everything, so "sinkhole" silently became "passthrough". Files are now copied with the current time, and lookfirst waits for a "ready" file the addon writes before any run.
+- **strace's regex filter takes no closing slash.** With one, strace refused to start, and the run looked like an ordinary failed install. Now a run with no traced programs at all counts as not checked, never "nothing seen".
+- **Under amd64 emulation strace can't follow programs** (it stays silent). The install still runs in the sandbox and the proxy still records it, so network findings count, and what it ran is listed under "Not checked".
+- **Debian starts npm as `node /usr/bin/npm`,** so npm reading its own `.npmrc` looked like `node` reading a decoy. Programs run through node are now named by their script.
+- **A decoy npm token for registry.npmjs.org would be sent by npm itself with every request,** and npm refuses fake tokens. The decoy is for GitHub Packages' registry instead, which installs never use.
+- **Proxy settings:** curl only reads the lowercase `http_proxy`, and mitmproxy needs `connection_strategy=lazy` to answer made-up hosts.
+- **The mitmproxy image's start-up script needs root** to switch users, so the proxy starts straight into `mitmdump` as its ordinary user, with no capabilities either.
+- **OrbStack adds its own certificate to every container** as it starts. File-change counts ignore it.

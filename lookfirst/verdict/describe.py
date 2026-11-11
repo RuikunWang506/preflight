@@ -9,6 +9,7 @@ from lookfirst.verdict.schema import (
     Evidence,
     Finding,
     Report,
+    SandboxRun,
     Severity,
     Target,
     VerdictLabel,
@@ -59,6 +60,49 @@ def where_short(finding: Finding) -> str:
         return f"{first}, and {more} more" if more else first
     first = evidence_place(ev)
     return f"{first} and {more} more" if more else first
+
+
+SANDBOX_LIMITS = (
+    "It's a Linux container, so macOS-only tricks, such as fake password dialogs, don't run "
+    "there. Malware can also wait, or notice the sandbox: seeing nothing doesn't mean it's safe."
+)
+_NETWORK_MODES = {
+    "sinkhole": "registries and its own sites passed; the sandbox answered every other request",
+    "passthrough": "every request was recorded and let through (--network passthrough)",
+    "offline": "no network at all (--network offline)",
+}
+
+
+def describe_sandbox(run: SandboxRun) -> list[tuple[str, str]]:
+    """The dry run's rows: what ran, its network, how long, what it touched, its limits."""
+    lines = run.command.splitlines() or [""]
+    command = one_line(lines[0], 120)
+    if len(lines) > 1:
+        command += f" (and {len(lines) - 1} more line{'s' if len(lines) > 2 else ''})"
+    ran = f"{command}: {one_line(run.why, 100)}" if run.why else command
+    time = f"{run.duration_s:.1f} s"
+    if run.timed_out:
+        time += ", stopped at the time limit"
+    elif run.exit_code == 0:
+        time += ", finished normally"
+    elif run.exit_code is not None:
+        time += f", exited with code {run.exit_code}"
+    if run.arch == "amd64":
+        time += ", as amd64"
+    files = f"{run.files_changed} file{'' if run.files_changed == 1 else 's'} changed"
+    if run.hosts:
+        shown = ", ".join(one_line(h, 60) for h in run.hosts[:5])
+        extra = len(run.hosts) - 5
+        files += f"; contacted {shown}" + (f" and {extra} more" if extra > 0 else "")
+    else:
+        files += "; contacted no sites"
+    return [
+        ("Ran", ran),
+        ("Network", _NETWORK_MODES.get(run.network, run.network)),
+        ("Time", time),
+        ("Touched", files),
+        ("Limits", SANDBOX_LIMITS),
+    ]
 
 
 def describe_tools(report: Report) -> str | None:

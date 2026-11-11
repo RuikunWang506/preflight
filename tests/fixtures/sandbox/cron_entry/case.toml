@@ -1,0 +1,5 @@
+description = "install.sh tries to add a cron job (the sandbox's permissions block it)"
+verdict = "caution"
+
+[expect]
+"sandbox.persistence" = "high"

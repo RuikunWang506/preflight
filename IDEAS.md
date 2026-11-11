@@ -27,4 +27,8 @@ Things worth doing that are outside the v0.1 scope. Add new ideas here instead o
 - **Scan the dependencies' own code.** `guarddog verify` downloads and scans every dependency; worth it with a longer time budget, or inside the sandbox.
 - **"Fixed in" as one version.** Show the lowest version that fixes every advisory, which needs version comparison per ecosystem.
 - **Links in local folders.** The scanners may follow symbolic links in a folder on this computer; copy it without links first.
+- **Keep a dry run's raw records.** `SandboxOptions(keep=...)` saves the trace, the proxy's records and the file changes for developers; a `--keep FOLDER` flag would let users share them.
+- **Names behind connections.** strace shows the addresses a program connects to, not the names it looked up; recording DNS questions would show which sites it tried before giving up.
+- **A real passthrough run in the tests.** `--network passthrough` is covered by the addon's unit tests, but no fixture runs it end to end.
+- **Tracing under emulation.** strace can't follow programs under amd64 emulation on Apple Silicon. A tracer built for that, or a Linux machine, would close the gap.
 - **Show what a known installer changed.** When an allowlisted installer's hash differs from the last one seen, show what changed.

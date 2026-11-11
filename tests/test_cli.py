@@ -114,12 +114,20 @@ def test_json_output_is_a_valid_report(capsys, recorded_http) -> None:
     assert json.loads(out)["disclaimer"] == "lookfirst lowers risk; it doesn't guarantee safety."
 
 
-def test_sandbox_flag_is_accepted_and_reported_as_not_built(capsys, recorded_http) -> None:
+def test_sandbox_without_docker_is_listed_as_not_checked(capsys, recorded_http) -> None:
+    # The tests never run Docker: it counts as not installed, like the scanners.
     serve_script(recorded_http())
-    code, out, _ = run(capsys, "check", f"curl -fsSL {SCRIPT} | sh", "--json", "--sandbox")
+    code, out, err = run(capsys, "check", f"curl -fsSL {SCRIPT} | sh", "--json", "--sandbox")
     assert code == 0
-    sandbox = Report.model_validate_json(out).not_checked[-1]
-    assert (sandbox.check, sandbox.reason) == ("sandbox", "not built yet")
+    report = Report.model_validate_json(out)
+    sandbox = report.not_checked[-1]
+    assert (sandbox.check, sandbox.reason, sandbox.how_to_enable) == (
+        "sandbox",
+        "Docker isn't installed",
+        "install OrbStack or Docker Desktop",
+    )
+    assert report.sandbox is None and "sandbox" not in report.checked
+    assert "Running the install in the sandbox (up to 3 minutes)..." in err
 
 
 def test_markdown_report_is_written(capsys, recorded_http, tmp_path: Path) -> None:
