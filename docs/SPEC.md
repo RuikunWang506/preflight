@@ -123,51 +123,68 @@ A fork is compared with its parent first, then an official project, then the mos
 
 ## 8. Sandbox dry run (`--sandbox`)
 
-**Engine:** the Docker API against Docker Desktop or OrbStack on the Mac. Linux-only in v0.1.
+**Engine:** the `docker` command-line tool against Docker Desktop or OrbStack on the Mac (no Python Docker library; M5 decision 1). Linux containers only in v0.1.
 
-**Image:** `lookfirst-sandbox`, built from `lookfirst/sandbox/Dockerfile`.
+**Image:** `lookfirst-sandbox`, built locally from `lookfirst/sandbox/Dockerfile` on the first `--sandbox` run or with `lookfirst sandbox build` (about 90 seconds once, about 1 GB). It's tagged with the recipe's hash, so a changed Dockerfile builds a new image.
 
-- Debian slim with git, curl, ca-certificates, python3, pip, uv, nodejs, npm, build-essential, strace and procps.
-- Built locally and pinned by digest.
+- Debian 13 slim, pinned by digest, with git, curl, ca-certificates, python3, pip, venv, uv (pinned), nodejs, npm, build-essential, strace and procps.
+- `/.lookfirst-sandbox`, the file every fixture checks for. An ordinary user `sandbox` (uid 1000) owns `/work`, the home folder and a Python environment that `pip install` uses.
 
 **Isolation:**
 
-- **No host mounts.** Copy the target into `/work` with `docker cp` or a tar stream.
-- **Container settings:** not privileged; all capabilities dropped except `SYS_PTRACE` (for strace); pids, memory and CPU limits; a hard timeout (default 180 seconds).
-- **Network:** an internal Docker network whose only way out is a mitmproxy sidecar (`mitmproxy/mitmproxy`, pinned by digest).
-  - Set `HTTP_PROXY` and `HTTPS_PROXY`. Generate a fresh mitmproxy CA for each run and install it in the sandbox trust store.
-  - **Sinkhole by default** (decided 5 Nov 2026): requests to the package registries and the project's own domains pass through. Every other request is recorded in full (so honeytoken markers are still caught) and answered locally with a stub, so nothing leaves the Mac.
-  - `--network=passthrough` lets all traffic through the proxy, as an explicit opt-in.
+- **No host mounts,** and never the Docker socket. The target is copied in with `docker cp` tar streams, without following links and without `.git`, `node_modules`, `.venv` or caches (at most 200 MB and 50,000 files).
+- **Container settings:** no capabilities at all (strace follows its own child processes without `SYS_PTRACE`), no new privileges, the ordinary user, 512 processes, 2 GB of memory, 2 CPUs and a hard time limit (default 180 seconds, `--timeout`).
+- **Network:** an internal Docker network whose only way out is the proxy container, the only one also on an outside network.
+  - mitmproxy 12.3.1, pinned by digest, started straight into `mitmdump` as its ordinary user with no capabilities. lookfirst's addon is copied in, and a fresh certificate authority is made for each run. `connection_strategy=lazy` lets it answer made-up hosts without connecting to them.
+  - lookfirst waits for the addon's "ready" file before a run, so a proxy without its addon, which would forward everything, is never used.
+  - **Sinkhole by default** (decided 5 Nov 2026): package registries (npm, yarn, PyPI) and the project's own sites pass: its GitHub repo, its homepage, and the sites its install command names. Every other request is recorded in full and answered locally with an empty 200, so nothing leaves the Mac. A request carrying a decoy secret is never forwarded, even to an allowed site.
+  - `--network passthrough` lets all traffic through the proxy, as an explicit opt-in. `--network offline` has no proxy at all.
+  - The proxy is set in upper- and lowercase variables (curl only reads the lowercase `http_proxy`), and its certificate in `SSL_CERT_FILE`, `REQUESTS_CA_BUNDLE`, `PIP_CERT`, `NODE_EXTRA_CA_CERTS`, `CURL_CA_BUNDLE` and `GIT_SSL_CAINFO`.
   - Anything that tries to bypass the proxy fails, and strace records the attempt.
-- **`--offline`** removes even the proxy.
-- **Architecture:** arm64 by default (native on Apple Silicon). `--arch amd64` runs under emulation, which is slower but runs the many payloads built only for amd64.
+- **Architecture:** the engine's own by default (arm64 on Apple Silicon). `--arch amd64` runs under emulation, which is slower and catches payloads built only for amd64. Under emulation strace can't follow programs, so only the proxy's record counts, and the report lists what it ran under "Not checked".
 
-**Decoy home** (honeytokens, each holding a unique random marker):
+**Decoy home** (honeytokens). Each holds a value made fresh for every run and never stored, shaped like the real thing because stealers search for those shapes:
 
 - `~/.ssh/id_ed25519` (fake key)
 - `~/.aws/credentials` (a fake `AKIA…` pair)
-- `~/.config/gh/hosts.yml`
-- `~/.npmrc` with a fake token
-- `.env` files in `/work`
-- a fake Chrome profile (`Login Data`, `Cookies`)
-- a fake wallet folder
+- `~/.config/gh/hosts.yml` (a `gho_` token)
+- `~/.npmrc`, with a token for GitHub Packages' registry, which installs never use, so npm doesn't send it while installing
+- `.env` in `/work`, unless the project has its own
+- a fake Chrome profile (`Login Data`, `Cookies`) and fake Exodus and Electrum wallets
+- `GITHUB_TOKEN` and `NPM_TOKEN` in the environment
+
+A value counts as sent if it appears in a request as plain text, base64 (at any alignment), URL-safe base64, hex or URL-encoded.
 
 **Run:**
 
-1. **Choose the command.** Use `--cmd` if given. Otherwise pick the best guess from section 5: the one-liner itself, the README's install block, `npm install`, `pip install .`, `make install`, or `./install.sh`. Show the chosen command in the report.
-2. **Trace it:** wrap it in `strace -f -e trace=execve,openat,connect,unlinkat,renameat2 -o /trace/strace.log`.
-3. **Diff the filesystem:** after it exits or times out, collect `docker diff`.
-4. **Collect network logs:** proxy flows (method, host, path, size, and whether any body contains a honeytoken marker) plus DNS lookups and connect() targets from strace.
+1. **Choose the command.** Use `--cmd` if given. Otherwise:
+   - the one-liner or MCP command itself
+   - an npm or PyPI package installed by name and version into an empty folder
+   - the README's install block (with `git clone` of the project, the `cd` after it and `sudo` dropped)
+   - otherwise `npm install`, `pip install .`, `make install` or `bash install.sh`
+
+   The report shows the chosen command and why it was chosen.
+2. **Trace it:** `strace -f -qq -s 512 -o /dev/stderr -e trace=/^(execve|openat|connect|rename…)$`, streaming to the container's error output, which the command itself can't reach. The command's own output goes to a log.
+3. **Diff the filesystem:** `docker diff` before and after, ignoring the certificate OrbStack adds as a container starts.
+4. **Collect network logs:** the proxy's records (method, host, path, headers, the start of the body, and what it did with the request) and `connect()` targets from strace.
+5. **Clean up:** containers and networks are removed whatever happened. Leftovers older than an hour, from an interrupted run, are swept up next time.
+
+If strace recorded no programs at all on the engine's own architecture, the tracing failed. The dry run is then "not checked", never "nothing seen".
 
 **Findings from the run:**
 
 | Severity | Finding |
 | --- | --- |
-| critical | A honeytoken marker appears in outbound traffic |
-| high | A honeytoken file is read by anything other than the tool that legitimately owns it, for example ssh reading `~/.ssh` during a git-over-ssh clone; writes to persistence locations (shell rc files, `/etc/cron*`, systemd units); a downloaded binary is executed from `/tmp` or the home folder |
-| medium | Connections to domains other than the package registries and the project's own domains; processes still running at the timeout |
+| critical | A decoy value appears in outbound traffic |
+| high | A decoy file is read by anything other than the tool that owns it (npm reading `.npmrc` is fine; `node evil.js` reading it isn't); writes, or attempts, to persistence locations (shell rc files, `/etc/cron*`, systemd units, autostart, `authorized_keys`); a program saved during the install into `/tmp` or the home folder and then run |
+| medium | Requests to sites other than the registries and the project's own; connections that try to go around the proxy; processes still running at the timeout |
+| info | The install command failed, so later steps may not have run |
+
+Attempts count even when the sandbox's permissions block them.
 
 **Limits stated in the report:** the dry run is a Linux container, so macOS-only payloads (for example fake password dialogs) won't fire there; the static rules in section 5 cover them. Malware can detect sandboxes or wait before acting, so "nothing seen" doesn't mean safe.
+
+**Measured on 11 Nov 2026** (OrbStack, Apple Silicon): each fixture takes 4 to 10 seconds. A full check of the decoy-key theft fixture takes 6.0 seconds (the dry run itself 0.3), and of a harmless `npm install` 6.5 seconds (1.2).
 
 **v0.2 (not now):** macOS virtual machines on Apple Silicon (for example Tart; check its license first).
 
