@@ -1,0 +1,6 @@
+description = "install.sh downloads a program into /tmp and runs it"
+verdict = "caution"
+
+[expect]
+"sandbox.ran_downloaded_program" = "high"
+"sandbox.contacted_other_sites" = "medium"

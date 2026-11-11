@@ -1,0 +1,4 @@
+description = "an ordinary pip install . of a tiny Python project"
+verdict = "looks_ok"
+
+[expect]

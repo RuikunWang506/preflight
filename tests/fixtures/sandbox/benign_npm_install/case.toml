@@ -1,0 +1,4 @@
+description = "an ordinary npm install of one small, pinned package"
+verdict = "looks_ok"
+
+[expect]
