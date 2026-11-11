@@ -1,0 +1,11 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "lookfirst-fixture-benign-pip"
+version = "1.0.0"
+description = "A harmless lookfirst test fixture"
+
+[tool.setuptools]
+packages = ["lookfirst_fixture_benign"]

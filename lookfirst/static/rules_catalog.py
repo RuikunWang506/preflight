@@ -541,5 +541,83 @@ RULES.update(
 )
 
 
+# The sandbox dry run (SPEC section 8): what the install did inside the container.
+RULES.update(
+    _rules(
+        CheckKind.sandbox,
+        # --- critical ---
+        (
+            "decoy_sent",
+            C,
+            "Sent a decoy secret out over the network",
+            "During the dry run it sent one of the fake secrets lookfirst left in the "
+            "sandbox. On your computer, your real keys and tokens would go the same way. "
+            "The sandbox kept it from leaving.",
+            _DONT,
+        ),
+        # --- high ---
+        (
+            "decoy_read",
+            H,
+            "Read a decoy secret file",
+            "It opened one of the fake secret files lookfirst left in the sandbox, which an "
+            "install has no reason to touch.",
+            "Don't run it on a computer that has real keys, tokens or wallets.",
+        ),
+        (
+            "persistence",
+            H,
+            "Tried to set itself up to run again later",
+            "During the dry run it wrote, or tried to write, a startup file or a scheduled "
+            "job, so it would run again after the install finished.",
+            "Don't run it. If you already did, check the files listed below.",
+        ),
+        (
+            "ran_downloaded_program",
+            H,
+            "Ran a program it had just downloaded",
+            "It saved a program into a temporary or home folder during the install, then ran "
+            "it. Malware uses this to fetch its real payload.",
+            "Don't run it.",
+        ),
+        # --- medium ---
+        (
+            "contacted_other_sites",
+            M,
+            "Contacted sites other than package registries and its own",
+            "The dry run recorded these requests. In the default mode the sandbox answered "
+            "them itself, so they never left this computer.",
+            "Make sure you know why it contacts these sites.",
+        ),
+        (
+            "direct_connection",
+            M,
+            "Tried to connect straight to an internet address",
+            "Installs reach the internet through the sandbox's recording proxy. These "
+            "connections tried to go around it, which is a way to hide traffic, so they "
+            "failed.",
+            "Check what the program listed below was doing.",
+        ),
+        (
+            "still_running",
+            M,
+            "Was still running when the time limit ran out",
+            "Installs normally finish. Something still running may be waiting to act later, "
+            "or the install was just slow.",
+            "Try a longer --timeout, or look at what was still running.",
+        ),
+        # --- info ---
+        (
+            "install_failed",
+            I,
+            "The install command failed",
+            "It stopped with an error, so later steps may not have run. Installed for real, "
+            "it could do more than the dry run showed.",
+            "If you know the right install command, run the dry run again with --cmd.",
+        ),
+    )
+)
+
+
 def rule(rule_id: str) -> Rule:
     return RULES[rule_id]

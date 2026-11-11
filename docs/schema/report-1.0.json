@@ -254,6 +254,15 @@
     "SandboxRun": {
       "additionalProperties": false,
       "properties": {
+        "arch": {
+          "default": "arm64",
+          "enum": [
+            "arm64",
+            "amd64"
+          ],
+          "title": "Arch",
+          "type": "string"
+        },
         "command": {
           "title": "Command",
           "type": "string"
@@ -275,6 +284,20 @@
           "default": null,
           "title": "Exit Code"
         },
+        "files_changed": {
+          "default": 0,
+          "minimum": 0,
+          "title": "Files Changed",
+          "type": "integer"
+        },
+        "hosts": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 50,
+          "title": "Hosts",
+          "type": "array"
+        },
         "image_digest": {
           "title": "Image Digest",
           "type": "string"
@@ -292,6 +315,18 @@
           "default": false,
           "title": "Timed Out",
           "type": "boolean"
+        },
+        "why": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Why"
         }
       },
       "required": [

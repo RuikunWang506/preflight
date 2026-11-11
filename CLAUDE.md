@@ -54,7 +54,7 @@ macOS VM dry runs (v0.2), Windows, browser extensions, Mac app bundles, a web ve
 - Python 3.12, uv, Typer (CLI), httpx, pydantic (findings schema), rich (terminal output)
 - tree-sitter-bash (MIT) for shell parsing, plus ShellCheck when installed. Not bashlex: it's GPL-3.0 and failed on all 10 real installers we tried. Mark parse-error regions as "couldn't fully read"; never skip them silently.
 - Name distance and README similarity are lookfirst's own code (edit distance with look-alike letters folded; exact Jaccard over 5-word shingles), so no extra libraries
-- docker-py against Docker Desktop or OrbStack; mitmproxy as a container image (`mitmproxy/mitmproxy`, pinned by digest; not a Python dependency); strace inside the sandbox image
+- the `docker` command-line tool against Docker Desktop or OrbStack (no Python Docker library); mitmproxy as a container image (`mitmproxy/mitmproxy`, pinned by digest; not a Python dependency); strace inside the sandbox image
 - the official MCP Python SDK, v2: `mcp>=2.3,<3`, `from mcp.server import MCPServer` (FastMCP was renamed in v2)
 - License: Apache-2.0
 - pytest, ruff; recorded HTTP fixtures so tests never call GitHub
@@ -79,7 +79,9 @@ lookfirst/
                 Inside the package, so it ships with `pip install`. Community-maintained: edit by pull request.
   scanners/     check.py (the package check)  base.py (runs tools safely)  osv.py  guarddog.py
                 lockfiles.py (registry download or local copy?)
-  sandbox/      Dockerfile  runner.py  honeytokens.py  proxy.py  mitm_addon.py  trace_parse.py
+  sandbox/      runner.py (one dry run)  Dockerfile  image.py  docker.py (the docker CLI)  command.py (what to run)
+                honeytokens.py (decoys)  proxy.py  mitm_addon.py (runs inside mitmproxy)  trace_parse.py (strace)
+                analyze.py (findings)  transfer.py (docker cp tar streams; nothing is mounted)
   verdict/      schema.py  scoring.py  describe.py (shared wording)  render_terminal.py  render_markdown.py
   mcp_server.py
   hook.py       Claude Code PreToolUse handler; the fast path imports only the standard library (under 50 ms)
@@ -100,8 +102,9 @@ Keep this section accurate whenever scripts change.
 - setup: `uv sync`
 - optional scanners: `brew install osv-scanner` and `uv tool install --python 3.12 guarddog`
 - check: `uv run lookfirst check <target>` (add `--json` for JSON, `--report FILE` for Markdown)
-- sandbox image build: (fill in at M5)
-- test: `uv run pytest` (never uses the network; sandbox tests are marked `sandbox` and run on Linux CI from M5)
+- sandbox image build: `uv run lookfirst sandbox build` (also happens on the first `--sandbox` run; needs Docker)
+- test: `uv run pytest` (never uses the network or Docker)
+- sandbox tests, which run the fixtures in Docker: `LOOKFIRST_SANDBOX_TESTS=1 uv run pytest -m sandbox` (CI runs them on Linux)
 - lint: `uv run ruff check . && uv run ruff format --check .`
 - refresh the recorded HTTP fixtures (uses the network; a `gh` token, if any, only raises the rate limit): `uv run python scripts/record_fixtures.py`
 - rebuild the popular-repos list that ships with lookfirst (needs a GitHub token, about 3 minutes): `uv run python scripts/build_popular_index.py`

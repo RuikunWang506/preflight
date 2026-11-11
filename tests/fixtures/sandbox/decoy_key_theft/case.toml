@@ -1,0 +1,7 @@
+description = "install.sh reads the SSH key and posts it to a server"
+verdict = "dont_run"
+
+[expect]
+"sandbox.decoy_sent" = "critical"
+"sandbox.decoy_read" = "high"
+"sandbox.contacted_other_sites" = "medium"

@@ -18,6 +18,7 @@ from lookfirst.verdict.describe import (
     SKELETON_NOTE,
     Segment,
     describe_identity,
+    describe_sandbox,
     describe_target,
     describe_tools,
     evidence_notes,
@@ -195,6 +196,13 @@ def render_markdown(report: Report) -> str:
         lines += [f"## {header}", ""]
         for f in minor:
             lines += _finding(f, commit)
+
+    if report.sandbox is not None:
+        lines += ["## Sandbox dry run", "", "| | |", "| --- | --- |"]
+        for label, text in describe_sandbox(report.sandbox):
+            value = md_code(text, None) if label == "Ran" else md_text(text, None)
+            lines.append(f"| {label} | {value} |")
+        lines.append("")
 
     if report.not_checked:
         lines += ["## Not checked", ""]

@@ -19,6 +19,7 @@ from lookfirst.verdict.describe import (
     SKELETON_NOTE,
     Segment,
     describe_identity,
+    describe_sandbox,
     describe_target,
     describe_tools,
     evidence_notes,
@@ -148,6 +149,16 @@ def render_terminal(report: Report, console: Console) -> None:
                 folded.add_row("", Text(where, style="dim"))
         console.print(_indented(folded, 2))
         console.print(_indented(Text("Add --report FILE to see every detail.", style="dim"), 2))
+
+    if report.sandbox is not None:
+        console.print()
+        console.print(_indented(Text("Sandbox dry run", style="bold")))
+        rows = Table.grid(padding=(0, 3))
+        rows.add_column(style="dim", no_wrap=True)
+        rows.add_column()
+        for label, text in describe_sandbox(report.sandbox):
+            rows.add_row(label, Text(text))
+        console.print(_indented(rows, 2))
 
     if report.not_checked:
         console.print()
