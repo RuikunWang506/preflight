@@ -14,10 +14,11 @@ dependencies = [
     "tree-sitter-bash>=0.25",
     "pyyaml>=6.0",
     "markdown-it-py>=4.0",
+    "mcp>=2.3,<3",
 ]
 
 [project.scripts]
-lookfirst = "lookfirst.cli:main"
+lookfirst = "lookfirst.entry:main"
 
 [dependency-groups]
 dev = [
