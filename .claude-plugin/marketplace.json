@@ -1,0 +1,15 @@
+{
+  "name": "lookfirst",
+  "owner": {
+    "name": "lookfirst"
+  },
+  "description": "The lookfirst plugin for Claude Code: check repos, shell one-liners, packages and MCP servers before your agent runs them.",
+  "plugins": [
+    {
+      "name": "lookfirst",
+      "source": "./plugin",
+      "description": "Checks code from strangers before your agent runs it: a hook that stops risky install commands, an MCP tool and a skill. Needs the lookfirst command (uv tool install lookfirst).",
+      "category": "security"
+    }
+  ]
+}

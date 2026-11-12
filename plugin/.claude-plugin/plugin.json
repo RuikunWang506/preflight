@@ -1,0 +1,10 @@
+{
+  "name": "lookfirst",
+  "version": "0.1.0.dev0",
+  "description": "Checks code from strangers before your agent runs it: a hook that stops risky install commands, an MCP tool and a skill. Needs the lookfirst command (uv tool install lookfirst).",
+  "author": {
+    "name": "lookfirst"
+  },
+  "license": "Apache-2.0",
+  "keywords": ["security", "supply-chain", "install", "impersonation", "hook", "mcp"]
+}

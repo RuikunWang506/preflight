@@ -1,0 +1,17 @@
+{
+  "description": "lookfirst checks commands that install something or run downloaded code, before they run.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh \"${CLAUDE_PLUGIN_ROOT}/scripts/run-lookfirst\" hook",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
