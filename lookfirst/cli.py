@@ -216,6 +216,24 @@ def update_index() -> None:
     console.print(f"Saved {len(popular_index.load_index()):,} popular repos to {path}.")
 
 
+@app.command("mcp")
+def mcp() -> None:
+    """Run lookfirst as an MCP server over stdio, so a coding agent can call it."""
+    from lookfirst.mcp_server import main as mcp_main
+
+    mcp_main()
+
+
+@app.command("hook", context_settings={"allow_extra_args": True, "ignore_unknown_options": True})
+def hook() -> None:
+    """Claude Code's PreToolUse hook for the Bash tool. Reads the hook's JSON on stdin."""
+    # `lookfirst hook` normally never gets here: lookfirst/entry.py hands it off before
+    # Typer loads, to keep it fast. This is for --help and for running cli.py directly.
+    from lookfirst.hook import main as hook_main
+
+    raise typer.Exit(hook_main(()))
+
+
 @sandbox_app.command("build")
 def sandbox_build(
     arch: Annotated[

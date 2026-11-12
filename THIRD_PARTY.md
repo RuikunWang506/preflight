@@ -31,6 +31,15 @@ Versions are the ones in `uv.lock`. uv only installs versions published at least
 | annotated-types | 0.8.0 | MIT | Needed by pydantic |
 | typing-inspection | 0.4.4 | MIT | Needed by pydantic |
 | typing-extensions | 4.16.0 | PSF-2.0 | Needed by typer and pydantic |
+| mcp | 2.3.0 | MIT | The official MCP Python SDK: `lookfirst mcp` (M6). Never imported by the hook's fast path. |
+| mcp-types | 2.3.0 | MIT | Needed by mcp: the protocol's message types |
+| httpx2, httpcore2 | 2.16.0, 2.16.0 | BSD-3-Clause | Needed by mcp: Pydantic's continuation of httpx. lookfirst's own requests still use httpx. |
+| truststore | 0.10.5 | MIT | Needed by httpx2 |
+| starlette, sse-starlette, uvicorn, python-multipart | 1.9.0, 3.5.0, 0.54.0, 0.0.32 | BSD-3-Clause (starlette, sse-starlette, uvicorn), Apache-2.0 (python-multipart) | Needed by mcp for its web transports. `lookfirst mcp` only uses stdio. |
+| click | 8.5.0 | BSD-3-Clause | Needed by uvicorn |
+| jsonschema, jsonschema-specifications, referencing, rpds-py, attrs | 4.26.0, 2025.9.1, 0.37.0, 2026.9.1, 26.1.0 | MIT | Needed by mcp to check tool inputs |
+| pyjwt, cryptography, cffi, pycparser | 2.15.1, 50.0.2, 2.1.1, 3.12 | MIT (pyjwt), Apache-2.0 OR BSD-3-Clause (cryptography), MIT-0 (cffi), BSD-3-Clause (pycparser) | Needed by mcp for its sign-in support, which `lookfirst mcp` doesn't use |
+| opentelemetry-api | 1.45.1 | Apache-2.0 | Needed by mcp. The API alone sends nothing anywhere. |
 
 ## Development only (not installed for users)
 
@@ -86,11 +95,7 @@ Installed into the sandbox image from Debian (and uv from PyPI) when you build i
 
 ## Planned (record the exact version when it's added)
 
-M3 (the identity check) added no libraries: name distance and README similarity are lookfirst's own code, so rapidfuzz and datasketch are no longer planned.
-
-| Package or image | License | For |
-| --- | --- | --- |
-| mcp (official MCP Python SDK) | MIT | MCP server (M6) |
+M3 (the identity check) added no libraries: name distance and README similarity are lookfirst's own code, so rapidfuzz and datasketch are no longer planned. The MCP SDK, the last planned entry, was added in M6 (the table above).
 
 ## Test fixtures
 
