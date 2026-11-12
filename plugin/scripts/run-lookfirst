@@ -1,0 +1,25 @@
+#!/bin/sh
+# Starts the lookfirst command for this plugin's hook and MCP server.
+#
+# lookfirst itself is installed separately: uv tool install lookfirst. Claude Code's PATH
+# can miss the folders where uv, pipx and Homebrew put commands, so those are tried too.
+for candidate in "$(command -v lookfirst 2>/dev/null)" "$HOME/.local/bin/lookfirst" \
+    /opt/homebrew/bin/lookfirst /usr/local/bin/lookfirst; do
+    if [ -n "$candidate" ] && [ -x "$candidate" ]; then
+        exec "$candidate" "$@"
+    fi
+done
+
+message="lookfirst isn't installed, so this plugin can't check commands yet. Install it with: uv tool install lookfirst"
+if [ "$1" = "hook" ]; then
+    # Never block the agent: let the command through, and say why at most once a day.
+    folder="${CLAUDE_PLUGIN_DATA:-${TMPDIR:-/tmp}}"
+    marker="$folder/lookfirst-missing-warned"
+    if [ -z "$(find "$marker" -mtime -1 2>/dev/null)" ]; then
+        mkdir -p "$folder" 2>/dev/null && touch "$marker" 2>/dev/null
+        printf '{"systemMessage": "%s"}\n' "$message"
+    fi
+    exit 0
+fi
+echo "$message" >&2
+exit 1
