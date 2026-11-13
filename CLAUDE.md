@@ -92,10 +92,12 @@ plugin/         .claude-plugin/plugin.json  hooks/hooks.json  .mcp.json  skills/
                 scripts/run-lookfirst (finds the lookfirst command for the hook and the MCP server)
 .claude-plugin/ marketplace.json (makes this repo installable as a plugin marketplace)
 scripts/        record_fixtures.py  export_schema.py  build_popular_index.py  bench_hook.py
+                time_check.py (live timing for SPEC section 12)  make_demo_images.py (docs/demo/)
 data/           local data, gitignored except data/seed/ (the trending archive goes there when added)
 tests/          conftest.py (no network, no real tokens, host canary)  helpers.py
                 fixtures/ (harmless fakes, recorded API responses, lookalike pairs, injection README)
-docs/           SPEC.md  KICKOFF.md  THREAT_MODEL.md  PLAN-v0.1.md  schema/report-1.0.json (generated)
+docs/           SPEC.md  KICKOFF.md  THREAT_MODEL.md  PLAN-v0.1.md  RELEASE-NOTES-0.1.0.md
+                schema/report-1.0.json (generated)  demo/ (the README's images and how they were made)
 THIRD_PARTY.md  IDEAS.md  README.md  LICENSE
 ```
 
@@ -111,6 +113,8 @@ Keep this section accurate whenever scripts change.
 - sandbox tests, which run the fixtures in Docker: `LOOKFIRST_SANDBOX_TESTS=1 uv run pytest -m sandbox` (CI runs them on Linux)
 - the hook: `uv run lookfirst hook` reads Claude Code's hook JSON on stdin (the plugin runs it); the MCP server: `uv run lookfirst mcp`
 - time the hook: `uv run python scripts/bench_hook.py` (add `--installs` to also time install commands, which uses the network)
+- time full checks on 12 well-known repos (uses the network and your GitHub token): `uv run python scripts/time_check.py`
+- remake the README's demo images (the sandbox one needs Docker): `uv run python scripts/make_demo_images.py`
 - check the plugin and the marketplace file: `claude plugin validate plugin` and `claude plugin validate .`
 - try the plugin from this checkout: `uv tool install --editable .`, then in a scratch folder `claude plugin marketplace add <this folder> --scope project` and `claude plugin install lookfirst@lookfirst --scope project`
 - lint: `uv run ruff check . && uv run ruff format --check .`

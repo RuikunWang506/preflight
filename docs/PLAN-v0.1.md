@@ -347,3 +347,38 @@ The recording (11 and 12 Nov 2026): not done yet. Four sessions in the Claude ap
 What the sessions do show: the plugin loads, the MCP server starts through the launcher, an agent calls `lookfirst_check` unprompted and acts on the verdict, and ordinary commands pass through the hook unnoticed. What they don't show is a deny in a live session. Outside a session, the same launcher with the same hook JSON denies every way of running that installer (`./install.sh`, `sh install.sh`, `cd quickchart && ./install.sh`, `bash quickchart/install.sh`) in about 0.4 s, and lets `cat` and `ls` through in 29 ms.
 
 Current Claude models read a local install script before running it, so a script in the folder is the wrong demo. The hook earns its place where the agent can't or doesn't read first: a `curl … | bash` line, or an `npm install` whose `postinstall` script does the damage. The recording moves to M7, with one of those.
+
+## M7 decisions (all accepted as recommended, 13 Nov 2026)
+
+| # | Decision | Outcome |
+| --- | --- | --- |
+| 1 | The hook demo | A freshly cloned fake repo, csvplot, whose `postinstall` script is the `credential_theft_javascript` fixture; Haiku 5.5 at low effort; a plain "install it by following its README" |
+| 2 | If that agent refuses too | Stop trying; the live recording is done with the owner at launch. It did refuse, so item 4 of SPEC section 12 stands as verified offline only |
+| 3 | The README demo | Three still images from lookfirst's real output (`docs/demo/`, made by `scripts/make_demo_images.py`); a video waits for launch |
+| 4 | Install steps | Written for launch day: `uv tool install lookfirst` and the plugin from `lookfirst-dev/lookfirst`, plus a from-source section |
+| 5 | Threat model | `docs/THREAT_MODEL.md`, with a summary in the README |
+| 6 | Version | Stays `0.1.0.dev0`; `docs/RELEASE-NOTES-0.1.0.md` is ready, and the version change and tag happen at launch, after the names are reserved |
+| 7 | CI | A Linux lint-and-tests job alongside the macOS one, so a shortage of macOS runners can't block a merge |
+
+The fifth live session (13 Nov 2026): Haiku 5.5 read the README, then `package.json` and `scripts/setup.js`, and refused within 13 seconds, before running anything. The hook had nothing to stop. Every Claude model tried reads a project's own install code before running it.
+
+Measured on 13 Nov 2026 (`scripts/time_check.py`, with a GitHub token): a full check of 12 well-known repos took 3.3 to 10.6 seconds (median 4.7 s) against the 30-second target, and no Caution or Don't-run reason lacked evidence. The hook now takes 31 ms per ordinary command (`scripts/bench_hook.py`).
+
+Found in M7, and handled (each now covered by a test):
+
+- **A bare `npm link` wasn't checked.** It installs the folder globally and runs its install scripts, like `npm install`. The hook now checks it in a fresh clone.
+- **Credential theft in JavaScript and Python pointed at the file's first line, with no quote.** The evidence now points at the line that names the secret and quotes it, which the hook passes on to the agent.
+- **The test that the hook loads only the standard library failed on Linux,** because a virtual environment can load its own start-up module before lookfirst does. The test now ignores whatever Python loaded before lookfirst.
+
+Open, for the owner to decide: **axios gets a Caution.** Its issue template holds a line addressed to AI agents, hidden in a comment, that maintainers use to spot AI-written issues. SPEC section 6 includes issue templates, and hidden agent-aimed text is high (M2 decision), so lookfirst works as specified. But an agent installing axios never reads its issue templates. Options: rate hidden instructions in `.github/` issue and pull-request templates as medium (Looks OK with a note), or keep the rule and list it as a known limit, as the release notes now do.
+
+### SPEC section 12 at the end of M7
+
+| # | Item | Status | Evidence |
+| --- | --- | --- | --- |
+| 1 | Static check under 30 s with a token; evidence for every serious reason | Met | 3.3 to 10.6 s on 12 repos (`scripts/time_check.py`); the findings schema requires evidence for high and critical findings |
+| 2 | Sandbox under 3 minutes; catches theft, persistence and binary-run; passes both benign installs | Met | 6 Docker tests pass in 32 s in all (`-m sandbox`), also in CI on Linux |
+| 3 | Every lookalike flagged with the original named; none of 20 trusted repos gets Don't run | Met | `tests/test_identity.py` |
+| 4 | Hook blocks the malicious fixture in a recorded session; under 100 ms on unrelated commands | **Partly met** | 31 ms per command. The block is verified offline with the exact input Claude Code sends (`tests/test_hook.py`, the demo images), but not recorded live: in five sessions the agent refused before the hook was needed |
+| 5 | Host canary passes; the injection fixture can't change the verdict | Met | `tests/conftest.py`, `tests/test_install_fixtures.py`, `tests/test_mcp_server.py` |
+| 6 | README: 30-second demo, install steps, threat model, what is and isn't checked, the safety statement | Met | `README.md`, `docs/THREAT_MODEL.md`, kept true by `tests/test_docs.py` |

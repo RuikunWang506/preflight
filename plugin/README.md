@@ -26,12 +26,13 @@ lookfirst lowers risk; it doesn't guarantee safety.
 2. Add this repository as a plugin marketplace, then install the plugin. In Claude Code:
 
    ```text
-   /plugin marketplace add <path or GitHub address of this repository>
+   /plugin marketplace add lookfirst-dev/lookfirst
    /plugin install lookfirst@lookfirst
    ```
 
-   Or from a terminal: `claude plugin marketplace add <path>`, then
-   `claude plugin install lookfirst@lookfirst`.
+   Or from a terminal: `claude plugin marketplace add lookfirst-dev/lookfirst`, then
+   `claude plugin install lookfirst@lookfirst`. To try a copy of this repository instead, give
+   its path in place of `lookfirst-dev/lookfirst`.
 
 ## How it behaves
 
