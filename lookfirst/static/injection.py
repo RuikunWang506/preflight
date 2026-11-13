@@ -117,6 +117,12 @@ _INVISIBLE = re.compile(
 )
 _TEST_PATH = re.compile(r"(?:^|/)(?:tests?|__tests__|specs?|fixtures|testdata)/|(?:^|/)test_[^/]*$")
 _COMMENT_LINE = re.compile(r"^\s*(?:#|//|/\*|\*|<!--|--|;)\s?(.*)$")
+# GitHub's issue and pull-request forms, in .github/, docs/ or the top folder. Projects hide
+# notes there to spot reports written by AI; an agent installing the project never reads them.
+_TEMPLATE = re.compile(
+    r"^(?:\.github/|docs/)?(?:issue_template|pull_request_template)(?:/[^/]+|\.(?:md|ya?ml))$",
+    re.IGNORECASE,
+)
 
 
 def _line(text: str, offset: int) -> int:
@@ -155,12 +161,20 @@ def _aimed_at_agents(text: str) -> bool:
     return bool(_ADDRESSED.search(text) or (_OVERRIDE.search(text) or _SECRECY.search(text)))
 
 
+def _hidden_rule(rel: str, text: str) -> str:
+    """Hidden text addressed to AI in an issue or pull-request form is a note (medium), unless
+    it tells the agent to run something, drop its instructions or keep secrets."""
+    if _TEMPLATE.match(rel) and _directive(text) is None:
+        return "injection.template_note"
+    return "injection.hidden_instructions"
+
+
 def _hidden(text: str, rel: str, out: Collector) -> None:
     for m in _HTML_COMMENT.finditer(text):
         body = m.group(1).strip()
         if len(body) >= 12 and _aimed_at_agents(body):
             out.add(
-                "injection.hidden_instructions",
+                _hidden_rule(rel, body),
                 path=rel,
                 line=_line(text, m.start()),
                 excerpt=body,
@@ -171,7 +185,7 @@ def _hidden(text: str, rel: str, out: Collector) -> None:
             alt = m.group(group)
             if _aimed_at_agents(alt):
                 out.add(
-                    "injection.hidden_instructions",
+                    _hidden_rule(rel, alt),
                     path=rel,
                     line=_line(text, m.start()),
                     excerpt=alt,

@@ -425,6 +425,15 @@ RULES: dict[str, Rule] = {
             "Don't let an AI agent work with this project until you've read the text below.",
         ),
         (
+            "template_note",
+            M,
+            "Has a hidden note for AI agents in its issue or pull-request form",
+            "Some projects hide a line in their bug-report or pull-request forms to spot reports "
+            "written by AI. Agents that install or use the project don't read these forms.",
+            "Nothing to do before installing it. If an AI agent files issues or pull requests "
+            "for you here, read the text below first.",
+        ),
+        (
             "agent_directed",
             H,
             "Tells AI agents to run commands or ignore their instructions",
