@@ -71,19 +71,33 @@ def _strings(node: ast.AST) -> list[str]:
 
 def _credentials_and_network(
     text: str, strings: list[str], network: re.Pattern[str]
-) -> tuple[str | None, bool]:
-    kinds = [k for s in strings if (k := credential_kind(s))]
-    if not kinds:
+) -> tuple[str | None, bool, str]:
+    """What kind of saved secret the code names, whether it uses the network, and the
+    text that named the secret (to point the evidence at it)."""
+    found = [(k, s) for s in strings if (k := credential_kind(s))]
+    if not found:
         # paths built in pieces, like os.path.join(home, ".ssh", "id_rsa")
         squashed = re.sub(r"['\"]\s*,\s*['\"]|['\"]\s*\+\s*['\"]", "/", text)
-        kinds = [
-            k
+        found = [
+            (k, m.group(0).lstrip("~/").split("/")[0])
             for m in re.finditer(
                 r"~?/?\.(?:ssh|aws|npmrc|netrc|docker|kube|gnupg|config/gh)[^'\"\s]*", squashed
             )
             if (k := credential_kind("~/" + m.group(0).lstrip("~/")))
         ]
-    return (kinds[0] if kinds else None), bool(network.search(text))
+    if not found:
+        return None, False, ""
+    kind, needle = found[0]
+    return kind, bool(network.search(text)), needle
+
+
+def _line_naming(text: str, needle: str, origin: Origin) -> tuple[int, str]:
+    """The line that names the secret, and that line as the excerpt. Falls back to where
+    the code starts when the name can't be found as written (built from pieces)."""
+    for number, line in enumerate(text.splitlines()):
+        if needle and needle in line:
+            return origin.line + number, line.strip()[:200]
+    return origin.line, ""
 
 
 def analyze_python(text: str, origin: Origin, out: Collector, *, is_setup_py: bool) -> CodeResult:
@@ -138,19 +152,35 @@ def analyze_python(text: str, origin: Origin, out: Collector, *, is_setup_py: bo
                     excerpt=ast.unparse(node)[:200],
                     runs=origin.runs,
                 )
-    kind, network = _credentials_and_network(text, _strings(tree), _PY_NETWORK)
+    kind, network, needle = _credentials_and_network(text, _strings(tree), _PY_NETWORK)
     if kind:
         rule = "install_path.credential_theft" if network else "install_path.credential_read"
-        out.add(rule, path=origin.path, line=origin.line, runs=origin.runs, data={"what": kind})
+        line, excerpt = _line_naming(text, needle, origin)
+        out.add(
+            rule,
+            path=origin.path,
+            line=line,
+            excerpt=excerpt or None,
+            runs=origin.runs,
+            data={"what": kind},
+        )
     return CodeResult(shell, install_hook)
 
 
 def analyze_javascript(text: str, origin: Origin, out: Collector) -> CodeResult:
     strings = [m.group(2) for m in _STRING.finditer(text)]
-    kind, network = _credentials_and_network(text, strings, _JS_NETWORK)
+    kind, network, needle = _credentials_and_network(text, strings, _JS_NETWORK)
     if kind:
         rule = "install_path.credential_theft" if network else "install_path.credential_read"
-        out.add(rule, path=origin.path, line=origin.line, runs=origin.runs, data={"what": kind})
+        line, excerpt = _line_naming(text, needle, origin)
+        out.add(
+            rule,
+            path=origin.path,
+            line=line,
+            excerpt=excerpt or None,
+            runs=origin.runs,
+            data={"what": kind},
+        )
     for m in _JS_DECODE_RUN.finditer(text):
         line = origin.line + text.count("\n", 0, m.start())
         out.add(

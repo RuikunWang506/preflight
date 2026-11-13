@@ -212,6 +212,8 @@ def fake_clone(
         "make",
         "npm install",
         "npm ci",
+        "npm link",
+        "npm install && npm link",
         "yarn",
         "pnpm install",
         "pip install .",
@@ -456,11 +458,14 @@ def test_the_fast_path_loads_only_the_standard_library() -> None:
     the MCP SDK would add tens or hundreds of milliseconds to every command."""
     script = (
         "import io, sys\n"
+        # what Python loaded before lookfirst, such as a virtualenv's own start-up module
+        "before = {m.split('.')[0] for m in sys.modules}\n"
         "sys.stdin = io.TextIOWrapper(io.BytesIO(" + repr(hook_input("git status && ls")) + "))\n"
         "from lookfirst.entry import main\n"
         "assert main(['hook']) == 0\n"
         "outside = sorted(m.split('.')[0] for m in sys.modules\n"
-        "    if m.split('.')[0] not in sys.stdlib_module_names and m.split('.')[0] not in ('lookfirst', '__main__'))\n"
+        "    if m.split('.')[0] not in sys.stdlib_module_names and m.split('.')[0] not in before\n"
+        "    and m.split('.')[0] not in ('lookfirst', '__main__'))\n"
         "print(' '.join(sorted(set(outside))))\n"
         "print(' '.join(sorted(m for m in sys.modules if m.startswith('lookfirst'))))\n"
     )
