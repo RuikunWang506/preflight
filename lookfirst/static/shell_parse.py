@@ -282,6 +282,15 @@ class _Walker:
         for i, kind, sub in pending:
             for child in sub.named_children:
                 self.visit(child, {"parent": index, "subst": kind, "parent_arg": i})
+        for child in node.named_children:  # `cmd <<< text`: the grammar puts it in the command
+            if child.type != "herestring_redirect":
+                continue
+            for part in child.named_children:
+                value, _, _, substs = self.word(part)
+                cmd.herestring = value
+                for kind, sub in substs:
+                    for grandchild in sub.named_children:
+                        self.visit(grandchild, {"parent": index, "subst": kind})
 
 
 def _error_ranges(node: Node) -> list[tuple[int, int]]:

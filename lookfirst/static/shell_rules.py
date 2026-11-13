@@ -5,7 +5,10 @@ the same rules, up to 3 levels deep.
 
 from __future__ import annotations
 
+import base64
+import hashlib
 import re
+import zlib
 from dataclasses import dataclass, field
 
 from lookfirst.core.urls import url_host, url_path
@@ -172,7 +175,13 @@ _SECRET_HOME = {
 
 
 def basename(word: str) -> str:
-    return word.rsplit("/", 1)[-1]
+    """A program's name. macOS finds programs whatever their case, so `CURL ... | BASH` runs
+    curl and bash: names are compared in lowercase. File names keep their case."""
+    return word.rsplit("/", 1)[-1].lower()
+
+
+def _file_name(path: str) -> str:
+    return path.rsplit("/", 1)[-1]
 
 
 def peel(argv: list[str]) -> tuple[list[str], list[str]]:
@@ -332,7 +341,7 @@ def as_download(cmd: Command) -> Download | None:
         outs = [v for o, v in opts if o in ("-o", "--output") and v != "-"]
         remote_name = any(o in ("-O", "--remote-name", "--remote-name-all") for o, _ in opts)
         if remote_name:
-            outs += [basename(url_path(u)) or "index.html" for u in urls if u != DYNAMIC]
+            outs += [_file_name(url_path(u)) or "index.html" for u in urls if u != DYNAMIC]
         sends = any(o in _CURL_SENDS for o, _ in opts) or any(
             o in ("-X", "--request") and v.upper() in ("POST", "PUT", "PATCH") for o, v in opts
         )
@@ -348,7 +357,7 @@ def as_download(cmd: Command) -> Download | None:
         to_stdout = "-" in doc
         outs = [v for v in doc if v != "-"]
         if not doc:
-            outs += [basename(url_path(u)) or "index.html" for u in urls if u != DYNAMIC]
+            outs += [_file_name(url_path(u)) or "index.html" for u in urls if u != DYNAMIC]
         sends = any(
             o in ("--post-data", "--post-file", "--body-data", "--body-file") for o, _ in opts
         )
@@ -541,6 +550,75 @@ def _is_decoder(cmd: Command) -> bool:
     return False
 
 
+MAX_DECODED = 512 * 1024  # bytes of decoded text that are read
+MAX_DECODE_DEPTH = 3  # decoded text inside decoded text inside ..., like downloads
+_BASE64_TEXT = re.compile(r"[A-Za-z0-9+/_-]+=*")
+_ECHO_FLAGS = re.compile(r"-[neE]+")
+
+
+def decoded_payload(decoder: Command, members: list[Command]) -> str | None:
+    """The text a decoder hands to the shell, when the command spells it out: `echo <base64>
+    | base64 -d`, `base64 -d <<< <base64>`, a here-document, or `xxd -r -p` for hex. This
+    is the "paste this into Terminal" trick: decoding it is just reading, and lookfirst
+    then checks what's inside with every rule. None if it isn't written out or isn't text."""
+    _, rest = peel(decoder.argv)
+    if not rest:
+        return None
+    name, args = basename(rest[0]), rest[1:]
+    if name == "base64" or (name == "openssl" and ("base64" in args or "-base64" in args)):
+        kind = "base64"
+    elif name == "xxd" and any(a.startswith("-r") for a in args):
+        kind = "hex"
+    else:
+        return None
+    encoded = decoder.herestring or decoder.heredoc
+    if encoded is None and decoder.pipeline is not None:
+        feeders = [
+            m
+            for m in members
+            if m.pipeline == decoder.pipeline and m.position == decoder.position - 1
+        ]
+        if len(feeders) != 1 or feeders[0].dynamic:
+            return None
+        _, words = peel(feeders[0].argv)
+        if not words:
+            return None
+        program, values = basename(words[0]), words[1:]
+        if program == "echo":
+            encoded = " ".join(v for v in values if not _ECHO_FLAGS.fullmatch(v))
+        elif program == "printf":
+            encoded = " ".join(values[1:] if values and "%" in values[0] else values)
+        elif program == "cat" and feeders[0].heredoc:
+            encoded = feeders[0].heredoc
+        else:
+            return None
+    return _decode(kind, encoded or "")
+
+
+def _decode(kind: str, encoded: str) -> str | None:
+    compact = "".join(encoded.split())
+    if not compact or len(compact) > 4 * MAX_DECODED:
+        return None
+    try:
+        if kind == "hex":
+            data = bytes.fromhex(compact)
+        elif _BASE64_TEXT.fullmatch(compact):
+            urlsafe = "-" in compact or "_" in compact
+            padded = compact.rstrip("=") + "=" * (-len(compact.rstrip("=")) % 4)
+            data = base64.b64decode(padded, altchars=b"-_" if urlsafe else None)
+        else:
+            return None
+        if data[:2] == b"\x1f\x8b":  # gzip, as in `base64 -d | gunzip | sh`
+            data = zlib.decompressobj(wbits=31).decompress(data, MAX_DECODED)
+    except (ValueError, zlib.error):
+        return None
+    text = data[:MAX_DECODED].decode("utf-8", "replace")
+    if not text.strip():
+        return None
+    printable = sum(ch.isprintable() or ch in "\n\r\t" for ch in text)
+    return text if printable >= 0.95 * len(text) else None  # else a program, not a script
+
+
 @dataclass
 class _Run:
     runner: Command
@@ -548,6 +626,7 @@ class _Run:
     via: str  # "pipe", "substitution", "process" or "file"
     sudo: bool
     excerpt: str
+    payload: str | None = None  # for via "decode": the decoded text, if it's written out
 
 
 @dataclass
@@ -822,7 +901,8 @@ class ShellAnalyzer:
                         runs.append(_Run(c, downloads[o.index], "pipe", sudo, text))
                     if _is_decoder(o) and c.index not in decoded:
                         decoded.add(c.index)
-                        runs.append(_Run(c, None, "decode", sudo, text))
+                        payload = decoded_payload(o, parsed.pipeline(c.pipeline))
+                        runs.append(_Run(c, None, "decode", sudo, text, payload))
             # 2. bash -c "$(curl ...)", eval "$(...)", source <(curl ...), bash <(curl ...)
             runs_code = name == "eval" or name in SOURCE or (name in SHELLS | SCRIPT_RUNNERS)
             if runs_code:
@@ -837,22 +917,25 @@ class ShellAnalyzer:
                         continue
                     if child.subst not in ("command", "process_in"):
                         continue
-                    for member in self._substitution_members(parsed, child):
+                    members = self._substitution_members(parsed, child)
+                    for member in members:
                         if member.index in downloads and downloads[member.index].to_stdout:
                             runs.append(
                                 _Run(c, downloads[member.index], "substitution", sudo, c.raw)
                             )
                         if _is_decoder(member) and c.index not in decoded:
                             decoded.add(c.index)
-                            runs.append(_Run(c, None, "decode", sudo, c.raw))
+                            payload = decoded_payload(member, members)
+                            runs.append(_Run(c, None, "decode", sudo, c.raw, payload))
             # 3. "$(echo ... | base64 -d)" used as the command itself
             if c.argv and c.argv[0].startswith(f"$({DYNAMIC}") and c.index not in decoded:
                 for child in parsed.children(c.index):
-                    if child.parent_arg == 0 and any(
-                        _is_decoder(m) for m in self._substitution_members(parsed, child)
-                    ):
+                    members = self._substitution_members(parsed, child)
+                    decoders = [m for m in members if _is_decoder(m)]
+                    if child.parent_arg == 0 and decoders:
                         decoded.add(c.index)
-                        runs.append(_Run(c, None, "decode", sudo, c.raw))
+                        payload = decoded_payload(decoders[0], members)
+                        runs.append(_Run(c, None, "decode", sudo, c.raw, payload))
                         break
         # 4. curl -o file URL; chmod +x file; ./file  (handled below, after de-duplication)
         unique: dict[tuple[int, int | None, str], _Run] = {}
@@ -915,6 +998,7 @@ class ShellAnalyzer:
         }
         if run.via == "decode":
             self.out.add("install_path.decode_and_run", **where)
+            self._read_decoded(run, origin)
             return
         download = run.download
         if download is None:
@@ -996,6 +1080,22 @@ class ShellAnalyzer:
                 )
                 if snippet.root_command and run.via in ("pipe", "substitution"):
                     self.core_unreadable.append(f"{url}: {reason}")
+
+    def _read_decoded(self, run: _Run, origin: Origin) -> None:
+        """Check the decoded text with every rule, as if it were a script of its own."""
+        if run.payload is None or origin.depth >= MAX_DECODE_DEPTH:
+            return
+        key = "decoded:" + hashlib.sha256(run.payload.encode()).hexdigest()
+        if key in self._analyzed:
+            return
+        self._analyzed.add(key)
+        path = "the command, decoded" if origin.path == "command" else f"{origin.path}, decoded"
+        self.analyze(
+            Snippet(
+                run.payload,
+                Origin(path, 1, origin.runs, origin.remote, origin.depth + 1),
+            )
+        )
 
     def _fetch(self, url: str, tool: str, origin: Origin) -> RemoteScript | None:
         if self.reader is None:

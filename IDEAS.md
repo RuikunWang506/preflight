@@ -32,3 +32,10 @@ Things worth doing that are outside the v0.1 scope. Add new ideas here instead o
 - **A real passthrough run in the tests.** `--network passthrough` is covered by the addon's unit tests, but no fixture runs it end to end.
 - **Tracing under emulation.** strace can't follow programs under amd64 emulation on Apple Silicon. A tracer built for that, or a Linux machine, would close the gap.
 - **Show what a known installer changed.** When an allowlisted installer's hash differs from the last one seen, show what changed.
+- **Remember hook verdicts.** The hook checks `npm install lodash` again every time (about 4 seconds). Remembering verdicts for a day, by package version, repo commit or command, would make repeats instant.
+- **More package managers in the hook:** `cargo install`, `go install`, `brew install` from third-party taps, `gem install`, `deno run <url>`, and `pip install` of archive addresses. lookfirst can't check those yet, so the hook lets them through.
+- **Clones from outside GitHub.** `git clone` from GitLab or elsewhere isn't checked before it runs.
+- **Claude Code's `if` filters.** A hook can say which commands it wants, so Claude Code doesn't start it at all for the rest. lookfirst's own fast path takes 26 ms, but no process at all would be 0.
+- **`claude mcp add-json`.** Read the JSON server config and check the command inside, like `claude mcp add ... -- npx -y ...`.
+- **Here-strings that are run.** `bash <<< "$(curl ...)"` runs what it downloads, but the install-path rules don't count it as a download that's run yet.
+- **A plugin icon,** for the listing in Anthropic's plugin directory (`claude plugin validate` asks for one).

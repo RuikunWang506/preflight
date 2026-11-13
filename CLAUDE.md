@@ -63,6 +63,7 @@ macOS VM dry runs (v0.2), Windows, browser extensions, Mac app bundles, a web ve
 
 ```
 lookfirst/
+  entry.py      the `lookfirst` command: hands `hook` off before anything else loads, everything else to cli.py
   cli.py
   pipeline.py   one check from start to finish: target, checks, verdict
   core/         http.py (httpx, size caps, host checks, token only to api.github.com)  config.py  errors.py
@@ -83,11 +84,14 @@ lookfirst/
                 honeytokens.py (decoys)  proxy.py  mitm_addon.py (runs inside mitmproxy)  trace_parse.py (strace)
                 analyze.py (findings)  transfer.py (docker cp tar streams; nothing is mounted)
   verdict/      schema.py  scoring.py  describe.py (shared wording)  render_terminal.py  render_markdown.py
-  mcp_server.py
-  hook.py       Claude Code PreToolUse handler; the fast path imports only the standard library (under 50 ms)
-plugin/         .claude-plugin/plugin.json  hooks/hooks.json  skills/<name>/SKILL.md  .mcp.json
+                render_agent.py (what agents read: the hook's answers and the MCP results)
+  mcp_server.py the MCP tools lookfirst_check and lookfirst_explain
+  hook.py       Claude Code PreToolUse hook: reads the command and decides what to check; standard library only
+  hook_run.py   the hook's checks, within the 20-second budget; loaded only for install-like commands
+plugin/         .claude-plugin/plugin.json  hooks/hooks.json  .mcp.json  skills/lookfirst/SKILL.md  README.md
+                scripts/run-lookfirst (finds the lookfirst command for the hook and the MCP server)
 .claude-plugin/ marketplace.json (makes this repo installable as a plugin marketplace)
-scripts/        record_fixtures.py  export_schema.py  build_popular_index.py
+scripts/        record_fixtures.py  export_schema.py  build_popular_index.py  bench_hook.py
 data/           local data, gitignored except data/seed/ (the trending archive goes there when added)
 tests/          conftest.py (no network, no real tokens, host canary)  helpers.py
                 fixtures/ (harmless fakes, recorded API responses, lookalike pairs, injection README)
@@ -105,6 +109,10 @@ Keep this section accurate whenever scripts change.
 - sandbox image build: `uv run lookfirst sandbox build` (also happens on the first `--sandbox` run; needs Docker)
 - test: `uv run pytest` (never uses the network or Docker)
 - sandbox tests, which run the fixtures in Docker: `LOOKFIRST_SANDBOX_TESTS=1 uv run pytest -m sandbox` (CI runs them on Linux)
+- the hook: `uv run lookfirst hook` reads Claude Code's hook JSON on stdin (the plugin runs it); the MCP server: `uv run lookfirst mcp`
+- time the hook: `uv run python scripts/bench_hook.py` (add `--installs` to also time install commands, which uses the network)
+- check the plugin and the marketplace file: `claude plugin validate plugin` and `claude plugin validate .`
+- try the plugin from this checkout: `uv tool install --editable .`, then in a scratch folder `claude plugin marketplace add <this folder> --scope project` and `claude plugin install lookfirst@lookfirst --scope project`
 - lint: `uv run ruff check . && uv run ruff format --check .`
 - refresh the recorded HTTP fixtures (uses the network; a `gh` token, if any, only raises the rate limit): `uv run python scripts/record_fixtures.py`
 - rebuild the popular-repos list that ships with lookfirst (needs a GitHub token, about 3 minutes): `uv run python scripts/build_popular_index.py`
