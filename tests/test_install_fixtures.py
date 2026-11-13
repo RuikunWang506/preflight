@@ -177,3 +177,29 @@ def test_files_tools_load_automatically_are_stored_under_neutral_names() -> None
         rel = path.relative_to(CASES)
         assert path.name not in auto_loaded, f"{rel}: store it as {path.name}.fixture or dot_..."
         assert not any(part.startswith(".") for part in rel.parts), f"{rel}: use a dot_ prefix"
+
+
+@pytest.mark.parametrize(
+    ("name", "path", "excerpt"),
+    [
+        ("credential_theft_javascript", "scripts/setup.js", ".npmrc"),
+        ("credential_theft_python", "setup.py", ".aws"),
+        ("credential_theft_ssh", "install.sh", "id_ed25519"),
+    ],
+)
+def test_credential_theft_points_at_the_line_that_names_the_secret(
+    name: str, path: str, excerpt: str, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    case_dir = CASES / name
+    case = tomllib.loads((case_dir / "case.toml").read_text())
+    monkeypatch.setattr(
+        lf_http, "_TRANSPORT", httpx.MockTransport(serve(case_dir, case.get("remote", {})))
+    )
+    report = run_check(str(build_repo(case_dir, tmp_path / "repo")), cwd=tmp_path)
+    theft = next(f for f in report.findings if f.id == "install_path.credential_theft")
+    evidence = next(e for e in theft.evidence if e.ref == path)
+    lines = (case_dir / path).read_text().splitlines()
+    assert evidence.line is not None
+    assert excerpt in lines[evidence.line - 1]
+    assert evidence.excerpt is not None
+    assert excerpt in evidence.excerpt

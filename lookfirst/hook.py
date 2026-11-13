@@ -909,7 +909,8 @@ def _installer_folder(name: str, args: list[str], rest: list[str]) -> str | None
     if name == "make":
         return folder
     if name == "npm":
-        found = words in (["install"], ["i"], ["ci"], ["add"])
+        # a bare `npm link` installs the folder globally, running its install scripts
+        found = words in (["install"], ["i"], ["ci"], ["add"], ["link"], ["ln"])
     elif name in ("pnpm", "bun"):
         found = words in (["install"], ["i"])
     elif name == "yarn":
