@@ -26,7 +26,6 @@ lookfirst lowers risk; it doesn't guarantee safety.
 - **Code that waits, or notices the sandbox,** can pass the dry run.
 - **The hook fails open:** if a check crashes or takes more than 20 seconds, the command goes ahead with a warning.
 - **The hook block hasn't been recorded in a live session.** It's tested with the exact input Claude Code sends, but in every live try the agent read the install script and refused before the hook was needed.
-- **Hidden agent instructions in issue templates** can give a well-known repo a Caution, such as a line some projects add to spot AI-written issues.
 
 Full list: [README](../README.md#what-it-doesnt-check) and [threat model](THREAT_MODEL.md).
 
